@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+  <!DOCTYPE configuration
+          PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+          "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <package name="org.fautapo.domain"/>
+    </typeAliases>
+    <mappers>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Abm.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Clientes.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Usuarios.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Enlaces.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Categorias.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Roles.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Instituciones.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Herramientas.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Actividades.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Dominios.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Campos.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Informes.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Gw.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Tramites.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Personas.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Proveidos.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Adjuntos.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Tableros.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Hilos.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Dibwayka.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Horarios.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Planes.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Programas.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Departamentos.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Facultades.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Universidades.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Notas.xml"/>  
+        <mapper resource="org/fautapo/dao/ibatis/maps/Materias.xml"/>    
+        <mapper resource="org/fautapo/dao/ibatis/maps/Libretas.xml"/>    
+        <mapper resource="org/fautapo/dao/ibatis/maps/Docentes.xml"/>    
+        <mapper resource="org/fautapo/dao/ibatis/maps/Asignaciones.xml"/>    
+        <mapper resource="org/fautapo/dao/ibatis/maps/Estudiantes.xml"/>
+        <mapper resource="org/fautapo/dao/ibatis/maps/Grupos.xml"/>  
+        <mapper resource="org/fautapo/dao/ibatis/maps/Postulantes.xml"/>  
+        <mapper resource="org/fautapo/dao/ibatis/maps/Perfiles.xml"/>  
+        <mapper resource="org/fautapo/dao/ibatis/maps/Curriculum.xml"/> 
+        <mapper resource="org/fautapo/dao/ibatis/maps/Calendarios.xml"/> 
+        <mapper resource="org/fautapo/dao/ibatis/maps/Tokens.xml"/> 
+        <mapper resource="org/fautapo/dao/ibatis/maps/ProgramaAnalitico.xml"/> 
+        <mapper resource="org/fautapo/dao/ibatis/maps/CursosMoodle.xml"/> 
+        <mapper resource="org/fautapo/dao/ibatis/maps/Kardex.xml"/>  
+        <mapper resource="org/fautapo/dao/ibatis/maps/Menciones.xml"/> 
+        <mapper resource="org/fautapo/dao/ibatis/maps/MateriasOptativas.xml"/> 
+    </mappers>
+</configuration>

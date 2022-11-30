@@ -1,0 +1,74 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+ * @autor FAUTAPO
+ * @fec_registro 2006-03-20
+ * @ult_usuario FAUTAPO
+ * @fec_modificacion 2006-03-20
+-->
+
+<mapper namespace="Informes">
+
+  <!-- Administracion de informes -->
+  <resultMap id="listadoInformes" type="org.fautapo.domain.Informes">
+    <result property="id_informe"    column="id_informe" />
+    <result property="id_proceso"    column="id_proceso" />
+    <result property="id_actividad"  column="id_actividad" />
+    <result property="actividad"     column="actividad" />
+    <result property="informe"       column="informe" />
+    <result property="descripcion"   column="descripcion" />
+    <result property="contenido"     column="contenido" />
+    <result property="correlativo"   column="correlativo" />
+  </resultMap>
+ 
+  <select id="getListarInformes" resultMap="listadoInformes">
+    SELECT * FROM tr_listar_informes(#{id_proceso})
+    AS (id_informe integer, id_proceso dentero, id_actividad dentero, actividad dtexto, informe dtexto, descripcion dtexto2, 
+        contenido dtexto2, correlativo dentero2);
+  </select>
+
+  <resultMap id="informe" type="org.fautapo.domain.Informes">
+    <result property="id_informe"    column="id_informe" />
+    <result property="id_proceso"    column="id_proceso" />
+    <result property="id_actividad"  column="id_actividad" />
+    <result property="informe"       column="informe" />
+    <result property="descripcion"   column="descripcion" />
+    <result property="contenido"     column="contenido" />
+    <result property="correlativo"   column="correlativo" />
+  </resultMap>
+
+  <select id="getBuscarInforme" resultMap="informe">
+    SELECT *
+    FROM tr_buscar_informe(#{id_informe});
+  </select>
+
+  <select id="setRegistrarInforme" resultType="java.lang.Integer">
+    SELECT tr_registrar_informe(#{id_informe}, #{id_proceso}, #{id_actividad}, #{informe}, #{descripcion}, #{contenido}, #{ult_usuario}) as valor;
+  </select>
+
+  <select id="setEliminarInforme" resultType="java.lang.Integer">
+    SELECT tr_eliminar_informe(#{id_informe}, #{ult_usuario}) as valor;
+  </select>
+  <!-- Fin Administracion de informes -->
+
+  <!-- Administracion de tramites -->
+  <select id="getListarInformesActividad" resultMap="listadoInformes">
+    SELECT * FROM tr_listar_informes(#{id_proceso}, #{id_actividad})
+    AS (id_informe integer, id_proceso dentero, id_actividad dentero, actividad dtexto, informe dtexto, descripcion dtexto2,
+        contenido dtexto2, correlativo dentero2);
+  </select>
+  
+  <resultMap id="datosInforme" type="org.fautapo.domain.Informes">
+    <result property="valor"           column="valor" />
+    <result property="id_tipo_dominio" column="id_tipo_dominio" />
+    <result property="id_campo"        column="id_campo" />
+  </resultMap>
+ 
+  <select id="getBuscarInforme2" resultMap="datosInforme">
+    SELECT * FROM tr_buscar_informe(#{id_tramite}, #{id_campo}) 
+    AS (valor dtexto, id_tipo_dominio dentero, id_campo dentero);
+  </select>
+
+  <!-- Fin Administracion de tramites -->
+
+</mapper>

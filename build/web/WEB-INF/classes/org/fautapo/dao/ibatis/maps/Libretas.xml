@@ -1,0 +1,741 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+ * @autor FAUTAPO
+ * @fec_registro 2006-04-07
+ * @ult_usuario FAUTAPO
+ * @fec_modificacion 2006-04-07
+-->
+
+<mapper namespace="Libretas">
+
+    <!--Administrar libretas --> 
+    <resultMap id="fases" type="org.fautapo.domain.Libretas">
+        <result property="fase"            column="fase" />
+        <result property="descripcion"     column="descripcion" />
+        <result property="id_departamento" column="id_departamento" />
+        <result property="ponderacion"     column="ponderacion" />
+        <result property="nota_aprobacion" column="nota_aprobacion" />
+    </resultMap>
+
+    <select id="getLbrBuscarFase" resultMap="fases">
+        SELECT * FROM mi_lbr_buscar_fase(#{id_fase}, #{id_tipo_evaluacion}, #{id_departamento}, #{gestion}, #{periodo})
+        AS (fase dtexto, descripcion dtexto2, id_departamento int4, ponderacion dentero, nota_aprobacion dnota2);
+    </select>
+  
+    <resultMap id="evaluacionDefinida" type="org.fautapo.domain.Libretas">
+        <result property="id_lbr_tipo_nota" column="id_lbr_tipo_nota"/>
+        <result property="cantidad"         column="cantidad"/>
+        <result property="ponderacion"      column="ponderacion"/>
+        <result property="tipo_nota"        column="tipo_nota"/>
+        <result property="id_tipo_nota"     column="id_tipo_nota"/>
+    </resultMap>  
+
+    <select id="getGrpListarEvaluacionDefinida" resultMap="evaluacionDefinida">  
+        SELECT * FROM mi_grp_listar_evaluacion_definida(#{id_materia}, #{id_grupo}, #{gestion}, #{periodo}, #{id_departamento}, #{id_tipo_evaluacion}, #{id_fase}, #{id_modelo_ahorro})
+        AS (id_lbr_tipo_nota integer, cantidad dentero, ponderacion dentero, tipo_nota dtexto, id_tipo_nota int4);
+    </select>          
+
+    <resultMap id="datosTiposNotas" type="org.fautapo.domain.Libretas">
+        <result property="id_lbr_tipo_nota"   column="ID_LBR_TIPO_NOTA"/>
+        <result property="id_fase"            column="ID_FASE"/>
+        <result property="id_departamento"    column="ID_DEPARTAMENTO"/>
+        <result property="id_tipo_evaluacion" column="ID_TIPO_EVALUACION"/>
+        <result property="id_tipo_nota"       column="ID_TIPO_NOTA"/>
+        <result property="gestion"    	  column="GESTION"/>
+        <result property="periodo"            column="PERIODO"/>
+        <result property="tipo_nota"          column="TIPO_NOTA"/>
+    </resultMap>  
+  
+    <select id="getLbrBuscarTipoNota"  resultMap="datosTiposNotas">  
+        SELECT * FROM  mi_lbr_buscar_tipo_nota(#{id_lbr_tipo_nota})
+        AS(id_lbr_tipo_nota integer, id_fase dentero, id_departamento dentero, id_tipo_evaluacion dentero, id_tipo_nota dentero,
+        gestion dentero, periodo dentero, tipo_nota dtexto );
+    </select>  
+
+    <resultMap id="estudiantesProgramados" type="org.fautapo.domain.Libretas">
+        <result property="id_matricula"        column="id_matricula"/>
+        <result property="id_materia"          column="id_materia"/>  
+        <result property="materia"             column="materia"/>  
+        <result property="id_estudiante"       column="id_estudiante"/>  
+        <result property="nombres"             column="nombres"/>
+        <result property="id_modelo_ahorro"    column="id_modelo_ahorro"/>
+    </resultMap>  
+  
+    <select id="getEstBuscarEstudiantesProgramados"  resultMap="estudiantesProgramados">  
+        SELECT * FROM mi_est_buscar_estudiantes_programados(#{id_materia}, #{id_grupo}, #{id_modelo_ahorro}, #{gestion}, #{periodo}, #{id_tipo_evaluacion})
+        AS (id_matricula integer, id_materia integer, materia dtexto, id_estudiante dentero, nombres varchar, id_grupo dentero, grupo dtexto, id_modelo_ahorro dentero2);
+    </select>  
+    
+    <resultMap id="estudiantesProgramadospersona" type="org.fautapo.domain.Libretas">
+        <result property="id_matricula"        column="id_matricula"/>
+        <result property="id_materia"          column="id_materia"/>  
+        <result property="materia"             column="materia"/>  
+        <result property="id_estudiante"       column="id_estudiante"/>  
+        <result property="nombres"             column="nombres"/>
+        <result property="id_modelo_ahorro"    column="id_modelo_ahorro"/>
+        <result property="id_persona"    column="id_persona"/>
+        <result property="paterno" column="paterno"/>
+        <result property="materno" column="materno"/>
+        <result property="dip" column="dip"/>
+        <result property="nombre" column="nombre"/>
+    </resultMap>  
+  
+    <select id="getEstBuscarEstudiantesProgramadospersona"  resultMap="estudiantesProgramadospersona">  
+        SELECT * FROM mi_est_buscar_estudiantes_programadosidpersona(#{id_materia}, #{id_grupo}, #{id_modelo_ahorro}, #{gestion}, #{periodo}, #{id_tipo_evaluacion})
+        AS (id_matricula integer, id_materia integer, materia dtexto, id_estudiante dentero, nombres varchar, id_grupo dentero, grupo dtexto, id_modelo_ahorro dentero2, id_persona integer, paterno varchar, materno varchar, nombre varchar, dip varchar);
+    </select>  
+    
+    <resultMap id="postulantesProgramados" type="org.fautapo.domain.Libretas">
+        <result property="id_matricula"     column="id_matricula"/>
+        <result property="id_materia"       column="id_materia"/>  
+        <result property="materia"          column="materia"/>  
+        <result property="id_postulante"    column="id_postulante"/>  
+        <result property="nombres"          column="nombres"/>
+        <result property="id_modelo_ahorro" column="id_modelo_ahorro"/>
+    </resultMap>  
+    
+    <resultMap id="postulantesProgramadospersona" type="org.fautapo.domain.Libretas">
+        <result property="id_matricula"     column="id_matricula"/>
+        <result property="id_materia"       column="id_materia"/>  
+        <result property="materia"          column="materia"/>  
+        <result property="id_postulante"    column="id_postulante"/>  
+        <result property="nombres"          column="nombres"/>
+        <result property="id_modelo_ahorro" column="id_modelo_ahorro"/>
+        <result property="id_persona" column="id_persona"/>
+        <result property="paterno" column="paterno"/>
+        <result property="materno" column="materno"/>
+        <result property="dip" column="dip"/>
+        <result property="nombre" column="nombre"/>
+    </resultMap>  
+  
+    <select id="getPstBuscarPostulantesProgramadospersona"  resultMap="postulantesProgramadospersona">  
+        SELECT * FROM mi_pst_buscar_postulantes_programadosidpersona(#{id_materia}, #{id_grupo}, #{id_modelo_ahorro}, #{gestion}, #{periodo})
+        AS (id_matricula integer, id_materia integer, materia dtexto, id_postulante dentero, nombres varchar, id_grupo dentero, grupo dtexto, id_modelo_ahorro integer, id_persona integer, paterno varchar, materno varchar, nombre varchar, dip varchar) 
+        ORDER BY nombres;
+    </select>   
+    
+    <select id="getPstBuscarPostulantesProgramados"  resultMap="postulantesProgramados">  
+        SELECT * FROM mi_pst_buscar_postulantes_programados(#{id_materia}, #{id_grupo}, #{id_modelo_ahorro}, #{gestion}, #{periodo})
+        AS (id_matricula integer, id_materia integer, materia dtexto, id_postulante dentero, nombres varchar, id_grupo dentero, grupo dtexto, id_modelo_ahorro integer) 
+        ORDER BY nombres;
+    </select>   
+    
+    
+    <resultMap id="notasEstudiante" type="org.fautapo.domain.Libretas">
+        <result property="nota"       column="nota"/>
+        <result property="nro_nota"   column="nro_nota"/>
+    </resultMap>  
+    <resultMap id="notasEstudiantepermitido" type="org.fautapo.domain.Libretas">
+        <result property="nota"       column="nota"/>
+        <result property="nro_nota"   column="nro_nota"/>
+        <result property="permitidomodificar"   column="permitidomodificar"/>
+    </resultMap> 
+    <select id="getEstListarNotasEstudiante" resultMap="notasEstudiante">  
+        SELECT * FROM mi_est_listar_notas_estudiante(#{id_estudiante}, #{id_grupo}, #{id_materia}, #{id_tipo_nota}, #{id_fase}, #{gestion}, #{periodo},
+        #{id_tipo_evaluacion}, #{id_modelo_ahorro})
+        AS (nota dnota2, nro_nota dentero );
+    </select>  
+    <select id="getEstListarNotasEstudianteLibreta" resultMap="notasEstudiante">  
+        SELECT * FROM mi_est_listar_notas_estudiantelibreta(#{id_estudiante}, #{id_grupo}, #{id_materia}, #{id_tipo_nota}, #{gestion}, #{periodo},
+        #{id_tipo_evaluacion}, #{id_modelo_ahorro})
+        AS (nota dnota2, nro_nota dentero );
+    </select> 
+    <select id="getEstListarNotasEstudiantePermitidoModificar" resultMap="notasEstudiantepermitido">  
+        SELECT * FROM mi_est_listar_notas_estudiante_habilitados_mdificacion_nota(#{id_estudiante}, #{id_grupo}, #{id_materia}, #{id_tipo_nota}, #{id_fase}, #{gestion}, #{periodo},
+        #{id_tipo_evaluacion}, #{id_modelo_ahorro},#{id_programa},#{id_docente})
+        AS (nota dnota2, nro_nota dentero, permitidomodificar dentero );
+    </select>  
+    <select id="getPstListarNotasPostulante" resultMap="notasEstudiante">  
+        SELECT * FROM mi_pst_listar_notas_postulante(#{id_postulante}, #{id_grupo}, #{id_materia}, #{id_tipo_nota}, #{id_fase}, #{gestion}, #{periodo})
+        AS (nota dnota2, nro_nota dentero);
+    </select>  
+  
+    <select id="setEstInsertarNotaEstudianteFase" resultType="java.lang.Integer">
+        SELECT * FROM mi_est_registrar_libretas(#{id_estudiante}, #{id_grupo}, #{id_materia}, #{id_departamento}, #{id_modelo_ahorro}, #{id_fase}, 
+        #{id_tipo_nota}, #{id_tipo_evaluacion}, #{gestion}, #{periodo}, #{nro_nota}, #{nota}::numeric, #{id_rol}, #{ult_usuario});
+    </select> 
+
+    <select id="setPstInsertarNotaPostulanteFase" resultType="java.lang.Integer">
+        SELECT mi_pst_registrar_libretas(#{id_postulante}, #{id_grupo}, #{id_materia}, #{id_departamento}, #{id_modelo_ahorro}, #{id_fase}, 
+        #{id_tipo_nota}, #{id_tipo_evaluacion}, #{gestion}, #{periodo}, #{nro_nota}, #{nota}::numeric, #{id_rol}, #{ult_usuario});
+    </select>    
+
+    <select id="setDctAvanzarFase" resultType="java.lang.Integer">
+        SELECT * FROM mi_dct_avanzar_fase(#{id_docente}, #{id_departamento}, #{id_materia}, #{id_grupo}, #{id_modelo_ahorro},
+        #{id_tipo_evaluacion}, #{gestion}, #{periodo}, #{id_fase}, #{id_tipo_grado}, #{id_rol}, #{ult_usuario});
+    </select>
+  
+    <select id="setDctAvanzarFaseSemiFinal" resultType="java.lang.Integer">
+        SELECT * FROM mi_dct_avanzar_fase_semi_final(#{id_docente}, #{id_departamento}, #{id_materia}, #{id_grupo}, #{id_modelo_ahorro},
+        #{id_tipo_evaluacion}, #{gestion}, #{periodo});
+    </select>  
+
+    <select id="getEstSumarNotasEstudianteEvalRegular" resultType="java.lang.Integer">  
+        SELECT * FROM mi_est_sumar_notas_estudiante_eval_regular2(#{id_estudiante}, #{id_grupo}, #{id_materia}, #{id_fase}, #{gestion}, #{periodo}, #{id_tipo_evaluacion}, #{id_modelo_ahorro},#{id_programa});
+    </select>  
+  
+    <select id="getEstSumarNotasEstudianteEvalContinua" resultType="java.lang.Integer">  
+        SELECT * FROM mi_est_sumar_notas_estudiante_eval_continua1(#{id_estudiante}, #{id_grupo}, #{id_materia}, #{id_fase}, #{gestion}, #{periodo}, #{id_tipo_evaluacion}, #{id_modelo_ahorro});
+    </select>  
+  
+    <select id="getLbrBuscarFaseMinima" resultType="java.lang.Integer">  
+        SELECT * FROM mi_lbr_buscar_fase_minima(#{id_tipo_evaluacion}, #{id_programa}, #{gestion}, #{periodo});    
+    </select>  
+  
+    <select id="getLbrBuscarFaseMaxima" resultType="java.lang.Integer">  
+        SELECT * FROM mi_lbr_buscar_fase_maxima(#{id_tipo_evaluacion}, #{id_programa}, #{gestion}, #{periodo});    
+    </select>    
+    <!--Fin Administrar libretas --> 
+  
+    <!--Definir evaluacion-->
+    <resultMap id="tiposnotas" type="org.fautapo.domain.Libretas">
+        <result property="id_tipo_nota"         column="ID_TIPO_NOTA"/>
+        <result property="tipo_nota"            column="TIPO_NOTA"/>
+        <result property="cantidad"             column="CANTIDAD"/>
+        <result property="ponderacion"          column="PONDERACION"/>
+    </resultMap>  
+  
+    <select id="getLbrListarTiposNotas" resultMap="tiposnotas">  
+        SELECT * FROM mi_lbr_listar_tipos_notas(#{id_fase}, #{id_tipo_evaluacion}, #{gestion}, #{periodo}, #{id_materia}, #{id_grupo}, #{id_modelo_ahorro}, #{id_departamento})
+        AS (id_tipo_nota int4, tipo_nota dtexto, cantidad int4, ponderacion int4);
+    </select>
+
+    <select id="getLbrListarTiposNotasDefinidas" resultMap="tiposnotas">  
+        SELECT * FROM mi_lbr_listar_tipos_notas_definidas(#{gestion}, #{periodo}, #{id_programa}, #{id_materia}, #{id_grupo}, #{id_tipo_nota}, #{id_tipo_evaluacion}, #{id_fase}, #{id_modelo_ahorro})
+        AS (cantidad dentero,  ponderacion dentero, tipo_nota dtexto, id_tipo_nota dentero);    
+    </select>  
+  
+    <resultMap id="tiposnotasaux" type="org.fautapo.domain.Libretas">
+        <result property="id_evaluacion"        column="ID_EVALUACION"/>  
+        <result property="id_tipo_nota"         column="ID_TIPO_NOTA"/>
+        <result property="tipo_nota"            column="TIPO_NOTA"/>
+        <result property="cantidad"             column="CANTIDAD"/>
+        <result property="ponderacion"          column="PONDERACION"/>
+    </resultMap>  
+  
+    <select id="getLbrBuscarTipoNotaDefinida" resultMap="tiposnotasaux">  
+        SELECT * FROM mi_lbr_buscar_tipo_nota_definida(#{gestion}, #{periodo}, #{id_programa}, #{id_materia}, #{id_grupo}, #{id_tipo_nota},
+        #{id_tipo_evaluacion}, #{id_fase}, #{id_modelo_ahorro})
+        AS (id_evaluacion int4, cantidad int4, ponderacion int4, tipo_nota dtexto, id_tipo_nota dentero);    
+    </select>  
+
+    <select id="setGrpInsertarEvaluacion" resultType="java.lang.Integer">
+        SELECT * FROM mi_grp_adicionar_evaluacion(#{id_materia}, #{id_grupo}, #{id_modelo_ahorro}, #{id_tipo_nota}, #{id_fase}, #{id_departamento}, 
+        #{id_tipo_evaluacion}, #{id_tipo_docente}, #{gestion}, #{periodo}, #{cantidad}, #{ponderacion}, 
+        #{padre}, #{id_rol}, #{ult_usuario});
+    </select>  
+  
+    <select id="setGrpModificarEvaluacion" resultType="java.lang.Integer">
+        SELECT * FROM mi_grp_modificar_evaluacion(#{id_materia}, #{id_grupo}, #{id_modelo_ahorro}, #{id_tipo_nota}, #{id_fase}, #{id_departamento}, 
+        #{id_tipo_evaluacion}, #{id_tipo_docente}, #{gestion}, #{periodo}, #{cantidad}, #{ponderacion},
+        #{padre}, #{id_rol}, #{ult_usuario}, #{id_evaluacion});
+    </select>
+
+    <select id="setGrpRegistrarEvaluacion" resultType="java.lang.Integer">
+        SELECT * FROM mi_grp_registrar_evaluacion(#{id_materia}, #{id_grupo}, #{id_modelo_ahorro}, #{id_tipo_nota}, #{id_fase}, #{id_departamento}, 
+        #{id_tipo_evaluacion}, #{id_tipo_docente}, #{gestion}, #{periodo}, #{cantidad}, #{ponderacion}, 
+        #{id_rol}, #{ult_usuario});
+    </select>  
+
+    <select id="setGrpEliminarEvaluacion" resultType="java.lang.Integer">
+        SELECT * FROM mi_grp_eliminar_evaluacion(#{id_materia}, #{id_grupo}, #{id_modelo_ahorro}, #{id_tipo_nota}, #{id_fase}, #{id_departamento}, 
+        #{id_tipo_evaluacion}, #{gestion}, #{periodo}, #{id_rol}, #{ult_usuario});
+    </select>
+
+    <!--Fin Definir evaluacion-->  
+  
+    <select id="setCerrarLibreta" resultType="java.lang.Integer">
+        SELECT mi_calcula_nota_final(#{gestion}, #{periodo}, #{id_rol}, #{ult_usuario});
+    </select>  
+    <!-- Fin Cerrar Libreta-->  
+   
+    <!--Administrar lbr_tipos_notas--> 
+    <resultMap id="tipoevaluacion" type="org.fautapo.domain.Libretas">
+        <result property="id_tipo_evaluacion"  column="id_tipo_evaluacion" />
+        <result property="tipo_evaluacion"     column="tipo_evaluacion" />
+    </resultMap>
+
+    <select id="getTpsListarTiposEvaluaciones" resultMap="tipoevaluacion">
+        SELECT id_tipo_evaluacion, tipo_evaluacion FROM mi_tps_listar_tipos_evaluaciones();
+    </select>
+  
+    <select id="getTpsBuscarTipoEvaluacion" resultMap="tipoevaluacion">
+        SELECT id_tipo_evaluacion, tipo_evaluacion FROM mi_tps_buscar_tipo_evaluacion(#{id_tipo_evaluacion});  
+    </select>
+  
+    <resultMap id="lbrfases" type="org.fautapo.domain.Libretas">
+        <result property="id_lbr_fase"         column="id_lbr_fase" />
+        <result property="id_fase"             column="id_fase" />
+        <result property="fase"                column="fase" />
+        <result property="id_departamento"     column="id_departamento" />
+        <result property="id_tipo_evaluacion"  column="id_tipo_evaluacion" />
+        <result property="gestion"             column="gestion" />
+        <result property="periodo"             column="periodo" />
+    </resultMap>
+
+    <select id="getLbrListarFases" resultMap="lbrfases">
+        SELECT id_lbr_fase, id_fase, fase, id_departamento, id_tipo_evaluacion, gestion, periodo 
+        FROM mi_lbr_listar_fases(#{id_departamento}, #{id_tipo_evaluacion}, #{gestion}, #{periodo}) ;      
+    </select>
+  
+    <select id="getLbrListarFases2" resultMap="lbrfases">
+        SELECT id_lbr_fase, id_fase, fase, id_departamento, id_tipo_evaluacion, gestion, periodo
+        FROM mi_lbr_listar_fases2(#{id_departamento}, #{id_tipo_evaluacion}, #{gestion}, #{periodo});
+    </select>
+
+    <resultMap id="lbrtiposnotas" type="org.fautapo.domain.Libretas">
+        <result property="id_lbr_tipo_nota"    column="id_lbr_tipo_nota" />
+        <result property="id_tipo_nota"        column="id_tipo_nota" />
+        <result property="id_fase"             column="id_fase" />
+        <result property="id_departamento"     column="id_departamento" />
+        <result property="id_tipo_evaluacion"  column="id_tipo_evaluacion" />
+        <result property="tipo_nota"           column="tipo_nota" />
+        <result property="gestion"             column="gestion" />
+        <result property="periodo"             column="periodo" />
+    </resultMap>
+
+    <select id="getLbrListarTiposNotasFase" resultMap="lbrtiposnotas">
+        SELECT * FROM mi_lbr_listar_tipos_notas(#{id_fase}, #{id_departamento}, #{id_tipo_evaluacion}, #{gestion}, #{periodo})
+        AS (id_lbr_tipo_nota integer, id_tipo_nota dentero, id_fase dentero, id_departamento dentero, id_tipo_evaluacion dentero, gestion dentero, periodo dentero,
+        tipo_nota dtexto);
+    </select>
+
+    <select id="setLbrInsertarTipoNota" resultType="java.lang.Integer">
+        SELECT * FROM mi_lbr_insertar_tipo_nota(#{id_fase}, #{id_departamento}, #{id_tipo_evaluacion}, #{id_estado}, #{gestion}, #{periodo}, #{tipo_nota}, #{id_rol}, #{ult_usuario});
+    </select>    
+  
+    <select id="setLbrModificarTipoNota" resultType="java.lang.Integer">
+        SELECT * FROM mi_lbr_modificar_tipo_nota(#{id_tipo_nota}, #{id_fase}, #{id_departamento}, #{id_tipo_evaluacion}, #{id_estado}, #{gestion},#{periodo}, #{tipo_nota}, #{id_rol}, #{ult_usuario});
+    </select>    
+    <!--fin Administrar Lbr_tipos_notas-->
+    <!--Reporte Libretas --> 
+    <resultMap id="getListarLibretas" type="org.fautapo.domain.Libretas">
+        <result property="id_estudiante"        column="id_estudiante" />
+        <result property="id_fase"              column="id_fase" />
+        <result property="id_materia"           column="id_materia" />
+        <result property="id_grupo"             column="id_grupo" />
+        <result property="id_tipo_nota"         column="id_tipo_nota" />
+        <result property="nota_ponderada"       column="nota_ponderada" />
+        <result property="nota"                 column="nota" />
+    </resultMap>
+    <select id="getListarNotasFaseEstudiantes" resultMap="getListarLibretas">  
+        SELECT * FROM listar_detalle_libreta_s(#{id_materia}, #{id_fase}, #{id_grupo}, #{id_departamento}, #{gestion}, #{periodo}, #{id_tipo_evaluacion}, #{id_modelo_ahorro}) AS 
+        (id_estudiante integer, id_fase dentero, id_materia dentero, id_grupo dentero, id_tipo_nota dentero, nota_ponderada numeric(10,7), nota numeric(10,7));
+    </select> 
+  
+    <resultMap id="getResumenNotas" type="org.fautapo.domain.Libretas">
+        <result property="id_estudiante"        column="id_estudiante" />
+        <result property="id_fase"              column="id_fase" />
+        <result property="id_materia"           column="id_materia" />
+        <result property="id_grupo"             column="id_grupo" />
+        <result property="nota"                 column="nota" />
+    </resultMap>
+  
+    <select id="getListarResumenNotasEstudiantes" resultMap="getResumenNotas">  
+        SELECT * FROM listar_resumen_nota_final(#{id_estudiante}, #{id_tipo_evaluacion}, #{id_materia}, #{id_grupo},  #{gestion}, #{periodo}, #{id_tipo_docente}) AS 
+        (id_estudiante dentero, id_fase dentero, id_materia dentero, id_grupo dentero,  nota numeric(10,7));
+    </select>
+    <!--fin reporte Libretas-->
+  
+    <!--Cerrar Libreta Por Materia-->  
+    <resultMap id="cerrar" type="org.fautapo.domain.Libretas">
+        <result property="id_docente"         column="id_docente" />
+        <result property="nombres"            column="nombres" />
+        <result property="id_materia"         column="id_materia" />
+        <result property="materia"            column="materia" />
+        <result property="id_fase"            column="id_fase" />
+        <result property="id_grupo"           column="id_grupo" />
+        <result property="id_modelo_ahorro"   column="id_modelo_ahorro"/>
+        <result property="modelo_ahorro"      column="modelo_ahorro" />
+        <result property="grupo"              column="grupo" />
+        <result property="id_tipo_evaluacion" column="id_tipo_evaluacion" />
+        <result property="fase"               column="fase" />
+    </resultMap>
+   
+    <select id="getListarMateriasCerrarLibretaIndiv" resultMap="cerrar">
+        SELECT * FROM mi_dct_listar_materias_cerrar_libreta_individual(#{gestion}, #{periodo}, #{id_tipo_evaluacion})
+        AS (id_docente dentero, nombres varchar, id_materia dentero, materia dtexto, id_fase integer, id_grupo dentero, id_modelo_ahorro dentero2, 
+        modelo_ahorro text, grupo dtexto, id_tipo_evaluacion dentero, fase dtexto)
+        ORDER BY materia, id_modelo_ahorro;    
+    </select>
+
+    <select id="setCerrarLibretaPorMateria" resultType="java.lang.Integer">
+        SELECT * FROM mi_cerrar_pre_actas_por_materia(#{id_docente}, #{id_materia}, #{id_grupo}, #{id_fase}, #{gestion}, #{periodo},
+        #{id_modelo_ahorro}, #{id_tipo_evaluacion}, #{id_rol}, #{ult_usuario});
+    </select>  
+    <!--Fin Cerrar Libreta Por Materia-->  
+  
+    <!--EDGAR NUEVOS MODULOS-->
+    <!--Reporte certificado de calificaciones-->
+    <resultMap id="getCertificadoCalificaciones" type="org.fautapo.domain.Libretas">
+        <result property="id_nota"              column="id_nota" />  
+        <result property="id_estudiante"        column="id_estudiante" />
+        <result property="materia"              column="materia" />
+        <result property="sigla"                column="sigla" />
+        <result property="cod_l"                column="cod_l" />
+        <result property="cod_n"                column="cod_n" />
+        <result property="nota"                 column="nota" />
+        <result property="horas"                column="horas" />
+    </resultMap>
+  
+    <select id="getListarCerticadoCalificaciones" resultMap="getCertificadoCalificaciones">  
+        SELECT * FROM listar_certificados_calificaciones(#{periodo}, #{gestion}, #{id_estudiante}) AS 
+        (id_nota int, id_estudiante dentero, materia dtexto, sigla dtexto, cod_l text, cod_n text, nota dentero2, horas int)
+    </select>
+    <!--fin Reporte certificado de calificaciones-->
+
+    <!--fin Reporte detalle materia de notas continuas-->
+    <resultMap id="getMateriaNotasContinua" type="org.fautapo.domain.Libretas">
+        <result property="id_estudiante"         column="id_estudiante" />  
+        <result property="id_fase"               column="id_fase" />  
+        <result property="id_materia"            column="id_materia" />  
+        <result property="id_grupo"              column="id_grupo" />
+        <result property="id_tipo_nota"          column="id_tipo_nota" />
+        <result property="nota"                  column="nota" />
+        <result property="nro_nota"              column="nro_nota" />
+    </resultMap>
+  
+    <select id="getEstListarNotasEvaluacionContinua" resultMap="getMateriaNotasContinua">  
+        SELECT * FROM mi_listar_nota_eval_continua(#{id_departamento}, #{id_tipo_evaluacion}, #{id_materia}, #{id_grupo},  #{gestion}, #{periodo}, #{id_tipo_docente}, #{id_estudiante}, #{id_modelo_ahorro}) 
+        AS (id_estudiante int, id_fase dentero, id_materia dentero, id_grupo dentero, id_tipo_nota int,  nota numeric(10,7), nro_nota int);
+    </select>
+  
+    <select id="getListarEstudiantesEvaluacionContinua" resultMap="getMateriaNotasContinua">  
+        SELECT * FROM mi_listar_notas_continuas_estudiantes(#{id_departamento}, #{id_tipo_evaluacion}, #{id_materia}, #{id_grupo},  #{gestion}, #{periodo}, #{id_modelo_ahorro}) 
+        AS (id_estudiante dentero, id_fase dentero, id_materia dentero, id_grupo dentero, id_tipo_nota dentero, nro_nota int,  nota numeric(10,7));
+    </select>
+  
+    <resultMap id="getLbrfaseTiponotasDefinicion" type="org.fautapo.domain.Libretas">
+        <result property="id_fase"               column="id_fase" />  
+        <result property="cantidad"              column="cantidad" />  
+        <result property="ponderacion"           column="ponderacion" />
+        <result property="tipo_nota"             column="tipo_nota" />
+        <result property="id_tipo_nota"          column="id_tipo_nota" />
+    </resultMap>
+  
+    <select id="getLbrTiposnotasListarDefinicion" resultMap="getLbrfaseTiponotasDefinicion">  
+        SELECT * FROM mi_grp_listar_evaluacion_definida_tiponota(#{id_materia}, #{id_grupo}, #{gestion}, #{periodo}, #{id_departamento}, #{id_tipo_evaluacion}, #{id_modelo_ahorro})
+        AS (id_fase dentero, cantidad dentero, ponderacion dentero, tipo_nota dtexto, id_tipo_nota int4);
+    </select>
+    <!--fin Reporte detalle  materia de notas continua-->
+    <!--FIN EDGAR--> 
+  
+    <!--Retroceder Fase-->
+    <select id="setModificarFaseDocente" resultType="java.lang.Integer">
+        SELECT * FROM  mi_dct_asignacion_modificar_fase(#{id_docente}, #{id_departamento}, #{id_materia}, #{id_grupo}, #{id_modelo_ahorro},
+        #{id_tipo_evaluacion}, #{gestion}, #{periodo}, #{id_fase}, #{id_rol}, #{id_usuario});
+    </select>  
+  
+    <select id="setModificarFaseDocenteCerrarLibreta" resultType="java.lang.Integer">
+        SELECT * FROM  mi_dct_asignacion_modificar_fase_cerrar_libreta(#{id_docente}, #{id_departamento}, #{id_materia}, #{id_grupo}, #{id_modelo_ahorro},
+        #{id_tipo_evaluacion}, #{gestion}, #{periodo}, #{id_fase}, #{id_rol}, #{id_usuario},#{observacion});
+    </select>  
+
+    <select id="setEliminarFaseEstLibretas" resultType="java.lang.Integer">
+        SELECT mi_est_libretas_eliminar_fase(#{gestion}, #{periodo}, #{id_departamento}, #{id_materia}, #{id_grupo}, #{id_modelo_ahorro}, #{id_fase}, #{id_rol}, #{id_usuario});
+    </select>  
+    <!--Fin retroceder fase-->
+
+    <resultMap id="tiposEvaluaciones" type="org.fautapo.domain.Libretas">
+        <result property="id_tipo_evaluacion" column="id_tipo_evaluacion"/>
+        <result property="tipo_evaluacion"    column="tipo_evaluacion"/>
+    </resultMap>
+
+    <select id="getTrnListarEvaluacionesVerano" resultMap="tiposEvaluaciones">
+        SELECT * FROM mi_trn_listar_evaluaciones_verano()
+        AS (id_tipo_evaluacion integer, id_estado did_estado, tipo_evaluacion dtexto);
+    </select>  
+  
+    <!--TIPOS GRADOS PROGRAMA -->
+    <resultMap id="gradosAcademicos" type="org.fautapo.domain.Libretas">
+        <result property="id_prg_grado_academico" column="id_prg_grado_academico"/>
+        <result property="id_programa"            column="id_programa"/>
+        <result property="grado_academico"        column="grado_academico"/>
+    </resultMap>
+
+    <select id="getBuscarGradoAcademicoPrograma" resultMap="gradosAcademicos">
+        SELECT * FROM mi_buscar_prg_grados_academicos(#{id_programa}, #{id_plan}) 
+        AS (id_prg_grado_academico integer, id_programa dentero, grado_academico dtexto);
+    </select>  
+    <!--FIN TIPOS GRADOS PRGORAMA-->
+  
+    <!--Listar TIPOS NOTAS-->
+    <resultMap id="listarTiposNotas" type="org.fautapo.domain.Libretas">
+        <result property="id_tipo_nota"   column="id_tipo_nota"/>
+        <result property="tipo_nota"      column="tipo_nota"/>
+        <result property="habilitado"     column="habilitado"/>
+    </resultMap>
+
+    <select id="getListarTiposNotas" resultMap="listarTiposNotas">
+        SELECT * FROM mi_listar_tipos_notas() AS(id_tipo_nota integer, tipo_nota dtexto, habilitado dbooleano2);
+    </select>  
+    <!-- FIN  Listar TIPOS NOTAS-->
+
+    <!--Buscar lbr Fase-->
+    <resultMap id="buscarLbrFase" type="org.fautapo.domain.Libretas">
+        <result property="id_lbr_fase"           column="id_lbr_fase"/>
+        <result property="id_fase"               column="id_fase"/>
+        <result property="id_departamento"       column="id_departamento"/>
+        <result property="id_tipo_evaluacion"    column="id_tipo_evaluacion"/>
+        <result property="gestion"               column="gestion"/>
+        <result property="periodo"               column="periodo"/>
+        <result property="fase"                  column="fase"/>
+        <result property="ponderacion"           column="ponderacion"/>
+        <result property="nota_aprobacion"      column="nota_aprobacion"/>
+        <result property="descripcion"          column="descripcion"/>
+    </resultMap>
+
+    <select id="getBuscarLbrFase" resultMap="buscarLbrFase">
+        SELECT * FROM mi_buscar_lbr_fase(#{id_lbr_fase})
+        AS (id_lbr_fase integer, id_fase dentero, id_departamento dentero, id_tipo_evaluacion dentero, gestion dentero, periodo dentero, fase dtexto, ponderacion dentero, nota_aprobacion dnota2, descripcion dtexto2);
+    </select>  
+  
+    <resultMap id="buscarLbrTipoNota" type="org.fautapo.domain.Libretas">
+        <result property="id_lbr_tipo_nota"      column="id_lbr_tipo_nota"/>
+        <result property="id_fase"               column="id_fase"/>
+        <result property="id_departamento"       column="id_departamento"/>
+        <result property="id_tipo_evaluacion"    column="id_tipo_evaluacion"/>
+        <result property="id_tipo_nota"          column="id_tipo_nota"/>
+        <result property="gestion"               column="gestion"/>
+        <result property="periodo"               column="periodo"/>
+        <result property="tipo_nota"             column="tipo_nota"/>
+    </resultMap>
+
+    <select id="getBuscarLbrTipoNota" resultMap="buscarLbrTipoNota">
+        SELECT * FROM mi_buscar_lbr_tipo_nota(#{id_lbr_tipo_nota}) 
+        AS (id_lbr_tipo_nota integer, id_fase dentero, id_departamento dentero, id_tipo_evaluacion dentero, id_tipo_nota dentero, gestion dentero, periodo dentero, tipo_nota dtexto);
+    </select>  
+
+    <select id="setLbrRegistrarTipoNota" resultType="java.lang.Integer">
+        SELECT * FROM mi_lbr_registrar_tipo_nota(#{id_lbr_tipo_nota}, #{id_fase}, #{id_departamento}, #{id_tipo_evaluacion}, #{id_tipo_nota}, #{gestion}, #{periodo}, #{id_rol}, #{ult_usuario});
+    </select>    
+  
+    <select id="setLbrEliminarTipoNota" resultType="java.lang.Integer">
+        SELECT * FROM  mi_eliminar_lbr_tipo_nota(#{id_lbr_tipo_nota}, #{id_rol}, #{ult_usuario});
+    </select>    
+    <!-- FIN  Listar TIPOS NOTAS--> 
+
+    <!-- Listar estudiantes de est_libretas cierre--> 
+    <resultMap id="listarEstLibretas" type="org.fautapo.domain.Libretas">
+        <result property="id_libreta"            column="id_libreta"/>
+        <result property="id_estudiante"         column="id_estudiante"/>
+        <result property="nota"                  column="nota"/>
+        <result property="nombres"               column="nombres"/>
+        <result property="id_matricula"          column="id_matricula"/>
+    </resultMap>
+
+    <select id="getListarEstudiantesParaCierreLibreta" resultMap="listarEstLibretas">
+        SELECT * FROM mi_listar_estudiantes_con_pre_cierre_libreta(#{id_materia}, #{id_grupo}, #{id_departamento}, #{id_modelo_ahorro}, #{id_tipo_evaluacion}, #{gestion}, #{periodo})
+        AS(id_libreta integer, id_estudiante dentero, nota dnota2, nombres text, id_matricula integer) ;
+    </select>  
+    <!--  Fin Listar estudiantes de est_libretas cierre-->
+  
+    <resultMap id="listarEstudiantesLbr"   type="org.fautapo.domain.Libretas">
+        <result property="id_estudiante"         column="id_estudiante"/>
+        <result property="nombres"               column="nombres"/>
+        <result property="id_matricula"          column="id_matricula"/>
+    </resultMap>
+
+    <select id="getListarEstudiantesEnEstLibretas" resultMap="listarEstudiantesLbr">
+        SELECT * FROM mi_listar_estudiantes_en_est_libretas(#{id_materia}, #{id_grupo}, #{id_departamento}, #{id_modelo_ahorro}, #{id_tipo_evaluacion}, #{gestion}, #{periodo})
+        AS(id_estudiante integer, nombres text, id_matricula integer);
+    </select>  
+  
+    <resultMap id="datosFinalFase" type="org.fautapo.domain.Libretas">
+        <result property="id_matricula"   column="id_matricula"/>
+        <result property="id_estudiante"  column="id_estudiante"/>
+        <result property="nombres"        column="nombres"/>
+        <result property="id_fase"        column="id_fase"/>
+        <result property="nota"           column="nota"/>
+        <result property="estado"         column="estado"/>
+    </resultMap>
+
+    <select id="getListarEvaluacionesFinalesFase" resultMap="datosFinalFase">
+        SELECT * FROM mi_listar_evaluaciones_finales_fase(#{id_programa}, #{id_materia}, #{id_grupo}, #{id_departamento}, #{id_modelo_ahorro}, #{id_tipo_evaluacion}, #{gestion}, #{periodo})
+        AS (id_matricula integer, id_estudiante integer, nombres text, id_fase dentero, nota integer, estado text);
+    </select>  
+  
+    <resultMap id="datosFinalFase2" type="org.fautapo.domain.Estudiantes">
+        <result property="aprobados"  column="aprobados"/>
+        <result property="reprobados" column="reprobados"/>
+        <result property="abandonos"  column="abandonos"/>
+        <result property="cantidad"   column="total"/>
+    </resultMap>
+
+    <select id="getTotalAprobadosReprobadosMateria" resultMap="datosFinalFase2">
+        SELECT * FROM mi_listar_aprobados_reprobados_materia(#{id_programa}, #{id_materia}, #{id_grupo}, #{id_departamento}, #{id_modelo_ahorro}, #{id_tipo_evaluacion}, #{gestion}, #{periodo})
+        AS (aprobados integer, reprobados integer, abandonos integer, total integer);
+    </select>  
+    <!--parametros de evaluacion por materia y estudiante-->
+    <resultMap id="listarparametrosdeevaluacion" type="org.fautapo.domain.Libretas">
+        <result property="cantidad"          column="cantidad"/>
+        <result property="ponderacion"       column="ponderacion"/>
+        <result property="id_tipo_nota"      column="id_tipo_nota"/>
+        <result property="tipo_nota"     column="tipo_nota"/>
+    </resultMap>   
+    <select id="getListaParametrosdeEvaluacionporMateria" resultMap="listarparametrosdeevaluacion">
+        select * from get_listar_parametros_evaluacion(#{id_materia},#{gestion},#{periodo},#{id_tipo_evaluacion},#{id_grupo}) 
+        as (cantidad dentero ,ponderacion dentero ,id_tipo_nota integer ,tipo_nota dtexto  )
+    </select>  
+    <!--Reporte de Notas evaluacion Estudiantes-Docente-->
+    <resultMap id="listarNotasEstLib" type="org.fautapo.domain.Libretas">
+        <result property="id_estudiante"     column="id_estudiante"/>  
+        <result property="id_fase"           column="id_fase"/>  
+        <result property="id_materia"        column="id_materia"/>  
+        <result property="id_grupo"          column="id_grupo"/>
+        <result property="id_tipo_nota"      column="id_tipo_nota"/>
+        <result property="nota"              column="nota"/>
+        <result property="nro_nota"          column="nro_nota"/>
+        <result property="cantidad"          column="cantidad"/>
+        <result property="ponderacion"       column="ponderacion"/>
+        <result property="nota_ponderada"    column="nota_ponderada"/>
+        <result property="nota_final"        column="nota_final"/>
+        <result property="nota_final_ponderada"        column="nota_final_ponderada"/>
+        <result property="bandera"           column="bandera"/>
+    </resultMap>
+  
+    <select id="getListarNotasEstudiantesLibretas" resultMap="listarNotasEstLib">  
+        SELECT * FROM mi_listar_sumas_notas_est_libreta_estudiantes(#{id_departamento}, #{id_tipo_evaluacion}, #{id_materia}, #{id_grupo}, #{gestion}, #{periodo}, #{id_modelo_ahorro})  
+        AS (id_estudiante dentero, id_fase dentero, id_materia dentero, id_grupo dentero, id_tipo_nota dentero, nro_nota int,  nota numeric(10,7), cantidad dentero, ponderacion dentero,
+        nota_final_ponderada numeric(15,2), nota_ponderada numeric(15,2), nota_final numeric(15,2), bandera boolean);	 
+    </select>  
+    <!-- FIN Reporte de Notas evaluacion Estudiantes-Docente-->
+  
+    <!--Buscar Tipo Nota-->
+    <resultMap id="bTipoNota" type="org.fautapo.domain.Libretas">
+        <result property="id_tipo_nota" column="id_tipo_nota" />
+        <result property="tipo_nota"    column="tipo_nota" />
+        <result property="habilitado"   column="habilitado" />
+    </resultMap>
+
+    <select id="getMiBuscarTipoNota" resultMap="bTipoNota">
+        SELECT * FROM mi_buscar_tipo_nota(#{id_tipo_nota});
+    </select>
+  
+    <!-- FIN Buscar Tipo Nota-->
+
+    <!--INICIO - METODOS ADICIONADOS POR LA UAP -->
+
+    <!--LISTADO DE NOTAS RECTIFICADAS -->
+    <resultMap id="notasRectificadasEstudiante" type="org.fautapo.domain.Libretas">
+        <result property="id_estudiante"       column="id_estudiante"/>
+        <result property="nombres"     column="nombres"/>
+        <result property="materia"             column="materia"/>
+        <result property="nota"                column="nota"/>
+        <result property="gestion"             column="gestion"/>
+        <result property="periodo"             column="periodo"/>
+        <result property="observacion"         column="observacion"/>
+        <result property="fec_modificacion"    column="fec_modificacion"/>
+    </resultMap>  
+  
+    <select id="getEstListarNotasRectificadasEstudiante" resultMap="notasRectificadasEstudiante">  
+        SELECT * FROM mi_listar_notas_rectificadas (#{id_programa}) AS (id_estudiante integer, nombres text, materia dtexto, nota dentero2,
+        gestion dentero, periodo dentero, observacion dtexto2, fec_modificacion dfec_modificacion);
+    </select>  
+    <!--LISTADO DE calificacion calendario -->
+    <resultMap id="calificacionCalendario" type="org.fautapo.domain.Libretas">
+        <result property="programa"            column="programa"/>
+        <result property="departamento"        column="departamento"/>
+        <result property="tipo_nota"             column="tipo_nota"/>
+        <result property="tipo_evaluacion"             column="tipo_evaluacion"/>
+        <result property="fecha_inicio"         column="fecha_inicio"/>
+        <result property="fecha_limite"    column="fecha_limite"/>
+        <result property="gestion"    column="gestion"/>
+        <result property="periodo"    column="periodo"/>
+        <result property="nro_tipo_nota"    column="nro_tipo_nota"/>
+    </resultMap>  
+  
+    <select id="getListarCalificacionCalendario" resultMap="calificacionCalendario"> 
+        SELECT * FROM mi_listar_calificacion_calendario_por_programa(#{id_programa},#{gestion},#{periodo})
+        AS (
+        programa dtexto,
+        departamento dtexto,
+        tipo_nota dtexto,
+        tipo_evaluacion dtexto,
+        fecha_inicio dfecha2,
+        fecha_limite dfecha2,
+        gestion dentero,
+        periodo dentero,
+        nro_tipo_nota dentero
+        );
+    </select>  
+
+    <!--LISTADO DE calificacion calendario -->
+    <resultMap id="calificacionCalendarioDocente" type="org.fautapo.domain.Libretas">
+        <result property="gestion"            column="gestion"/>
+        <result property="periodo"        column="periodo"/>
+        <result property="nombres"             column="nombres"/>
+        <result property="paterno"             column="paterno"/>
+        <result property="materno"         column="materno"/>
+        <result property="dip"    column="dip"/>
+        <result property="id_plan"    column="id_plan"/>
+        <result property="materia"    column="materia"/>
+        <result property="sigla"    column="sigla"/>
+        <result property="nivel_academico"    column="nivel_academico"/>
+        <result property="grupo"    column="grupo"/>
+        <result property="nro_tipo_nota"    column="nro_tipo_nota"/>
+        <result property="tipo_nota"    column="tipo_nota"/>
+        <result property="fecha_limite"    column="fecha_limite"/>
+    </resultMap>  
+  
+    <select id="getListarCalificacionCalendarioDocente" resultMap="calificacionCalendarioDocente"> 
+        SELECT * FROM mi_listar_calificacion_calendario_por_programaDocente(#{id_programa},#{gestion},#{periodo},#{id_tipo_evaluacion},#{fec_actual})
+        AS (gestion integer,periodo integer,nombres text,paterno text,materno text,dip text,id_plan text,materia text,
+        sigla text,nivel_academico integer,grupo text,nro_tipo_nota integer,tipo_nota text,fecha_limite date);
+    </select>  
+    <!--Fin de LISTADO DE calificacion calendario -->
+
+    <!-- MOSTRAR ESTADOS -->
+    <resultMap id="tipoestadonota" type="org.fautapo.domain.Libretas">
+        <result property="id_estado"           column="id_estado" />
+        <result property="estado"     column="estado" />
+    </resultMap>
+
+    <select id="getTpsListarTiposEstados" resultMap="tipoestadonota">
+        SELECT id_estado, estado FROM mi_tps_listar_tipos_estados();
+    </select>
+    <!-- CALENDARIO ACADEMICO -->
+    <select id="setBuscarCalendarioAcademicoPrograma" resultType="java.lang.Integer">
+        SELECT * FROM  buscar_calificacion_calendarioPrograma(#{id_programa}, #{gestion}, #{periodo}, #{fec_actual},#{id_tipo_nota},#{id_tipo_evaluacion},#{nro_tipo_nota});
+    </select> 
+    <select id="setBuscarCalendarioAcademicoProgramaDocenteMateria" resultType="java.lang.Integer">
+        SELECT * FROM  buscar_calificacion_calendarioPrograma_ampliada(#{id_programa}, #{gestion}, #{periodo}, #{fec_actual},#{id_tipo_nota},#{id_tipo_evaluacion},#{nro_tipo_nota},#{id_docente});
+    </select> 	
+                	
+    <!-- PROGRAMACION AUTORIZACION -->
+    <select id="setBuscarProgramacionAutorizacion" resultType="java.lang.Integer">
+        SELECT * FROM buscar_programacion_autorizacion(#{id_estudiante},#{gestion},#{periodo},#{fec_actual},#{id_tipo_evaluacion});	
+    </select> 	
+    <select id="setCambioEstadoProgramacionAutorizacion" resultType="java.lang.Integer">
+        SELECT * FROM cambioestado_programacion_autorizacion(#{id_estudiante},#{gestion},#{periodo},#{fec_actual},#{id_tipo_evaluacion});	
+    </select> 
+    <resultMap id="getDetalleNota" type="org.fautapo.domain.Libretas">
+        <result property="id_libreta"           column="id_libreta" />
+        <result property="nota"     column="nota" />
+        <result property="nro_nota"     column="nro_nota" /> 
+    </resultMap>
+    
+    <select id="getNotasEstudiante" resultMap="getDetalleNota">  
+        SELECT id_libreta,nota,nro_nota
+        FROM est_libretas 
+        WHERE id_estudiante = #{id_estudiante#{
+        AND id_grupo = #{id_grupo#{
+        AND id_materia = #{id_materia#{
+        AND id_departamento = #{id_departamento#{
+        AND id_modelo_ahorro = #{id_modelo_ahorro#{
+        AND id_fase = #{id_fase#{
+        AND id_tipo_nota = #{id_tipo_nota#{
+        AND id_tipo_evaluacion = #{id_tipo_evaluacion#{
+        AND nro_nota = #{nro_nota#{
+        AND gestion = #{gestion#{
+        AND periodo = #{periodo#{
+        AND id_estado ='A';
+    </select>  
+    
+    <insert id="RegistrarBitacoraCambiosDocente">
+        INSERT INTO est_libretas_bitacora(
+        id_libreta, nro_nota, nota, ip, ubicacion, detalle_dispositivo)
+        VALUES (#{id_libreta}, #{nro_nota}, #{nota}, #{ip}, #{ubicacion}, #{detalle_dispositivo});
+    </insert>
+</mapper>

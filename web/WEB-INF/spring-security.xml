@@ -1,0 +1,56 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+    http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
+    <global-method-security secured-annotations="enabled" />
+    <http auto-config="false" use-expressions="true" pattern="/**"
+          entry-point-ref="loginUrlAuthenticationEntryPoint">
+        <session-management invalid-session-url="/login.fautapo">
+            <concurrency-control max-sessions="1" expired-url="/timeout.fautapo"/>
+        </session-management>
+        <headers>
+            <frame-options policy="SAMEORIGIN"/>
+        </headers>
+        <intercept-url pattern="/login.fautapo" access="permitAll"/>
+        <intercept-url  pattern="/Public/**" access="permitAll"/>
+        <intercept-url  pattern="/imagenes/**" access="permitAll"/>
+        <intercept-url  pattern="/captcha.jpg/**" access="permitAll"/>
+        <intercept-url  pattern="/ExisteUsuario.fautapo" access="permitAll"/>
+        <intercept-url  pattern="/RegistrarNuevoPinDocente.fautapo" access="permitAll"/>
+        <intercept-url  pattern="/Recovery.fautapo" access="permitAll"/>
+        <intercept-url pattern="/**" access="isAuthenticated()" />
+        <access-denied-handler error-page="/error.fautapo"/>
+        <custom-filter ref="authenticationProcessingFilter" position="FORM_LOGIN_FILTER"/>
+        <logout 
+            logout-url="/logout.fautapo" 
+            logout-success-url="/login.fautapo"
+            delete-cookies="JSESSIONID"/>
+        <csrf/>
+    </http>
+    <beans:bean id="loginUrlAuthenticationEntryPoint"
+                class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+        <beans:constructor-arg value="/login.fautapo"/>
+    </beans:bean>
+    <beans:bean id="authenticationProcessingFilter"  class="org.fautapo.web.service.CustomUsernamePasswordAuthenticationFilter">
+        <beans:property name="authenticationManager" ref="customerAuthenticationManager"/>
+        <beans:property name="filterProcessesUrl" value="/authentication.fautapo"/>
+        <beans:property name="usernameParameter" value="apodo"/>
+        <beans:property name="passwordParameter" value="clave"/>
+        <beans:property name="authenticationSuccessHandler" ref="customAuthenticationSuccessHandler"/>
+        <beans:property name="authenticationFailureHandler" ref="failureHandler"/>
+    </beans:bean>
+    <authentication-manager id="customerAuthenticationManager">
+        <authentication-provider user-service-ref="customUserDetailsService">
+            <password-encoder ref="bcryptEncoder"/>
+        </authentication-provider>
+    </authentication-manager> 
+    <beans:bean id="failureHandler"
+                class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+        <beans:property name="defaultFailureUrl" value="/user/index?error=true"/>
+    </beans:bean>
+    <beans:bean id="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+    <beans:bean id="customUserDetailsService" class="org.fautapo.web.service.CustomUserDetailsService"/>
+    <beans:bean id="customAuthenticationSuccessHandler"  class="org.fautapo.web.service.CustomAuthenticationSuccessHandler"/>
+    <beans:bean id="customInterfaceImplementation"  class="org.fautapo.web.service.CustomPermissionEvaluator"/>
+</beans:beans>

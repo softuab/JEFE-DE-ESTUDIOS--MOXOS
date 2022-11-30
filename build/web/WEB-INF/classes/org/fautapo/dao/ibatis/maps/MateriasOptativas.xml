@@ -1,0 +1,143 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="MateriasOptativas">
+    <select id="getListarMateriasOptativas" resultType="org.fautapo.domain.MateriasOptativas">
+        SELECT 
+        emt.id_est_materiaoptativa, 
+        emt.id_estudiante, 
+        p.paterno||' '|| p.materno||' '|| p.nombres as nombres,
+        fp.programa, 
+        emt.id_plan, 
+        m.materia, 
+        emt.id_programa,
+        emt.id_materia
+        FROM 
+        est_materiasoptativas emt inner join  estudiantes e on e.id_estudiante = emt.id_estudiante
+        inner join   personas p on p.id_persona = e.id_persona 
+        inner join fcl_programas fp on fp.id_programa = emt.id_programa
+        inner join  materias m on  m.id_materia = emt.id_materia
+        WHERE 
+        <choose>
+            <when test="condicion == 'todo'">
+                fp.id_programa= #{id_programa} and emt.id_estado='A'
+            </when>
+            <when test="condicion == 'incluye'">
+                <if test="filtro == 'R.U.'">
+                    fp.id_programa= #{id_programa} and emt.id_estudiante::text like '%'||#{buscar}||'%'  and emt.id_estado='A'
+                </if>
+                <if test="filtro == 'programa'">
+                    fp.id_programa= #{id_programa} and fp.programa like '%'|| #{buscar} ||'%'  and emt.id_estado='A'
+                </if>
+                <if test="filtro == 'plan'">
+                    fp.id_programa= #{id_programa} and emt.id_plan like '%'||#{buscar}||'%'  and emt.id_estado='A'
+                </if>
+                <if test="filtro == 'materia'">
+                    fp.id_programa= #{id_programa} and m.materia like '%'||#{buscar}||'%'  and emt.id_estado='A'
+                </if>
+                <if test="filtro == 'nombres'">
+                    fp.id_programa= #{id_programa} and p.paterno||' '||  p.materno||' '|| p.nombres like '%'||#{buscar} ||'%'  and emt.id_estado='A'
+                </if>
+            </when>
+            <when test="condicion == 'igual'">
+                <if test="filtro == 'R.U.'">
+                    fp.id_programa= #{id_programa} and emt.id_estudiante=#{buscar}  and emt.id_estado='A'
+                </if>
+                <if test="filtro == 'programa'">
+                    fp.id_programa= #{id_programa} and fp.programa=#{buscar} and emt.id_estado='A'
+                </if>
+                <if test="filtro == 'plan'">
+                    fp.id_programa= #{id_programa} and emt.id_plan=#{buscar}  and emt.id_estado='A'
+                </if>
+                <if test="filtro == 'materia'">
+                    fp.id_programa= #{id_programa} and m.materia=#{buscar} and emt.id_estado='A'
+                </if>
+                <if test="filtro == 'nombres'">
+                    fp.id_programa= #{id_programa} and p.paterno||' '||  p.materno||' '|| p.nombres=#{buscar}  and emt.id_estado='A'
+                </if>
+            </when>
+            <when test="condicion == 'mayor'">
+                <if test="filtro = 'R.U.'">
+                     <![CDATA[ fp.id_programa= #{id_programa} and emt.id_estudiante > #{buscar}  and emt.id_estado='A'  ]]>
+                </if>
+                <if test="filtro == 'programa'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and fp.programa  > #{buscar} and emt.id_estado='A'   ]]>
+                </if>
+                <if test="filtro == 'plan'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and emt.id_plan > #{buscar}  and emt.id_estado='A'  ]]>
+                </if>
+                <if test="filtro == 'materia'">
+                    <![CDATA[ fp.id_programa= #{id_programa} and m.materia > #{buscar}   and emt.id_estado='A' ]]>
+                </if>
+                <if test="filtro == 'nombres'">
+                    <![CDATA[ fp.id_programa= #{id_programa} and p.paterno||' '||  p.materno||' '|| p.nombres > #{buscar}  and emt.id_estado='A'  ]]>
+                </if>
+            </when>
+            <when test="condicion == 'menor'">
+                <if test="filtro == 'R.U.'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and emt.id_estudiante < #{buscar}  and emt.id_estado='A'  ]]>
+                </if>
+                <if test="filtro == 'programa'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and fp.programa < #{buscar}  and emt.id_estado='A'  ]]>
+                </if>
+                <if test="filtro == 'plan'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and emt.id_plan < #{buscar}  and emt.id_estado='A'  ]]>
+                </if>
+                <if test="filtro == 'materia'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and m.materia < #{buscar}   and emt.id_estado='A' ]]>
+                </if>
+                <if test="filtro == 'nombres'">
+                    <![CDATA[ fp.id_programa= #{id_programa} and  p.paterno||' '||  p.materno||' '|| p.nombres < #{buscar}   and emt.id_estado='A' ]]>
+                </if>
+            </when>
+            <when test="condicion == 'mayorigual'">
+                <if test="filtro == 'R.U.'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and emt.id_estudiante >= #{buscar}  and emt.id_estado='A'  ]]>
+                </if>
+                <if test="filtro == 'programa'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and fp.programa >= #{buscar}   and emt.id_estado='A' ]]>
+                </if>
+                <if test="filtro == 'plan'">
+                    <![CDATA[   fp.id_programa= #{id_programa} and emt.id_plan  >= #{buscar}  and emt.id_estado='A'  ]]>
+                </if>
+                <if test="filtro == 'materia'">
+                    <![CDATA[   fp.id_programa= #{id_programa} and m.materia >= #{buscar}  and emt.id_estado='A'  ]]>
+                </if>
+                <if test="filtro == 'nombres'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and p.paterno||' '||  p.materno||' '|| p.nombres >= #{buscar}  and emt.id_estado='A'  ]]>
+                </if>
+            </when>
+            <when test="condicion == 'menorigual'">
+                <if test="filtro == 'R.U.'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and emt.id_estudiante <= #{buscar}   and emt.id_estado='A' ]]>
+                </if>
+                <if test="filtro == 'programa'">
+                    <![CDATA[   fp.id_programa= #{id_programa} and fp.programa <= #{buscar}   and emt.id_estado='A' ]]>
+                </if>
+                <if test="filtro == 'plan'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and emt.id_plan <= #{buscar}  and emt.id_estado='A'  ]]>
+                </if>
+                <if test="filtro == 'materia'">
+                    <![CDATA[ fp.id_programa= #{id_programa} and  m.materia <= #{buscar}   and emt.id_estado='A' ]]>
+                </if>
+                <if test="filtro == 'nombres'">
+                    <![CDATA[ fp.id_programa= #{id_programa} and p.paterno||' '||  p.materno||' '|| p.nombres <= #{buscar}  and emt.id_estado='A'  ]]>
+                </if>
+            </when>
+        </choose>
+        LIMIT #{limit}
+    </select>
+    <insert id="RegistrarNuevaOptativa">
+        INSERT INTO est_materiasoptativas( id_estudiante, id_programa, id_materia, 
+        id_estado,  id_rol, ult_usuario, id_plan)
+        VALUES (#{id_estudiante},#{id_programa},#{id_materia},'A', #{id_rol},#{ult_usuario},#{id_plan});
+    </insert>
+    <update id="EditarMateriaOptativa">
+        UPDATE est_materiasoptativas
+        SET  id_materia=#{id_materia}
+        WHERE id_est_materiaoptativa=#{id_est_materiaoptativa}
+    </update>
+    <update id="EliminarMateriaOptativa">
+        UPDATE est_materiasoptativas
+        SET  id_estado='X'
+        WHERE id_est_materiaoptativa=#{id_est_materiaoptativa}
+    </update>
+</mapper>

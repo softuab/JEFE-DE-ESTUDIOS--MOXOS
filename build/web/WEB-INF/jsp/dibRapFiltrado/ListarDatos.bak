@@ -1,0 +1,60 @@
+<%@ include file="../Superior.jsp" %>
+
+<div class="titulo"><c:out value="${tabla.etiqueta}" /></div>
+
+<form name='forma' method='post'>
+  <input type="hidden" name="t" value="<c:out value='${tabla.id_tabla}' />">
+  <input type="hidden" name="e" value="<c:out value='${id_enlace}' />">
+  <input type="hidden" name="c" value="">
+  <input type="hidden" name="order" value="">
+
+<c:if test='${a > -1}'>
+  <div class="agregar">
+    <a href="javascript: document.forma.submit()" OnClick="javascript: document.forma.action='<c:url value="/dibRap/nuevoRegistro.fautapo"/>'">Nuevo</a>
+  </div>
+</c:if>
+
+<table class="tabla">
+<tr>
+  <c:forEach var="campos" items="${listaNombresCampos}" varStatus="contador1">
+    <th>
+      <a href="javascript: document.forma.submit()" OnClick='document.forma.order.value="<c:out value='${campos.campo}'/>"' >
+        <c:out value="${campos.etiqueta}"/>
+      </a>
+    </th>
+  </c:forEach>
+  <c:if test='${m > -1}'>
+    <th>MODIFICAR</th>
+  </c:if>
+  <c:if test='${b > -1}'>
+    <th>ELIMINAR</th>
+  </c:if>
+</tr>
+<c:forEach var="lista" items="${listaValoresPrimarios}" varStatus="contador">
+  <!-- ********** Esto es para el efecto ************ -->
+  <tr <c:if test="${(contador.count mod 2) == 0}">bgColor="#FFFFD9" %-- Est&acute;tico :( --%</c:if> onMouseOver="this.className='sobreFila'" onmouseout="this.className=''">
+  <!-- ********** Fin  efecto ************ -->
+  <c:forEach begin="0" end="${nro_campos - 1}" var="i">
+    <td><c:out value='${matrizDatos[contador.index][i]}'/></td>
+  </c:forEach>
+  <c:if test='${m > -1}'>
+    <td><div class="modificar">
+          <a href="javascript: document.forma.submit()" OnClick="javascript: document.forma.action='<c:url value="/dibRap/modificaRegistro.fautapo"/>';
+	    document.forma.c.value='<c:out value="${listaPrimarias[contador.index].valores}"/>'">Modificar</a>
+        </div>
+    </td>
+  </c:if>
+  <c:if test='${b > -1}'>
+    <td><div class="eliminar">
+          <a href="javascript: document.forma.submit()" OnClick="javascript: document.forma.action='<c:url value="/dibRap/confirmarBorrado.fautapo"/>';
+            document.forma.c.value='<c:out value="${listaPrimarias[contador.index].valores}"/>'">Eliminar</a>
+        </div>
+    </td>
+  </c:if>
+  </tr>
+</c:forEach>
+</table>
+
+</form>
+
+<%@ include file="../Inferior.jsp" %>

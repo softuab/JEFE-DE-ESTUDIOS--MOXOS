@@ -1,0 +1,17 @@
+.content 
+{
+    background-color: #FFFFFF;
+    padding: 30px;
+}
+img
+{
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+}
+.rounded-circle:hover
+{
+    -webkit-transform: scale(1.2);
+    -ms-transform: scale(1.2);
+    transform: scale(1.2);
+}

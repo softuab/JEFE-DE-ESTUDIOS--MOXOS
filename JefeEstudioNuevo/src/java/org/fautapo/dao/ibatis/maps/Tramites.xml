@@ -1,0 +1,950 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="Tramites">
+
+  <resultMap id="datosFormularioNuevo" type="org.fautapo.domain.Tramites">
+    <result property="id_form"            column="id_form" />
+    <result property="id_proceso"         column="id_proceso" />
+    <result property="id_campo"           column="id_campo" />
+    <result property="id_dominio"         column="id_dominio" />
+    <result property="campo"              column="campo" />
+    <result property="columnas"           column="columnas" />
+    <result property="filas"              column="filas" />
+    <result property="caracteres"         column="caracteres" />
+    <result property="id_tipo_permiso"    column="id_tipo_permiso" />
+    <result property="id_tipo_validacion" column="id_tipo_validacion" />
+    <result property="rango1"             column="valor_min" />
+    <result property="rango2"             column="valor_max" />
+    <result property="nro_fila"           column="nro_fila" />
+    <result property="nro_columna"        column="nro_columna" />
+    <result property="formula"            column="formula" />
+    <result property="operacion"          column="operacion" />
+    <result property="id_tipo_dominio"    column="id_tipo_dominio" />
+    <result property="permiso"            column="es_titulo" />
+    <result property="obligatorio"        column="obligatorio" />
+    <result property="habilitado"         column="habilitado" />
+  </resultMap>
+
+  <select id="getListarFormularioNuevo" resultMap="datosFormularioNuevo">
+    SELECT * FROM tr_listar_form_nuevo(#{id_proceso})
+    AS (id_form integer, id_proceso dentero, form dtexto, id_campo integer, id_dominio dentero,
+        campo dtexto, columnas dentero2, filas dentero2, caracteres dentero2, id_tipo_validacion dtexto, valor_min dtexto2, valor_max dtexto2,
+        nro_fila dentero2, nro_columna dentero2, id_tipo_dominio dentero, operacion dbooleano2, formula dtexto2, id_tipo_permiso dtexto, habilitado dbooleano2,
+	es_titulo text, obligatorio dbooleano2);
+  </select>
+
+  <resultMap id="datosFormulario" type="org.fautapo.domain.Tramites">
+    <result property="id_form"            column="id_form" />
+    <result property="id_proceso"         column="id_proceso" />
+    <result property="id_campo"           column="id_campo" />
+    <result property="id_dominio"         column="id_dominio" />
+    <result property="campo"              column="campo" />
+    <result property="columnas"           column="columnas" />
+    <result property="filas"              column="filas" />
+    <result property="caracteres"         column="caracteres" />
+    <result property="id_tipo_permiso"    column="id_tipo_permiso" />
+    <result property="id_tipo_validacion" column="id_tipo_validacion" />
+    <result property="rango1"             column="valor_min" />
+    <result property="rango2"             column="valor_max" />
+    <result property="nro_fila"           column="nro_fila" />
+    <result property="nro_columna"        column="nro_columna" />
+    <result property="formula"            column="formula" />
+    <result property="operacion"          column="operacion" />
+    <result property="id_tipo_dominio"    column="id_tipo_dominio" />
+    <result property="form"               column="form" />
+    <result property="valor"              column="valor" />
+    <result property="cadena_1"           column="campos" />
+    <result property="permiso"            column="es_titulo" />
+    <result property="obligatorio"        column="obligatorio" />
+    <result property="habilitado"         column="habilitado" />
+  </resultMap>
+ 
+  <select id="getListarFormulario" resultMap="datosFormulario">
+    SELECT * 
+    FROM tr_listar_form(#{id_tramite})
+    AS (id_form integer, id_proceso dentero, form dtexto, id_campo integer, id_dominio dentero,
+        campo dtexto, columnas dentero2, filas dentero2, caracteres dentero2, id_tipo_validacion dtexto, valor_min dtexto2, valor_max dtexto2,
+        nro_fila dentero2, nro_columna dentero2, id_tipo_dominio dentero, operacion dbooleano2, formula dtexto2, id_tipo_permiso dtexto, habilitado dbooleano2,
+	valor dtexto2, campos dtexto2, es_titulo text, obligatorio dbooleano2);
+  </select>
+
+  <select id="setInsertarTramite" resultType="java.lang.Integer">
+    SELECT tr_insertar_tramite(#{id_proceso}, #{para}, #{de}, #{id_tipo_proveido}) AS valor;
+  </select>
+
+  <select id="getBuscarActividadMinima" resultType="java.lang.Integer">
+    SELECT tr_buscar_actividad_minima(#{id_proceso});
+  </select>
+
+  <select id="setInsertarFrLog" resultType="java.lang.Integer">
+    SELECT tr_registrar_fr_log(#{id_tramite}, #{id_proceso}, #{id_form}, #{id_actividad}, #{id_estado}, #{ult_usuario}) as valor;
+  </select>
+
+  <select id="setRegistrarValor" resultType="java.lang.Integer">
+    SELECT tr_registrar_valor(#{id_tramite}, #{id_campo}, #{id_proceso}, #{id_form}, #{valor}, #{campos}, #{ult_usuario}) as valor;
+  </select>
+
+  <resultMap id="datosTramite" type="org.fautapo.domain.Tramites">
+    <result property="id_tramite"           column="id_tramite" />
+    <result property="id_proceso"           column="id_proceso" />
+    <result property="id_actividad_actual"  column="id_actividad_actual" />
+    <result property="para"                 column="para" />
+    <result property="de"                   column="de" />
+    <result property="fec_registro"         column="fec_registro" />
+    <result property="fec_modificacion"     column="fec_modificacion" />
+    <result property="proceso"              column="proceso" />
+    <result property="actividad"            column="actividad" />
+    <result property="correlativo2"         column="correlativo" />
+    <result property="gestion"              column="gestion" />
+    <result property="id_tipo_documento"    column="id_tipo_documento" />
+    <result property="id_estado"            column="id_estado" />
+  </resultMap>
+ 
+  <select id="getBuscarTramite" resultMap="datosTramite">
+    SELECT * FROM tr_buscar_tramite(#{id_tramite})
+    AS (id_tramite integer, id_proceso dentero, id_actividad_actual dentero, para did_usuario, de did_usuario, correlativo dtexto2, gestion dentero4,
+        fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, proceso dtexto, actividad dtexto, id_tipo_documento dentero2, id_estado did_estado);
+  </select>
+  
+  <select id="setRecibirTramite" resultType="java.lang.Integer">
+    SELECT tr_recibir_tramite(#{id_tramite}, #{ult_usuario}) as valor;  
+  </select>
+
+  <resultMap id="datosFrLog" type="org.fautapo.domain.Tramites">
+    <result property="ult_usuario" column="ult_usuario" />    
+  </resultMap>
+ 
+  <select id="getBuscarFrLog" resultMap="datosFrLog">
+    SELECT ult_usuario 
+    FROM tr_buscar_fr_log(#{id_tramite}, #{id_proceso}, #{id_form}, #{id_actividad}, #{ult_usuario});
+  </select>
+
+  <select id="setAvanzarTramite" resultType="java.lang.Integer">
+    SELECT tr_avanzar_tramite(#{id_tramite}, #{para}, #{id_tipo_actuacion}, #{orden}, #{id_tipo_proveido}) AS minimo
+  </select>
+
+  <select id="setConcluirTramite" resultType="java.lang.Integer">
+    SELECT tr_concluir_tramite(#{id_tramite}, #{ult_usuario}) as valor;
+  </select>
+
+  <select id="setEliminarFrLog" resultType="java.lang.Integer">
+    SELECT tr_eliminar_fr_log(#{id_tramite}, #{ult_usuario}) as valor;
+  </select>
+
+  <resultMap id="datosTramitesMios2" type="org.fautapo.domain.Tramites">
+    <result property="id_tramite"           column="id_tramite" />
+    <result property="id_proceso"           column="id_proceso" />
+    <result property="id_actividad_actual"  column="id_actividad_actual" />
+    <result property="id_tipo_proveido"     column="id_tipo_proveido" />
+    <result property="id_estado"            column="id_estado" />
+    <result property="para"                 column="para" />
+    <result property="de"                   column="de" />
+    <result property="actividad"            column="actividad" />
+    <result property="proceso"              column="proceso" />
+    <result property="id_form"              column="id_form" />
+    <result property="usuario"              column="nombres" />
+    <result property="cargo"                column="cargo" />
+    <result property="correlativo2"         column="correlativo" />
+    <result property="gestion"              column="gestion" />
+    <result property="id_actividad_minima"  column="id_actividad_minima" />
+    <result property="estado"               column="estado" />
+    <result property="imagen"               column="imagen" />
+    <result property="id_tipo_actuacion"    column="id_tipo_actuacion" />
+    <result property="actuacion"            column="actuacion" />
+    <result property="rol"                  column="rol" />
+  </resultMap>
+
+  <resultMap id="datosTramitesMios3" type="org.fautapo.domain.Tramites">
+    <result property="id_tramite"           column="id_tramite" />
+    <result property="id_proceso"           column="id_proceso" />
+    <result property="id_actividad_actual"  column="id_actividad_actual" />
+    <result property="id_tipo_proveido"     column="id_tipo_proveido" />
+    <result property="id_estado"            column="id_estado" />
+    <result property="para"                 column="para" />
+    <result property="de"                   column="de" />
+    <result property="actividad"            column="actividad" />
+    <result property="proceso"              column="proceso" />
+    <result property="id_form"              column="id_form" />
+    <result property="usuario"              column="nombres" />
+    <result property="cargo"                column="cargo" />
+    <result property="correlativo2"         column="correlativo" />
+    <result property="gestion"              column="gestion" />
+    <result property="id_actividad_minima"  column="id_actividad_minima" />
+    <result property="estado"               column="estado" />
+    <result property="imagen"               column="imagen" />
+    <result property="id_tipo_actuacion"    column="id_tipo_actuacion" />
+    <result property="actuacion"            column="actuacion" />
+    <result property="rol"                  column="rol" />
+    <result property="puente"               column="puente" />
+    <result property="ruta"                 column="ruta" />
+  </resultMap>
+
+
+  <select id="getListarTramitesMios" resultMap="datosTramitesMios3">
+    SELECT *
+    FROM tr_listar_tramites_mios(#{para}, #{pagina})
+    AS (id_tramite integer, id_proceso dentero, id_actividad_actual dentero, id_tipo_proveido dentero, id_estado did_estado, para did_usuario, de did_usuario, 
+        fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, actividad dtexto, proceso dtexto, id_form integer,
+	nombres dtexto, cargo dtexto2, correlativo dtexto2, gestion dentero4, id_actividad_minima integer, estado dtexto, imagen dtexto2, id_tipo_actuacion dentero, 
+	actuacion dtexto2, rol dtexto, puente dbooleano2, ruta dtexto2);
+  </select>
+
+  <select id="getListarTramitesMiosFiltrado" resultMap="datosTramitesMios3">
+    SELECT *
+    FROM tr_listar_tramites_mios_filtrado(#{para}, #{correlativo2})
+    AS (id_tramite integer, id_proceso dentero, id_actividad_actual dentero, id_tipo_proveido dentero, id_estado did_estado, para did_usuario, de did_usuario, 
+        fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, actividad dtexto, proceso dtexto, id_form integer,
+	nombres dtexto, cargo dtexto2, correlativo dtexto2, gestion dentero4, id_actividad_minima integer, estado dtexto, imagen dtexto2, id_tipo_actuacion dentero, 
+	actuacion dtexto2, rol dtexto, puente dbooleano2, ruta dtexto2);
+  </select>
+
+  <resultMap id="datosTramitesMiosDespachados" type="org.fautapo.domain.Tramites">
+    <result property="id_tramite"           column="id_tramite" />
+    <result property="id_proceso"           column="id_proceso" />
+    <result property="correlativo2"         column="correlativo" />
+    <result property="gestion"              column="gestion" />
+    <result property="fec_registro"         column="fec_registro" />
+    <result property="fec_modificacion"     column="fec_modificacion" />
+    <result property="actividad"            column="actividad" />
+    <result property="proceso"              column="proceso" />
+    <result property="imagen"               column="imagen" />
+    <result property="estado"               column="estado" />
+    <result property="usuario"              column="nombres" />
+    <result property="cargo"                column="cargo" />
+  </resultMap>
+
+  <select id="getListarTramitesMiosDespachados" resultMap="datosTramitesMiosDespachados">
+    SELECT *
+    FROM tr_listar_tramites_mios_despachados(#{para}, #{pagina})
+    AS (id_tramite integer, id_proceso dentero, correlativo dtexto2, gestion dentero4, fec_registro dfec_modificacion, fec_modificacion dfec_modificacion,
+        actividad dtexto, proceso dtexto, imagen text, estado text, nombres dtexto, cargo dtexto2);
+  </select>
+
+  <select id="getListarTramitesMiosDespachadosFiltrado" resultMap="datosTramitesMiosDespachados">
+    SELECT *
+    FROM tr_listar_tramites_mios_despachados_filtrado(#{para}, #{correlativo2})
+    AS (id_tramite integer, id_proceso dentero, correlativo dtexto2, gestion dentero4, fec_registro dfec_modificacion, fec_modificacion dfec_modificacion,
+        actividad dtexto, proceso dtexto, imagen text, estado text, nombres dtexto, cargo dtexto2);
+  </select>
+
+  <resultMap id="listadoUsuarios" type="org.fautapo.domain.Tramites">
+    <result property="id_usuario" column="id_usuario" />
+    <result property="usuario"    column="usuario" />
+  </resultMap>
+
+  <select id="getListarUsuariosActividadSiguiente" resultMap="listadoUsuarios">
+    SELECT (nombres || ' ' || paterno || ' ' || materno) as usuario, id_usuario
+    FROM tr_listar_usuarios_actividad_siguiente(#{id_tramite}, #{id_tipo_actuacion}, #{orden})
+    AS (nombres dtexto, paterno dtexto2, materno dtexto2, id_usuario integer);
+  </select>
+
+  <resultMap id="listadoCamposReferencia" type="org.fautapo.domain.Tramites">
+    <result property="campo" column="campo" />
+    <result property="valor" column="valor" />
+  </resultMap>
+ 
+  <select id="getListarCamposReferencia" resultMap="listadoCamposReferencia">
+    SELECT * FROM tr_listar_campos_referencia(#{id_proceso}, #{id_tramite}) 
+    AS (campo dtexto, valor text);
+  </select>
+
+  <select id="setRetrocederTramite" resultType="java.lang.Integer">
+    SELECT tr_retroceder_tramite(#{id_tramite}, #{proveido}, #{id_tipo_proveido}, #{ult_usuario}) AS minimo
+  </select>
+
+  <!--Administrar mis pendientes agrupados-->
+  <select id="getListarTramitesMiosAgrupados" resultMap="datosTramitesMios2">
+    SELECT *
+    FROM tr_listar_tramites_mios_por_fecha_estado(#{para}, #{id_estado}, _cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+    AS (id_tramite integer, id_proceso dentero, id_actividad_actual dentero, id_tipo_proveido dentero, id_estado did_estado, para did_usuario, de did_usuario, 
+        fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, actividad text, proceso dtexto, id_form integer,
+	nombres dtexto, cargo dtexto2, correlativo dtexto2, gestion dentero4, id_actividad_minima integer, estado dtexto, imagen dtexto2, id_tipo_actuacion integer, actuacion dtexto2, rol dtexto);
+  </select>
+
+  <select id="getListarTramitesMiosAgrupados2" resultMap="datosTramitesMios2">
+    SELECT * 
+    FROM tr_listar_tramites_mios_por_fecha_anterior_estado(#{para}, #{id_estado}, _cadena_fecha(#{fecha_fin}))
+    AS (id_tramite integer, id_proceso dentero, id_actividad_actual dentero, id_tipo_proveido dentero, id_estado did_estado, para did_usuario, de did_usuario,
+        fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, actividad text, proceso dtexto, id_form integer,
+        nombres dtexto, cargo dtexto2, correlativo dtexto2, gestion dentero4, id_actividad_minima integer, estado dtexto, imagen dtexto2, id_tipo_actuacion integer, actuacion dtexto2, rol dtexto);
+  </select>
+
+  <select id="getListarTramitesMiosAgrupadosDespachados" resultMap="datosTramitesMiosDespachados">
+    SELECT *
+    FROM tr_listar_tramites_mios_por_fecha_estado2(#{para}, #{id_estado}, _cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+    AS (id_tramite integer, id_proceso dentero, correlativo dtexto2, gestion dentero4, fec_registro dfec_modificacion, fec_modificacion dfec_modificacion,
+        actividad dtexto, proceso dtexto, imagen text, estado text, nombres dtexto, cargo dtexto2);
+  </select>
+
+  <select id="getListarTramitesMiosAgrupadosDespachados2" resultMap="datosTramitesMiosDespachados">
+    SELECT * 
+    FROM tr_listar_tramites_mios_por_fecha_anterior_estado2(#{para}, #{id_estado}, _cadena_fecha(#{fecha_fin}))
+    AS (id_tramite integer, id_proceso dentero, correlativo dtexto2, gestion dentero4, fec_registro dfec_modificacion, fec_modificacion dfec_modificacion,
+        actividad dtexto, proceso dtexto, imagen text, estado text, nombres dtexto, cargo dtexto2);
+  </select>
+
+  <resultMap id="contarTramites" type="org.fautapo.domain.Tramites">
+    <result property="nro_total_tramites"      column="nro_total_tramites" />
+    <result property="nro_tramites_hoy"        column="nro_tramites_hoy" />
+    <result property="nro_tramites_semanal"    column="nro_tramites_semanal" />
+    <result property="nro_tramites_anteriores" column="nro_tramites_anteriores" />
+  </resultMap>
+  
+  <select id="getContarTramitesPorFechaEstado" resultMap="contarTramites">
+    SELECT *
+    FROM tr_contador_tramites_mios_por_fecha_estado(#{para}, #{id_estado}, _cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+    AS (nro_total_tramites integer, nro_tramites_hoy integer, nro_tramites_semanal integer, nro_tramites_anteriores integer);
+  </select>
+  
+  <select id="getContarTramitesPorFechaEstado2" resultMap="contarTramites">
+    SELECT *
+    FROM tr_contador_tramites_mios_por_fecha_estado2(#{para}, #{id_estado}, _cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+    AS (nro_total_tramites integer, nro_tramites_hoy integer, nro_tramites_semanal integer, nro_tramites_anteriores integer);
+  </select>
+  
+  <select id="getContarTramitesPorFecha" resultMap="contarTramites">
+    SELECT *
+    FROM tr_contador_tramites_mios_por_fecha_todo(#{para}, _cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+    AS (nro_total_tramites integer, nro_tramites_hoy integer, nro_tramites_semanal integer, nro_tramites_anteriores integer);
+  </select>
+
+  <select id="getContarTramitesPorFecha2" resultMap="contarTramites">
+    SELECT *
+    FROM tr_contador_tramites_mios_por_fecha_todo2(#{para}, _cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+    AS (nro_total_tramites integer, nro_tramites_hoy integer, nro_tramites_semanal integer, nro_tramites_anteriores integer);
+  </select>
+
+  <select id="getContarTramitesPorFecha3" resultMap="contarTramites">
+    SELECT *
+    FROM tr_contador_tramites_mios_por_fecha_todo3(#{para}, _cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+    AS (nro_total_tramites integer, nro_tramites_hoy integer, nro_tramites_semanal integer, nro_tramites_anteriores integer);
+  </select>
+  <!--Fin Administrar mis pendientes agrupados-->
+
+  <!-- Busquedas de tramites -->
+  <resultMap id="datosTramites" type="org.fautapo.domain.Tramites">
+    <result property="id_tramite"         column="id_tramite" />
+    <result property="correlativo2"       column="correlativo" />
+    <result property="gestion"            column="gestion" />
+    <result property="id_proceso"         column="id_proceso" />     
+    <result property="campo"              column="campo" />     
+    <result property="valor"              column="valor" />
+    <result property="proceso"            column="proceso" />
+    <result property="actividad"          column="actividad" />
+    <result property="fec_registro"       column="fec_registro" />   
+    <result property="id_estado"          column="id_estado" />
+    <result property="estado"             column="estado" />    
+    <result property="imagen"             column="imagen" />
+    <result property="ubicacion_organica" column="ubicacion_organica" />
+    <result property="ult_usuario"        column="ult_usuario" />
+  </resultMap>
+
+  <select id="getListarTramitesPorCampos" resultMap="datosTramites">
+    SELECT * FROM tr_listar_tramites_por_campo(#{id_campo}, #{valor}, #{tablita})
+    AS (id_tramite integer, correlativo text, gestion integer, id_proceso integer, proceso text, actividad text, campo text, valor text, fec_registro dfec_modificacion, 
+        id_estado did_estado, estado text, imagen text, ubicacion_organica text, ult_usuario did_usuario);
+  </select>
+
+  <select id="getBuscarTramiteExisteUbicacionOrganica" resultType="java.lang.Integer">
+    SELECT count(id_tramite)
+    FROM tr_buscar_tramite_area(#{id_ubicacion_organica}, #{id_tramite})
+    AS (id_tramite integer, id_proceso dentero, id_actividad_actual dentero, para did_usuario, de did_usuario, 
+        correlativo dtexto2, gestion dentero4, fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, proceso dtexto, actividad dtexto,
+	id_estado did_estado, estado dtexto);
+  </select>
+
+  <resultMap id="datosTramites2" type="org.fautapo.domain.Tramites">
+    <result property="id_tramite"           column="id_tramite" />
+    <result property="id_proceso"           column="id_proceso" />
+    <result property="id_actividad_actual"  column="id_actividad_actual" />
+    <result property="para"                 column="para" />
+    <result property="de"                   column="de" />
+    <result property="correlativo2"         column="correlativo" />
+    <result property="fec_registro"         column="fec_registro" />
+    <result property="fec_modificacion"     column="fec_modificacion" />
+    <result property="proceso"              column="proceso" />
+    <result property="actividad"            column="actividad" />
+    <result property="id_estado"            column="id_estado" />
+    <result property="estado"               column="estado" />
+  </resultMap>
+ 
+  <select id="getBuscarTramiteUbicacionOrganica" resultMap="datosTramites2">
+    SELECT * FROM tr_buscar_tramite_area(#{id_ubicacion_organica}, #{id_tramite})
+    AS (id_tramite integer, id_proceso dentero, id_actividad_actual dentero, para did_usuario, de did_usuario, 
+        correlativo dtexto2, gestion dentero4, fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, proceso dtexto, actividad dtexto,
+	id_estado did_estado, estado dtexto);
+  </select>
+
+  <resultMap id="datosTramiteLog" type="org.fautapo.domain.Tramites">
+    <result property="id_tramite"           column="id_tramite" />
+    <result property="id_proceso"           column="id_proceso" />
+    <result property="id_actividad"         column="id_actividad" />
+    <result property="id_tipo_proveido"     column="id_tipo_proveido" />
+    <result property="orden"                column="orden" />
+    <result property="de"                   column="de" />
+    <result property="para"                 column="para" />
+    <result property="fec_registro"         column="fec_registro" />
+    <result property="fec_modificacion"     column="fec_modificacion" />
+    <result property="dias"                 column="dias" />
+    <result property="proceso"              column="proceso" />
+    <result property="actividad"            column="actividad" />
+    <result property="duracion"             column="duracion" />
+    <result property="tipo_duracion"        column="tipo_duracion" />
+    <result property="usuario"              column="destinatario" />
+    <result property="cargo"                column="cargo_destinatario" />
+    <result property="ubicacion_organica"   column="ubicacion_organica_destinatario" />
+    <result property="id_estado"            column="id_estado" />
+    <result property="estado"               column="estado" />
+    <result property="retrocedido"          column="retrocedido" />
+    <result property="proveido"             column="proveido" />
+    <result property="imagen"               column="imagen" />
+  </resultMap>
+ 
+  <select id="getListarTramiteLog" resultMap="datosTramiteLog">
+    SELECT * FROM tr_listar_tramite_log(#{id_tramite})
+    AS (id_tramite integer, id_proceso dentero, id_actividad dentero, id_tipo_proveido dentero, orden dentero, de did_usuario,
+        para did_usuario, fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, dias text, proceso dtexto,
+	actividad dtexto, duracion dentero2, tipo_duracion dtexto, remitente dtexto, cargo_remitente dtexto2, ubicacion_organica_remitente dtexto, destinatario dtexto,
+	cargo_destinatario dtexto2, ubicacion_organica_destinatario dtexto, retrocedido integer, estado dtexto, id_estado did_estado, proveido dtexto2, imagen dtexto2);
+  </select>
+
+  <resultMap id="datosTramites3" type="org.fautapo.domain.Tramites">
+     <result property="id_tramite"           column="id_tramite" />
+     <result property="id_proceso"           column="id_proceso" />
+     <result property="actividad"            column="actividad" />
+     <result property="proceso"              column="proceso" />
+     <result property="de"                   column="de" />
+     <result property="para"                 column="para" />
+     <result property="fec_registro"         column="fecha" />
+     <result property="usuario"              column="destinatario" />
+     <result property="cargo"                column="cargo_destinatario" />
+     <result property="ubicacion_organica"   column="ubicacion_organica_destinatario" />
+     <result property="correlativo2"         column="correlativo" />
+     <result property="gestion"              column="gestion" />
+     <result property="imagen"               column="imagen" />
+     <result property="id_tipo_proceso"      column="id_tipo_proceso" />
+     <result property="tipo_proceso"         column="tipo_proceso" />
+  </resultMap>
+ 
+  <select id="getListarTramitesFechaUbicacionOrganica" resultMap="datosTramites3">
+    SELECT * FROM tr_listar_tramites_fecha_ubicacion_organica(_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}), #{id_ubicacion_organica})
+    AS (id_tramite integer, id_proceso dentero, actividad dtexto, proceso dtexto, de did_usuario, para did_usuario,
+        fecha dfec_modificacion, remitente dtexto, cargo_remitente dtexto2, ubicacion_organica_remitente dtexto, destinatario dtexto, cargo_destinatario dtexto2,
+	ubicacion_organica_destinatario dtexto, correlativo dtexto2, gestion dentero4, imagen dtexto2, id_tipo_proceso integer, tipo_proceso dtexto);
+  </select>
+ 
+  <resultMap id="listaTramites2" type="org.fautapo.domain.Tramites">
+    <result property="id_proceso"  column="id_proceso" />
+    <result property="proceso"     column="proceso" />
+    <result property="resultado"   column="cantidad" />
+  </resultMap>
+  
+  <select id="getListarTramitesIniciados" resultMap="listaTramites2">
+    SELECT * FROM tr_listar_tramites_iniciados(_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}), #{id_ubicacion_organica})
+    AS (id_proceso integer, proceso dtexto, cantidad integer);
+  </select>
+
+  <select id="getListarTramitesMovidos" resultMap="listaTramites2">
+    SELECT * FROM tr_listar_tramites_movidos(_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}), #{id_ubicacion_organica})
+    AS (id_proceso integer, proceso dtexto, cantidad integer);
+  </select>
+  
+  <select id="getListarTramitesConcluidos" resultMap="listaTramites2">
+    SELECT * FROM tr_listar_tramites_concluidos(_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}), #{id_ubicacion_organica})
+    AS (id_proceso integer, proceso dtexto, cantidad integer);
+  </select>
+
+  <select id="getListarTramitesIniciadosDetalle" resultMap="datosTramites3">
+    SELECT * FROM tr_listar_tramites_iniciados(_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}), #{id_ubicacion_organica}, #{id_proceso})
+    AS (id_tramite integer, id_proceso dentero, actividad dtexto, proceso dtexto, de did_usuario, para did_usuario,
+        fecha dfec_modificacion, remitente dtexto, cargo_remitente dtexto2, ubicacion_organica_remitente dtexto, destinatario dtexto, cargo_destinatario dtexto2, 
+	ubicacion_organica_destinatario dtexto, correlativo dtexto2, gestion dentero4, imagen dtexto2, id_tipo_proceso integer, tipo_proceso dtexto);
+  </select>
+
+  <select id="getListarTramitesMovidosDetalle" resultMap="datosTramites3">
+    SELECT * FROM tr_listar_tramites_movidos(_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}), #{id_ubicacion_organica}, #{id_proceso})
+    AS (id_tramite integer, id_proceso dentero, actividad dtexto, proceso dtexto, de did_usuario, para did_usuario,
+        fecha dfec_modificacion, remitente dtexto, cargo_remitente dtexto2, ubicacion_organica_remitente dtexto, destinatario dtexto, cargo_destinatario dtexto2, 
+	ubicacion_organica_destinatario dtexto, correlativo dtexto2, gestion dentero4, imagen dtexto2, id_tipo_proceso integer, tipo_proceso dtexto);
+  </select>
+  
+  <select id="getListarTramitesConcluidosDetalle" resultMap="datosTramites3">
+    SELECT * FROM tr_listar_tramites_concluidos(_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}), #{id_ubicacion_organica}, #{id_proceso})
+    AS (id_tramite integer, id_proceso dentero, actividad dtexto, proceso dtexto, de did_usuario, para did_usuario,
+        fecha dfec_modificacion, remitente dtexto, cargo_remitente dtexto2, ubicacion_organica_remitente dtexto, destinatario dtexto, cargo_destinatario dtexto2, 
+	ubicacion_organica_destinatario dtexto, correlativo dtexto2, gestion dentero4, imagen dtexto2, id_tipo_proceso integer, tipo_proceso dtexto);
+  </select>
+  <!-- Fin Busquedas de tramites -->
+
+  <!-- Busqueda ejecutiva -->
+  <resultMap id="listadoDatosTramite" type="org.fautapo.domain.Tramites">
+    <result property="campo" column="campo" />
+    <result property="valor" column="valor" />
+  </resultMap>
+ 
+  <select id="getListarDatosTramite" resultMap="listadoDatosTramite">
+    SELECT *
+    FROM tr_listar_datos_tramite(#{id_tramite})
+    AS (campo text, valor text);
+  </select>
+  <!-- Fin Busqueda ejecutiva -->
+
+  <!-- Bloquear tramites -->
+  <select id="setBloquearTramite" resultType="java.lang.Integer">
+   SELECT * FROM tr_bloquear_tramite(#{id_tramite}, #{id_actividad}, #{proveido}, #{id_tipo_proveido}, #{ult_usuario}) AS valor;
+  </select>
+  <!-- Bloquear tramites -->
+
+  <!-- Desbloquear tramites -->
+  <select id="setDesbloquearTramite" resultType="java.lang.Integer">
+   SELECT * FROM tr_desbloquear_tramite(#{id_tramite}, #{id_actividad}, #{proveido}, #{id_tipo_proveido}, #{ult_usuario}) AS valor;
+  </select>
+  <!-- Fin desbloquear tramites -->
+  
+  <!--Anular tramites-->
+  <resultMap id="datosTramitesAnulados" type="org.fautapo.domain.Tramites">
+    <result property="id_tramite"           column="id_tramite" />
+    <result property="id_proceso"           column="id_proceso" />
+    <result property="id_actividad_actual"  column="id_actividad_actual" />
+    <result property="para"                 column="para" />
+    <result property="de"                   column="de" />
+    <result property="correlativo2"         column="correlativo" />
+    <result property="gestion"              column="gestion" />
+    <result property="proceso"              column="proceso" />
+    <result property="actividad"            column="actividad" />
+    <result property="estado"               column="estado" />     
+  </resultMap>
+ 
+  <select id="getListarTramitesAnulados" resultMap="datosTramitesAnulados">
+    SELECT * FROM tr_listar_tramites_anulados()
+    AS (id_tramite int4, id_proceso dentero, id_actividad_actual dentero, id_estado did_estado, para did_usuario, de did_usuario,
+        correlativo dtexto2, gestion dentero4, fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, proceso  dtexto, actividad dtexto,
+	estado dtexto);	
+  </select>
+  
+  <select id="setAnularTramite" resultType="java.lang.Integer">
+    SELECT tr_anular_tramite(#{id_tramite}) as valor;  
+  </select>
+  <!-- Fin Anular tramite -->    
+
+  <resultMap id="datosTramitesMios" type="org.fautapo.domain.Tramites">
+    <result property="id_tramite"           column="id_tramite" />
+    <result property="id_proceso"           column="id_proceso" />
+    <result property="id_actividad_actual"  column="id_actividad_actual" />
+    <result property="id_tipo_proveido"     column="id_tipo_proveido" />
+    <result property="id_estado"            column="id_estado" />
+    <result property="para"                 column="para" />
+    <result property="de"                   column="de" />
+    <result property="actividad"            column="actividad" />
+    <result property="proceso"              column="proceso" />
+    <result property="id_form"              column="id_form" />
+    <result property="usuario"              column="nombres" />
+    <result property="cargo"                column="cargo" />
+    <result property="correlativo2"         column="correlativo" />     
+    <result property="gestion"              column="gestion" />
+    <result property="id_actividad_minima"  column="id_actividad_minima" />
+    <result property="estado"               column="estado" />
+    <result property="imagen"               column="imagen" />
+    <result property="id_tipo_actuacion"    column="id_tipo_actuacion" />
+    <result property="actuacion"            column="actuacion" />
+    <result property="fec_registro"         column="fec_registro" />
+  </resultMap>
+ 
+  <!-- Imprimir tramites -->
+  <select id="getListarTramitesImpresion" resultMap="datosTramitesMios">
+    SELECT * 
+    FROM tr_listar_tramites_impresion(#{para}, #{id_tramite})
+    AS (id_tramite integer, id_proceso dentero, id_actividad_actual dentero, id_tipo_proveido dentero, id_estado did_estado, para did_usuario, de did_usuario, 
+        fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, actividad dtexto, proceso dtexto, id_form integer,
+	nombres dtexto, cargo dtexto2, correlativo dtexto2, gestion dentero4, id_actividad_minima integer, estado dtexto, imagen dtexto2, id_tipo_actuacion integer, actuacion dtexto2);
+  </select>
+  <!-- Fin Imprimir tramites -->
+ 
+  <!-- Redireccionar tramites -->
+  <select id="getListarTramites" resultMap="datosTramitesMios">
+    SELECT * 
+    FROM tr_listar_tramites(#{id_proceso}, #{id_actividad})
+    AS (id_tramite integer, id_proceso dentero, id_actividad_actual dentero, id_tipo_proveido dentero, id_estado did_estado, para did_usuario, de did_usuario, 
+        fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, actividad dtexto, proceso dtexto, id_form integer,
+	nombres dtexto, cargo dtexto2, correlativo dtexto2, gestion dentero4, id_actividad_minima integer, estado dtexto, imagen dtexto2, id_tipo_actuacion integer, actuacion dtexto2);
+  </select> 
+  
+  <select id="setRedireccionarTramite" resultType="java.lang.Integer">
+    SELECT tr_redireccionar_tramite(#{id_tramite}, #{id_actividad_actual}, #{para}) AS valor;
+  </select>
+  <!--Fin Redireccionar tramites -->
+  
+  <!-- Reingresar tramites -->
+  <select id="getBuscarTramite2" resultMap="datosTramitesMios">
+   SELECT * 
+    FROM tr_buscar_tramite2(#{id_tramite})
+    AS (id_tramite integer, id_proceso dentero, id_actividad_actual dentero, id_tipo_proveido dentero, id_estado did_estado, para did_usuario, de did_usuario, 
+        fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, actividad dtexto, proceso dtexto, id_form integer,
+	nombres dtexto, cargo dtexto2, correlativo dtexto2, gestion dentero4, id_actividad_minima integer, estado dtexto, imagen dtexto2, id_tipo_actuacion integer, actuacion dtexto2);
+  </select> 
+ 
+  <select id="setReingresarTramite" resultType="java.lang.Integer">
+    SELECT tr_reingresar_tramite(#{id_tramite}) AS valor;
+  </select>
+  <!--Fin Reingresar tramites -->
+
+  <!-- Administrar correspondencias -->
+  <resultMap id="datosTiposProcesos" type="org.fautapo.domain.Tramites">
+    <result property="id_proceso"       column="id_proceso" />
+    <result property="id_tipo_proceso"  column="id_tipo_proceso" />
+    <result property="tipo_proceso"     column="TIPO_PROCESO" />
+  </resultMap>
+  
+  <select id="getBuscarTipoProceso2" resultMap="datosTiposProcesos">
+    SELECT * FROM tr_buscar_tipo_proceso2(#{id_proceso})
+    AS (id_proceso int4, id_tipo_proceso dentero, tipo_proceso dtexto); 
+  </select>
+
+  <resultMap id="tramitesMiosCorrespondenciasPara" type="org.fautapo.domain.Tramites">
+    <result property="id_tramite"           column="id_tramite" />
+    <result property="id_proceso"           column="id_proceso" />
+    <result property="id_actividad_actual"  column="id_actividad_actual" />
+    <result property="id_tipo_proveido"     column="id_tipo_proveido" />
+    <result property="id_estado"            column="id_estado" />
+    <result property="para"                 column="para" />
+    <result property="de"                   column="de" />
+    <result property="fec_registro"         column="fec_registro" />
+    <result property="fec_modificacion"     column="fec_modificacion" />
+    <result property="actividad"            column="actividad" />
+    <result property="proceso"              column="proceso" />
+    <result property="id_form"              column="id_form" />
+    <result property="usuario"              column="usuario" />     
+    <result property="cargo"                column="cargo" />
+    <result property="correlativo2"         column="correlativo" />     
+    <result property="gestion"              column="gestion" />     
+    <result property="id_actividad_minima"  column="id_actividad_minima" />
+    <result property="estado"               column="estado" />
+    <result property="imagen"               column="imagen" />
+    <result property="id_tipo_actuacion"    column="id_tipo_actuacion" />
+    <result property="actuacion"            column="actuacion" />
+    <result property="id_tipo_proceso"      column="id_tipo_proceso" />
+    <result property="tipo_proceso"         column="tipo_proceso" />
+    <result property="id_tipo_documento"    column="id_tipo_documento" />
+    <result property="tipo_documento"       column="tipo_documento" />
+    <result property="usuario_para"         column="usuario_para" />
+  </resultMap>
+
+  <select id="getListarTramitesMiosCorrespondenciaPara" resultMap="tramitesMiosCorrespondenciasPara">
+    SELECT *
+    FROM tr_listar_tramites_mios_correspondencia_para(#{para})
+    AS (id_tramite integer, correlativo dtexto2, gestion dentero4, id_proceso dentero, id_actividad_actual dentero, id_tipo_proveido dentero, id_estado did_estado, 
+        para did_usuario, de did_usuario, fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, actividad dtexto, 
+        proceso dtexto, id_form integer, usuario dtexto, cargo dtexto2, id_actividad_minima integer, estado dtexto, 
+        imagen dtexto2, id_tipo_actuacion dentero, actuacion dtexto2, id_tipo_proceso integer, tipo_proceso dtexto, id_tipo_documento dentero2,
+        tipo_documento dtexto, usuario_para dtexto)
+  </select>
+
+  <resultMap id="tramitesMiosCorrespondenciasDe" type="org.fautapo.domain.Tramites">
+    <result property="id_tramite"           column="id_tramite" />
+    <result property="id_proceso"           column="id_proceso" />
+    <result property="id_actividad_actual"  column="id_actividad_actual" />
+    <result property="id_tipo_proveido"     column="id_tipo_proveido" />
+    <result property="id_estado"            column="id_estado" />
+    <result property="para"                 column="para" />
+    <result property="de"                   column="de" />
+    <result property="fec_registro"         column="fec_registro" />
+    <result property="fec_modificacion"     column="fec_modificacion" />
+    <result property="cargo"                column="cargo" />
+    <result property="correlativo2"         column="correlativo" />     
+    <result property="estado"               column="estado" />
+    <result property="imagen"               column="imagen" />
+    <result property="id_tipo_documento"    column="id_tipo_documento" />
+    <result property="tipo_documento"       column="tipo_documento" />
+    <result property="usuario_para"         column="usuario_para" />
+  </resultMap>
+
+  <select id="getListarTramitesMiosCorrespondenciaDe" resultMap="tramitesMiosCorrespondenciasDe">
+    SELECT *
+    FROM tr_listar_tramites_mios_correspondencia_de(#{de})
+    AS (id_tramite integer, correlativo dtexto2, gestion dentero4, id_proceso dentero, id_actividad_actual dentero, id_tipo_proveido dentero, id_estado did_estado, 
+        para did_usuario, de did_usuario, fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, 
+	cargo dtexto2, estado dtexto, imagen dtexto2, id_tipo_documento dentero2, tipo_documento dtexto, usuario_para dtexto);
+  </select>
+
+  <select id="setAvanzarCorrespondencia" resultType="java.lang.Integer">
+    SELECT tr_avanzar_correspondencia(#{para}, #{de}, #{id_tramite}) as valor;
+  </select>
+
+  <select id="setInsertarTramiteCopia" resultType="java.lang.Integer">
+    SELECT tr_insertar_tramite_copia(#{id_proceso}::integer, #{para}::integer, #{de}::integer, #{id_tipo_proveido}::integer, #{id_tramite}::integer) as valor;
+  </select>
+  <!-- Fin de Administrar correspondencias -->
+
+  <!--Busqueda por Fecha Estados-->
+  <resultMap id="listarEstados" type="org.fautapo.domain.Tramites">
+     <result property="id_estado"           column="id_estado" />
+     <result property="estado"              column="estado" />
+     <result property="imagen"              column="imagen" />
+     <result property="fec_registro"        column="fec_registro" />
+     <result property="fec_modificacion"    column="fec_modificacion" />
+     <result property="ult_usuario"         column="ult_usuario" />
+  </resultMap>
+ 
+  <select id="getListarEstadosTramites" resultMap="listarEstados">
+    SELECT * FROM tr_listar_estados_tramites();    
+  </select>
+  
+  <select id="getListarTramitesEstadoFechaUbicacionOrganica" resultMap="datosTramites3">
+    SELECT * FROM tr_listar_tramites_estado_fecha_ubicacion_organica(_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}), #{id_ubicacion_organica}, #{id_estado})
+    AS (id_tramite integer, id_proceso dentero, actividad dtexto, proceso dtexto, de did_usuario, para did_usuario,
+        fecha dfec_modificacion, remitente dtexto, cargo_remitente dtexto2, ubicacion_organica_remitente dtexto, destinatario dtexto, cargo_destinatario dtexto2, 
+	ubicacion_organica_destinatario dtexto, correlativo dtexto2, gestion dentero4, imagen dtexto2, id_tipo_proceso integer, tipo_proceso dtexto);
+  </select>
+ <!--Busqueda por Fecha Estados-->  
+
+  <resultMap id="datosForanea2" type="org.fautapo.domain.Abm">
+    <result property="tabla_foranea"    column="tabla_foranea" />
+    <result property="campo_foraneo"    column="campo_foraneo" />
+    <result property="id_campo_foraneo" column="id_campo_foraneo" />
+  </resultMap>
+
+  <select id="getBuscarForanea2" resultMap="datosForanea2">
+    SELECT * FROM dib_buscar_foranea(#{tabla}, #{campo});
+  </select>
+
+  <!-- Habilitar tramites -->
+  <select id="setHabilitarTramite" resultType="java.lang.Integer">
+   SELECT * FROM tr_habilitar_tramite(#{id_tramite}, #{id_actividad}, #{proveido}, #{id_tipo_proveido}, #{ult_usuario}) AS valor;
+  </select>
+  <!-- Fin Habilitar tramites -->  
+
+  <resultMap id="listadoEstadosFechas" type="org.fautapo.domain.Tramites">
+     <result property="proceso"  column="proceso" />
+     <result property="cantidad" column="cantidad" />
+     <result property="estado"   column="estado" />
+     <result property="imagen"   column="imagen" />
+  </resultMap>
+ 
+  <select id="getListarTramitesPorEstadoFecha" resultMap="listadoEstadosFechas">
+    SELECT * FROM tr_contar_tramites_por_estado_fecha(_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+    AS (proceso dtexto, cantidad int8, estado dtexto, imagen dtexto2);
+  </select>
+  
+  <!-- Administrar Kardex-->
+  <select id="getListarTramitesMiosKardex" resultMap="datosTramitesMios2">
+    SELECT *
+    FROM tr_listar_tramites_mios_kardex(#{para}, #{pagina})
+    AS (id_tramite integer, id_proceso dentero, id_actividad_actual dentero, id_tipo_proveido dentero, id_estado did_estado, para did_usuario, de did_usuario, 
+        fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, actividad dtexto, proceso dtexto, id_form integer,
+	nombres dtexto, cargo dtexto2, correlativo dentero2, id_actividad_minima integer, estado dtexto, imagen dtexto2, id_tipo_actuacion dentero, 
+	actuacion dtexto2, rol dtexto);
+  </select>
+  
+  <select id="getListarTramitesMiosKardexPorProceso" resultMap="datosTramitesMios2">
+    SELECT *
+    FROM tr_listar_tramites_mios_kardex_proceso(#{para}, #{pagina}, #{id_proceso})
+    AS (id_tramite integer, id_proceso dentero, id_actividad_actual dentero, id_tipo_proveido dentero, id_estado did_estado, para did_usuario, de did_usuario, 
+        fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, actividad dtexto, proceso dtexto, id_form integer,
+	nombres dtexto, cargo dtexto2, correlativo dentero2, id_actividad_minima integer, estado dtexto, imagen dtexto2, id_tipo_actuacion dentero, 
+	actuacion dtexto2, rol dtexto);
+  </select>
+  
+  <!--Para ver los siguientes kardex-->
+  <select id="getListarTramitesMiosKardexPorProcesoAtendidos" resultMap="datosTramitesMios2">
+    SELECT *
+    FROM tr_listar_tramites_mios_kardex_proceso_atendido(#{para},#{id_proceso})
+    AS (id_tramite integer, id_proceso dentero, id_actividad_actual dentero, id_tipo_proveido dentero, id_estado did_estado, para did_usuario, de did_usuario, 
+        fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, actividad dtexto, proceso dtexto, id_form integer,
+	nombres dtexto, cargo dtexto2, correlativo dentero2, id_actividad_minima integer, estado dtexto, imagen dtexto2, id_tipo_actuacion dentero, 
+	actuacion dtexto2, rol dtexto);
+  </select>
+  
+  <resultMap id="maxminTramitesMios" type="org.fautapo.domain.Tramites">
+    <result property="min"  column="min" />
+    <result property="max" column="max" />
+  </resultMap>
+  
+  <select id="getBuscarMinMaxTramitesMiosKardexPorProceso" resultMap="maxminTramitesMios">
+    SELECT min(id_tramite), max(id_tramite)
+    FROM tr_listar_tramites_mios_kardex_proceso_atendido(#{para}, #{id_proceso})
+    AS (id_tramite integer, id_proceso dentero, id_actividad_actual dentero, id_tipo_proveido dentero, id_estado did_estado, para did_usuario, de did_usuario, 
+        fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, actividad dtexto, proceso dtexto, id_form integer,
+	nombres dtexto, cargo dtexto2, correlativo dentero2, id_actividad_minima integer, estado dtexto, imagen dtexto2, id_tipo_actuacion dentero, 
+	actuacion dtexto2, rol dtexto);
+  </select>
+  <!-- Fin Administrar Kardex-->
+
+  <!-- Reporte de tramites por funcionarios -->
+  <resultMap id="listadoTramitesFuncionarios" type="org.fautapo.domain.Tramites">
+    <result property="usuario"    column="usuario" />
+    <result property="id_proceso" column="id_proceso" />
+    <result property="proceso"    column="proceso" />
+    <result property="para"       column="para" />
+    <result property="cantidad"   column="cantidad" />
+  </resultMap>
+ 
+  <select id="getListarTramitesFuncionarios" resultMap="listadoTramitesFuncionarios">
+    SELECT * FROM tr_listar_tramites_funcionarios(#{id_ubicacion_organica}, _cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+    AS (usuario text, id_proceso integer, proceso dtexto, para did_usuario, cantidad integer);
+  </select>
+
+  <resultMap id="listadoTramitesFuncionarios2" type="org.fautapo.domain.Tramites">
+    <result property="id_tramite"         column="id_tramite" />
+    <result property="id_proceso"         column="id_proceso" />
+    <result property="proceso"            column="proceso" />
+    <result property="actividad"          column="actividad" />
+    <result property="fec_registro"       column="fec_registro" />
+    <result property="ubicacion_organica" column="ubicacion_organica" />
+    <result property="usuario"            column="nombres" />
+    <result property="cargo"              column="cargo" />
+    <result property="correlativo2"       column="correlativo" />     
+    <result property="gestion"            column="gestion" />
+    <result property="imagen"             column="imagen" />
+    <result property="id_tipo_proceso"    column="id_tipo_proceso" />
+    <result property="tipo_proceso"       column="tipo_proceso" />
+  </resultMap>
+ 
+  <select id="getListarTramitesFuncionarioProceso" resultMap="listadoTramitesFuncionarios2">
+   SELECT * FROM tr_listar_tramites_funcionario_proceso(#{para}, #{id_proceso}, _cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+   AS (id_tramite integer, id_proceso integer, proceso text, actividad text, fec_registro dfec_modificacion, ubicacion_organica dtexto, nombres dtexto, cargo dtexto2, 
+       correlativo text, gestion integer, imagen text, id_tipo_proceso integer, tipo_proceso text);
+  </select>
+
+  <resultMap id="listadoTramitesAtendidos" type="org.fautapo.domain.Tramites">
+    <result property="id_tramite"         column="id_tramite" />
+    <result property="id_proceso"         column="id_proceso" />
+    <result property="proceso"            column="proceso" />
+    <result property="actividad"          column="actividad" />
+    <result property="fec_registro"       column="fec_registro" />
+    <result property="ubicacion_organica" column="ubicacion_organica" />
+    <result property="usuario"            column="nombres" />
+    <result property="cargo"              column="cargo" />
+    <result property="correlativo2"       column="correlativo" />
+    <result property="imagen"             column="imagen" />
+    <result property="id_tipo_proceso"    column="id_tipo_proceso" />
+    <result property="tipo_proceso"       column="tipo_proceso" />
+  </resultMap>
+ 
+  <select id="getListarTramitesAtendidos" resultMap="listadoTramitesAtendidos">
+   SELECT * FROM tr_listar_tramites_funcionario(#{para}, _cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+   AS (id_tramite integer, id_proceso integer, proceso text, actividad text, fec_registro dfec_modificacion, ubicacion_organica dtexto, nombres dtexto, cargo dtexto2,
+       correlativo integer, imagen text, id_tipo_proceso integer, tipo_proceso text);
+  </select>
+
+  <select id="getContarTramitesAtendidos" resultMap="contarTramites">
+    SELECT *
+    FROM tr_contador_tramites_atendidos_por_fecha(#{para}, _cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+    AS (nro_total_tramites integer, nro_tramites_hoy integer, nro_tramites_semanal integer, nro_tramites_anteriores integer);
+  </select>
+  <!-- Fin - Reporte de tramites por funcionarios -->
+
+  <select id="getContarPaginas" resultType="java.lang.String">
+    SELECT tr_contar_paginas(#{para}) AS valor;
+  </select>
+
+  <select id="getContarPaginasDespachados" resultType="java.lang.String">
+    SELECT tr_contar_paginas(#{para}) AS valor;
+  </select>
+
+  <select id="getListarTramitesCorrelativo" resultMap="datosTramites3">
+    SELECT * FROM tr_listar_tramites_correlativo(#{correlativo2}, #{gestion})
+    AS (id_tramite integer, id_proceso dentero, actividad dtexto, proceso dtexto, de did_usuario, para did_usuario,
+        fecha dfec_modificacion, remitente dtexto, cargo_remitente dtexto2, ubicacion_organica_destinatario dtexto, destinatario dtexto, cargo_destinatario dtexto2, 
+        correlativo dtexto2, gestion dentero4, imagen dtexto2, id_tipo_proceso dentero, tipo_proceso dtexto);
+  </select>
+
+  <resultMap id="datosTramitesConcluidos" type="org.fautapo.domain.Tramites">
+    <result property="id_tramite"           column="id_tramite" />
+    <result property="id_proceso"           column="id_proceso" />
+    <result property="id_actividad_actual"  column="id_actividad_actual" />
+    <result property="id_tipo_proveido"     column="id_tipo_proveido" />
+    <result property="id_estado"            column="id_estado" />
+    <result property="para"                 column="para" />
+    <result property="de"                   column="de" />
+    <result property="actividad"            column="actividad" />
+    <result property="proceso"              column="proceso" />
+    <result property="id_form"              column="id_form" />
+    <result property="usuario"              column="nombres" />
+    <result property="cargo"                column="cargo" />
+    <result property="correlativo2"         column="correlativo" />
+    <result property="gestion"              column="gestion" />
+    <result property="estado"               column="estado" />
+    <result property="imagen"               column="imagen" />
+  </resultMap>
+
+  <select id="getListarTramitesConcluidosPorProceso" resultMap="datosTramitesConcluidos">
+    SELECT *
+    FROM tr_listar_tramites_concluidos_por_proceso(#{id_proceso}, #{pagina})
+    AS (id_tramite integer, id_proceso dentero, id_actividad_actual dentero, id_tipo_proveido dentero, id_estado did_estado, para did_usuario, de did_usuario, 
+        fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, actividad dtexto, proceso dtexto, id_form integer,
+	nombres dtexto, cargo dtexto2, correlativo dtexto2, gestion dentero4, estado dtexto, imagen dtexto2);
+  </select>
+
+  <select id="getListarTramitesConcluidosPorProcesoFiltrado" resultMap="datosTramitesConcluidos">
+    SELECT *
+    FROM tr_listar_tramites_concluidos_por_proceso_filtrado(#{id_proceso}, #{correlativo2})
+    AS (id_tramite integer, id_proceso dentero, id_actividad_actual dentero, id_tipo_proveido dentero, id_estado did_estado, para did_usuario, de did_usuario, 
+        fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, actividad dtexto, proceso dtexto, id_form integer,
+	nombres dtexto, cargo dtexto2, correlativo dtexto2, gestion dentero4, estado dtexto, imagen dtexto2);
+  </select>
+
+  <select id="getContarPaginasConcluidos" resultType="java.lang.String">
+    SELECT tr_contar_paginas_concluidos(#{id_proceso}) AS valor;
+  </select>
+
+  <select id="getContarPaginasTramitesGestionProceso" resultType="java.lang.String">
+    SELECT tr_contar_paginas_tramites_gestion_proceso(#{gestion}, #{id_proceso}) AS valor;
+  </select>
+
+
+
+  <!-- CORRESPONDENCIA DESPACHADAS -->  
+  <resultMap id="getListarCorrespondencia" type="org.fautapo.domain.Tramites">
+      <result property="id_tramite"           column="id_tramite" />
+      <result property="usuario_para"         column="usuario_para" />
+      <result property="valor"         	    column="valor" />
+      <result property="cargo"         	    column="cargo" />
+      <result property="fec_registro"         column="fec_registro" />
+    </resultMap>
+
+  <select id="getListarCorrespondenciaDes" resultMap="getListarCorrespondencia">
+  select id_tramite, usuario_para, valor, cargo, fec_registro from tr_buscar_correspondencia(#{de}) AS (id_tramite dentero, valor dtexto2, usuario_para text, cargo dtexto,fec_registro date);  
+  </select>
+  
+  <select id="getListarCorrespDesFecha" resultMap="getListarCorrespondencia">
+  SELECT * from tr_buscar_correspondencia_fecha(#{de}, #{fechaini}::date, #{fechafin}::date) AS (id_tramite dentero, valor dtexto2, usuario_para text, cargo dtexto,fec_registro date);
+  </select>
+
+  <!-- Busqueda de Correspondencia por referencia -->  
+  <resultMap id="getListarCorrespondenciaReference" type="org.fautapo.domain.Tramites">
+    <result property="id_tramite"           column="id_tramite" /> 
+    <result property="usuario_para"         column="usuario_para" /> 
+    <result property="valor"         	    column="valor" />
+    <result property="fec_registro"         column="fec_registro" />
+  </resultMap>
+
+  <select id="getListarCorrespReference" resultMap="getListarCorrespondenciaReference">
+  SELECT * from busqueda_referencia(#{valor}, #{de}) as (id_tramite dentero, id_proceso dentero, usuario_para text, valor dtexto2, fec_registro date);
+  </select>
+  
+  <select id="getListarCorrespRemitente" resultMap="getListarCorrespondenciaReference">
+  SELECT * from busqueda_remitente(#{valor}, #{de}) as (id_tramite dentero, id_proceso dentero, usuario_para text, valor dtexto2, fec_registro date);
+  </select>
+  
+  <!-- Cambiar Estado tramites -->
+  <select id="setCambiarEstadoTramite" resultType="java.lang.Integer">
+    SELECT * FROM tr_cambiar_estado_tramite(#{id_tramite}, #{id_estado});
+  </select>
+  <!--  Cambiar Estado tramites -->    
+
+<!--INICIO - METODOS ADICIONADOS POR LA UAP -->
+
+  <!-- TRAMITES ATENDIDOS -->
+  <resultMap id="datosProcesos" type="org.fautapo.domain.Tramites">
+    <result property="id_proceso"      column="id_proceso"/> 
+    <result property="proceso"         column="proceso"/>
+    <result property="codigo_proceso"  column="codigo_proceso"/>
+  </resultMap>
+
+  <select id="getTrListarProcesos" resultMap="datosProcesos">
+    SELECT * FROM trn_listar_procesos();
+  </select>
+
+<!--FIN - METODOS ADICIONADOS POR LA UAP -->
+
+</mapper>

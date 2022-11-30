@@ -1,0 +1,70 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="Curriculum">
+
+  <resultMap id="map_listar_rubros_personas" type="org.fautapo.domain.Curriculum">
+    <result property="id_curriculum" column="id_curriculum" />
+    <result property="id_persona"   column="id_persona" />
+    <result property="id_rubro"     column="id_rubro" />
+    <result property="rubro"        column="rubro" />
+    <result property="id_sub_rubro" column="id_sub_rubro" />
+    <result property="sub_rubro"    column="sub_rubro" />
+    <result property="detalle"      column="detalle" />
+    <result property="del"          column="del" />
+    <result property="al"           column="al" />
+  </resultMap>
+  
+  <select id="cvGetListarRubrosPersona" resultMap="map_listar_rubros_personas">
+    SELECT * FROM cv_listar_sub_rubros_persona(#{id_persona}, #{id_curriculum}, #{desde}, #{hasta}, #{pagina}) as (id_curriculum int4, id_persona dentero, id_rubro dentero, rubro dtexto, id_sub_rubro dentero, sub_rubro dtexto, detalle dtexto, del dfecha2, al dfecha2);
+  </select>
+  
+  <resultMap id="m_listar_rubros" type="org.fautapo.domain.Curriculum">
+    <result property="id_rubro"     column="id_rubro" />
+    <result property="rubro"        column="rubro" />
+  </resultMap>
+  
+  <select id="cvGetListarRubros" resultMap="m_listar_rubros">
+    SELECT * FROM cv_listar_rubros(#{desde}, #{hasta}, #{pagina}) as (id_rubro int4, rubro dtexto);
+  </select>
+
+  <resultMap id="mact_listar_sub_rubros" type="org.fautapo.domain.Curriculum">
+    <result property="id_rubro"     column="id_rubro" />
+    <result property="rubro"        column="rubro" />
+    <result property="id_sub_rubro" column="id_sub_rubro" />
+    <result property="sub_rubro"    column="sub_rubro" />
+  </resultMap>
+
+  <select id="cvGetListarSubRubros" resultMap="mact_listar_sub_rubros">
+    SELECT * FROM cv_listar_sub_rubros (#{id_rubro}, #{desde}, #{hasta}, #{pagina}) as (id_rubro dentero, rubro dtexto, id_sub_rubro int4, sub_rubro dtexto);
+  </select>
+  
+  <select id="cvSetRegistrarCurriculum" resultType="java.lang.Integer">
+    SELECT * FROM cv_registrar_curriculum(#{id_curriculum}, #{id_persona}, #{id_rubro}, #{id_sub_rubro}, #{detalle}, #{del}::date, #{al}::date, #{id_estado}, #{id_rol}, #{ult_usuario});
+  </select>
+  
+  <!--Adjunto Docente -->
+  <select id="setRegistrarDctAdjuntos" resultType="java.lang.Integer">
+    SELECT * FROM mi_registrar_dct_adjunto(#{id_docente}, #{id_estado}, #{nombre_archivo}, #{adjunto}, #{id_rol}, #{ult_usuario});
+  </select>
+  
+  <resultMap id="listarAdjuntosDct" type="org.fautapo.domain.Curriculum">
+    <result property="id_dct_adjunto"  column="id_dct_adjunto" />
+    <result property="id_docente"      column="id_docente" />
+    <result property="id_estado"       column="id_estado" />
+    <result property="nombre_archivo"  column="nombre_archivo" />
+    <result property="adjunto"         column="adjunto" />
+  </resultMap>
+
+  <select id="getListarAdjuntosDocente" resultMap="listarAdjuntosDct">
+     SELECT * FROM mi_listar_adjuntos_docente(#{id_docente}, #{id_estado});
+  </select>
+  
+  <select id="setEliminarDctAdjunto" resultType="java.lang.Integer">
+    SELECT * FROM mi_eliminar_adjunto(#{id_dct_adjunto}, #{ult_usuario})
+  </select>
+  
+  <!--Fin Adjunto Docente -->
+  
+
+
+</mapper>

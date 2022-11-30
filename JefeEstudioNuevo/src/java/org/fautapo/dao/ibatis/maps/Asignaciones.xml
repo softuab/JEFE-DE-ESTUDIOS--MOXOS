@@ -1,0 +1,729 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+ * @autor FAUTAPO
+ * @fec_registro 2006-04-07
+ * @ult_usuario FAUTAPO
+ * @fec_modificacion 2006-04-07
+-->
+
+<mapper namespace="Asignaciones">
+
+    <resultMap id="asignacionDocente" type="org.fautapo.domain.Asignaciones">
+        <result property="id_asignacion"      column="ID_ASIGNACION" />
+        <result property="id_docente"         column="ID_DOCENTE" />
+        <result property="id_modelo_ahorro"   column="ID_MODELO_AHORRO" />
+        <result property="id_programa"        column="ID_PROGRAMA" />
+        <result property="id_materia"         column="ID_MATERIA" />
+        <result property="materia"            column="MATERIA" />
+        <result property="sigla"              column="SIGLA" />
+        <result property="nivel_academico"    column="NIVEL_ACADEMICO" />
+        <result property="id_grupo"           column="ID_GRUPO" />
+        <result property="grupo"              column="GRUPO" />
+        <result property="id_fase"            column="ID_FASE" />
+        <result property="fase"               column="FASE" />
+        <result property="fec_registro"       column="FEC_REGISTRO" />
+        <result property="ult_usuario"        column="ULT_USUARIO" />
+        <result property="id_tipo_evaluacion" column="ID_TIPO_EVALUACION" />
+        <result property="programa"           column="PROGRAMA" />
+        <result property="tipo_evaluacion"    column="TIPO_EVALUACION" />
+        <result property="gestion"            column="GESTION" />
+        <result property="periodo"            column="PERIODO" />
+        <result property="id_tipo_grado"      column="id_tipo_grado" />
+        <result property="tipo_grado"         column="tipo_grado" />
+        <result property="id_departamento"    column="id_departamento" />
+        <result property="id_plan"            column="id_plan" />
+    </resultMap>
+  
+    <select id="getDctListarAsignacionDocente" resultMap="asignacionDocente">
+        SELECT * FROM mi_dct_listar_asignacion_docente(#{id_docente}, #{gestion}, #{periodo})
+        AS (id_asignacion integer, id_docente dentero, id_modelo_ahorro dentero2, id_programa dentero, id_materia int4, materia dtexto, sigla dtexto, 
+        nivel_academico dentero, id_grupo dentero, grupo dtexto, id_fase dentero2, fase dtexto, fec_registro dfec_modificacion,
+        ult_usuario did_usuario, id_tipo_evaluacion dentero, programa dtexto, tipo_evaluacion dtexto, gestion dentero, 
+        periodo dentero, id_tipo_grado dentero, tipo_grado dtexto, id_departamento integer, id_plan dtexto);
+    </select>
+  
+    <resultMap id="asignacionDocenteProgramaAnalitico" type="org.fautapo.domain.Asignaciones">
+        <result property="id_asignacion"      column="ID_ASIGNACION" />
+        <result property="id_docente"         column="ID_DOCENTE" />
+        <result property="id_modelo_ahorro"   column="ID_MODELO_AHORRO" />
+        <result property="id_programa"        column="ID_PROGRAMA" />
+        <result property="id_materia"         column="ID_MATERIA" />
+        <result property="materia"            column="MATERIA" />
+        <result property="sigla"              column="SIGLA" />
+        <result property="nivel_academico"    column="NIVEL_ACADEMICO" />
+        <result property="id_mencion"         column="ID_MENCION" />
+        <result property="id_grupo"           column="ID_GRUPO" />
+        <result property="grupo"              column="GRUPO" />
+        <result property="id_fase"            column="ID_FASE" />
+        <result property="fase"               column="FASE" />
+        <result property="fec_registro"       column="FEC_REGISTRO" />
+        <result property="ult_usuario"        column="ULT_USUARIO" />
+        <result property="id_tipo_evaluacion" column="ID_TIPO_EVALUACION" />
+        <result property="programa"           column="PROGRAMA" />
+        <result property="tipo_evaluacion"    column="TIPO_EVALUACION" />
+        <result property="gestion"            column="GESTION" />
+        <result property="periodo"            column="PERIODO" />
+        <result property="id_tipo_grado"      column="id_tipo_grado" />
+        <result property="tipo_grado"         column="tipo_grado" />
+        <result property="id_departamento"    column="id_departamento" />
+        <result property="id_plan"            column="id_plan" />
+    </resultMap>
+    <select id="getDctListarAsignacionDocenteporProgramaAnalitico" resultMap="asignacionDocenteProgramaAnalitico">
+        SELECT * FROM mi_dct_listar_asignacion_docente_prg_analitico(#{id_docente}, #{gestion}, #{periodo})
+        AS (id_asignacion integer, id_docente dentero, id_modelo_ahorro dentero2, id_programa dentero, id_materia int4, materia dtexto, sigla dtexto, 
+        nivel_academico dentero,  id_mencion dentero,       
+        id_grupo dentero, grupo dtexto, id_fase dentero2, fase dtexto, fec_registro dfec_modificacion,
+        ult_usuario did_usuario, id_tipo_evaluacion dentero, programa dtexto, tipo_evaluacion dtexto, gestion dentero, 
+        periodo dentero, id_tipo_grado dentero, tipo_grado dtexto, id_departamento integer, id_plan dtexto);
+    </select>
+  
+  
+    <resultMap id="materiasAhorro" type="org.fautapo.domain.Asignaciones">
+        <result property="id_modelo_ahorro"    column="ID_MODELO_AHORRO"/>
+        <result property="modelo_ahorro"       column="MODELO_AHORRO"/>
+        <result property="nota_aprobacion"     column="NOTA_APROBACION"/>
+        <result property="ponderacion_modelo"  column="PONDERACION_MODELO"/>
+        <result property="ponderacion_materia" column="PONDERACION_MATERIA"/>
+    </resultMap>
+  
+    <select id="getMtrListarMateriaAhorro" resultMap="materiasAhorro">
+        SELECT * FROM mi_mtr_listar_materia_ahorro(#{id_modelo_ahorro}, #{id_materia}, #{id_programa}, #{gestion}, #{periodo})
+        AS (id_modelo_ahorro int4, modelo_ahorro dtexto, nota_aprobacion dnota,
+        ponderacion_modelo dentero, ponderacion_materia dentero);
+    </select>
+  
+    <resultMap id="buscarAsignacionDocente" type="org.fautapo.domain.Asignaciones">
+        <result property="id_materia"         column="ID_MATERIA" />
+        <result property="id_fase"            column="ID_FASE" />
+        <result property="ult_usuario"        column="ULT_USUARIO" />
+        <result property="id_modelo_ahorro"   column="ID_MODELO_AHORRO" />
+        <result property="gestion"            column="GESTION" />
+        <result property="periodo"            column="PERIODO" />
+        <result property="id_tipo_evaluacion" column="ID_TIPO_EVALUACION" />
+        <result property="id_grupo"           column="ID_GRUPO" />    
+        <result property="id_tipo_docente"    column="ID_TIPO_DOCENTE" />
+        <result property="id_departamento"    column="ID_DEPARTAMENTO" />
+        <result property="id_programa"        column="ID_PROGRAMA" />
+    </resultMap>
+
+    <select id="getDctBuscarAsignacionDocenteMateria" resultMap="buscarAsignacionDocente">
+        SELECT * FROM mi_dct_buscar_asignacion_docente_materia(#{id_docente}, #{id_materia}, #{gestion}, #{periodo}, #{id_modelo_ahorro}, #{id_programa}, #{id_grupo}, #{id_tipo_evaluacion})
+        AS (id_materia dentero, id_fase dentero2, ult_usuario did_usuario, id_modelo_ahorro dentero2, gestion dentero,
+        periodo dentero, id_tipo_evaluacion dentero, id_grupo dentero, id_tipo_docente dentero, id_departamento dentero, id_programa dentero);
+    </select>
+    <!-- PARA SACAR EL SIGUIENTE NUMERO PARA EL MEMO-->
+    <select id="getTrnBuscarSiguienteNroMemo" resultType="java.lang.Integer">
+        SELECT trn_buscar_siguiente_nro_memo(#{id_sede}, #{gestion}) as valor;
+    </select>
+  
+    <select id="getTrnBuscaridMemo" resultType="java.lang.Integer">
+        SELECT trn_buscar_id_memo(#{id_sede}, #{gestion}) as valor;
+    </select>
+    <!-- PARA SACAR EL SIGUIENTE NUMERO PARA EL MEMO-->
+    <select id="setRegistrarAsignacionDocente" resultType="java.lang.Integer">
+        SELECT * FROM mi_dct_registrar_asignacion_docente(#{id_docente}, #{id_departamento}, #{id_materia}, #{id_grupo}, #{id_modelo_ahorro}, #{id_fase}, #{id_tipo_evaluacion}, #{id_tipo_docente}, #{id_tipo_asignacion}, #{gestion}, 
+        #{periodo}, #{observacion}, #{fec_inicio}, #{fec_fin}, #{nro_resolucion},#{nro_resolucionhcc},#{nro_resolucionhcf},#{nro_resolucionhcu}, #{fec_resolucion}, #{ult_usuario}, #{id_asignacion});
+    </select>
+  
+    <select id="setRegistrarMemo" resultType="java.lang.Integer">
+        SELECT * FROM trn_pst_registrar_memo(#{nro_memo}, #{id_asignacion},#{id_memo},#{ult_usuario});
+    </select> 
+  
+    <select id="setRegistrarAsignacionDocentefac" resultType="java.lang.Integer">
+        SELECT * FROM mi_dct_registrar_asignacion_docentefac(#{id_docente}, #{id_departamento}, #{id_materia}, #{id_grupo}, #{id_modelo_ahorro}, #{id_fase}, #{id_tipo_evaluacion}, #{id_tipo_docente}, #{id_tipo_asignacion}, #{gestion}, 
+        #{periodo}, #{observacion}, _cadena_fecha(#{fec_inicio}), _cadena_fecha(#{fec_fin}), #{nro_resolucion},#{nro_resolucionhcc},#{nro_resolucionhcf},#{nro_resolucionhcu},#{id_fase_resolucion}, _cadena_fecha(#{fec_resolucion2}), #{ult_usuario}, #{id_asignacion});
+    </select>
+  
+    <select id="setRegistrarFaseResolucion" resultType="java.lang.Integer">
+        SELECT * FROM mi_dct_registrar_asignacion_faseresolucion(#{id_departamento}, #{gestion},#{periodo}, #{id_tipo_evaluacion});
+    </select>
+    <select id="setRegistrarFaseResolucionfac" resultType="java.lang.Integer">
+        SELECT * FROM mi_dct_registrar_asignacion_faseresolucionfac(#{id_departamento}, #{gestion},#{periodo}, #{id_tipo_evaluacion});
+    </select>
+    <select id="setRegistrarFaseResolucionuni" resultType="java.lang.Integer">
+        SELECT * FROM mi_dct_registrar_asignacion_faseresolucionuni(#{id_departamento}, #{gestion},#{periodo}, #{id_tipo_evaluacion});
+    </select>
+  
+    <select id="setRegistrarRetrocederFaseResolucion" resultType="java.lang.Integer">
+        SELECT * FROM mi_dct_registrar_asignacion_retrocederfaseresolucion(#{id_programa}, #{gestion},#{periodo}, #{id_tipo_evaluacion});
+    </select>
+  
+    <resultMap id="verAsignacionDocente" type="org.fautapo.domain.Asignaciones">
+        <result property="id_docente"         column="id_docente" />
+        <result property="id_materia"         column="id_materia" />
+        <result property="id_grupo"           column="id_grupo" />
+        <result property="id_modelo_ahorro"   column="id_modelo_ahorro" />
+        <result property="gestion"            column="gestion" />
+        <result property="periodo"            column="periodo" />
+    </resultMap>
+
+    <select id="getDctVerificarAsignacionDocenteGestion" resultMap="verAsignacionDocente">
+        SELECT * FROM mi_dct_buscar_docente_asignado_gestion(#{id_departamento}, #{id_materia}, #{id_grupo}, #{id_tipo_evaluacion}, #{id_modelo_ahorro}, #{gestion}, #{periodo})
+        AS(id_docente dentero, id_materia dentero, id_grupo dentero, id_modelo_ahorro dentero2, gestion dentero, periodo dentero);  
+    </select>
+  
+    <select id="setmostrarplan" resultType="java.lang.Integer">
+        SELECT * FROM mi_dct_mostrar_plan(#{id_departamento}, #{gestion},#{periodo}, #{id_tipo_evaluacion});
+    </select>
+    <!--INICIO resumen de notas-->  
+    <resultMap id="listarDocentes" type="org.fautapo.domain.Asignaciones">
+        <result property="id_asignacion"     column="id_asignacion"/>
+        <result property="id_docente"        column="id_docente"/>
+        <result property="dip"               column="dip"/>
+        <result property="nombres"           column="nombres"/>
+        <result property="id_materia"        column="id_materia"/>
+        <result property="id_grupo"          column="id_grupo"/>
+        <result property="id_programa"       column="id_programa"/>
+        <result property="id_fase"           column="id_fase"/>
+        <result property="id_modelo_ahorro"  column="id_modelo_ahorro"/>
+        <result property="sigla"             column="sigla"/>
+        <result property="materia"           column="materia"/>
+        <result property="grupo"             column="grupo"/>
+        <result property="programa"          column="programa"/>
+        <result property="nivel_academico"   column="nivel_academico"/>
+        <result property="id_tipo_docente"   column="id_tipo_docente"/>
+        <result property="fase"              column="fase"/> 
+    </resultMap>
+
+    <select id="getListarDocentesProgramados" resultMap="listarDocentes">
+        SELECT * FROM  listar_docentes_asignados(#{id_departamento},#{id_tipo_evaluacion},#{gestion},#{periodo})
+        AS(id_asignacion integer, id_docente dentero, dip dtexto2, nombres text, id_materia integer, id_grupo integer,
+        id_programa dentero, id_fase dentero2, id_modelo_ahorro dentero2, sigla dtexto, materia dtexto, grupo dtexto,programa dtexto,
+        nivel_academico dentero, id_tipo_docente dentero, fase dtexto);
+    </select> 
+    <!--FIN resumen de notas--> 
+  
+    <!-- Dct asignacion por programa -->
+    <resultMap id="asignacionDctPrg" type="org.fautapo.domain.Asignaciones">
+        <result property="id_asignacion"      column="id_asignacion" />
+        <result property="id_docente"         column="ID_DOCENTE" />
+        <result property="id_modelo_ahorro"   column="ID_MODELO_AHORRO" />
+        <result property="id_programa"        column="ID_PROGRAMA" />
+        <result property="id_materia"         column="ID_MATERIA" />
+        <result property="materia"            column="MATERIA" />
+        <result property="sigla"              column="SIGLA" />
+        <result property="nivel_academico"    column="nivel_academico" />
+        <result property="id_grupo"           column="id_grupo" />
+        <result property="grupo"              column="GRUPO" />
+        <result property="id_fase"            column="ID_FASE" />
+        <result property="fase"               column="FASE" />
+        <result property="fec_registro"       column="FEC_REGISTRO" />
+        <result property="ult_usuario"        column="ULT_USUARIO" />
+        <result property="gestion"            column="GESTION" />
+        <result property="periodo"            column="PERIODO" />
+        <result property="id_departamento"    column="id_departamento" />
+        <result property="id_mencion"         column="id_mencion" />
+        <result property="mencion"            column="mencion" />
+        <result property="id_persona"         column="id_persona" />
+        <result property="nombres"            column="nombres" />
+        <result property="paterno"            column="paterno" />
+        <result property="materno"            column="materno" />
+        <result property="id_tipo_evaluacion" column="ID_TIPO_EVALUACION" />
+    </resultMap>
+  
+    <select id="getDctListarAsignacionDocenteProgramaPlan" resultMap="asignacionDctPrg">
+        SELECT * FROM mi_dct_listar_asignacion_docente_por_programa(#{id_programa},#{id_plan}, #{gestion}, #{periodo})
+        AS (id_asignacion integer, id_docente dentero, id_modelo_ahorro dentero2, id_programa dentero, id_materia int4, materia dtexto, sigla dtexto, 
+        nivel_academico dentero, id_grupo dentero, grupo dtexto, id_fase dentero2, fase dtexto, fec_registro dfec_modificacion,
+        ult_usuario did_usuario, gestion dentero, 
+        periodo dentero, id_departamento integer, id_mencion integer, mencion dtexto, id_persona dentero,
+        paterno dtexto2, materno dtexto2, nombres dtexto, id_tipo_evaluacion dentero);    	
+    </select>
+  
+    <select id="getDctListarAsignacionDocenteProgramaPlanTipoGrado" resultMap="asignacionDctPrg">
+        SELECT * FROM mi_dct_listar_asignacion_docente_por_programa_tipo_grado(#{id_programa},#{id_plan}, #{gestion}, #{periodo}, #{id_tipo_grado})
+        AS (id_asignacion integer, id_docente dentero, id_modelo_ahorro dentero2, id_programa dentero, id_materia int4, materia dtexto, sigla dtexto, 
+        nivel_academico dentero, id_grupo dentero, grupo dtexto, id_fase dentero2, fase dtexto, fec_registro dfec_modificacion,
+        ult_usuario did_usuario, gestion dentero, 
+        periodo dentero, id_departamento integer, id_mencion integer, mencion dtexto, id_persona dentero,
+        paterno dtexto2, materno dtexto2, nombres dtexto, id_tipo_evaluacion dentero);    	
+    </select>
+    <!-- Fin dct_asignacion por programa -->
+
+    <!-- INICIO - Buscar docente -->
+    <resultMap id="asignacionDocente2" type="org.fautapo.domain.Asignaciones">
+        <result property="id_docente"         column="ID_DOCENTE" />
+        <result property="departamento"         column="departamento" />
+        <result property="id_materia"         column="ID_MATERIA" />
+        <result property="sigla"              column="SIGLA" />
+        <result property="materia"            column="MATERIA" />
+        <result property="total_horas"        column="total_horas" />
+        <result property="id_grupo"           column="id_grupo" />
+        <result property="grupo"              column="GRUPO" />
+        <result property="gestion"            column="GESTION" />
+        <result property="periodo"            column="PERIODO" />
+        <result property="fec_inicio"         column="fec_inicio" />
+        <result property="fec_fin"            column="fec_fin" />
+        <result property="nro_resolucionhcu"            column="nro_resolucionhcu" />
+        <result property="fec_resolucion"            column="fec_resolucion" />
+        <result property="tipo_docente"            column="tipo_docente" />
+        <result property="tipo_asignacion"            column="tipo_asignacion" />
+        <result property="tipo_evaluacion"    column="tipo_evaluacion" />
+    </resultMap>
+
+    <select id="getListarAsignacionDocenteTodas" resultMap="asignacionDocente2">
+        SELECT * FROM  mi_dct_listar_asignacion_docente_todas(#{id_docente})
+        AS (id_docente dentero,departamento dtexto, id_materia dentero, sigla dtexto, materia dtexto, total_horas integer, id_grupo dentero, grupo dtexto, 
+        gestion dentero, periodo dentero, fec_inicio dfecha, fec_fin dfecha,nro_resolucionhcu dtexto2,fec_resolucion dfecha,tipo_docente dtexto,tipo_asignacion dtexto, tipo_evaluacion dtexto);	  	
+    </select>
+    <!-- FIN - Buscar docente -->
+  
+    <!-- INICIO - Buscar Asignacion -->
+    <resultMap id="datosAsignacion" type="org.fautapo.domain.Asignaciones">
+        <result property="id_asignacion"      column="id_asignacion" />
+        <result property="id_docente"         column="ID_DOCENTE" />
+        <result property="id_departamento"    column="id_departamento" />
+        <result property="id_materia"         column="ID_MATERIA" />
+        <result property="sigla"              column="SIGLA" />
+        <result property="materia"            column="MATERIA" />
+        <result property="id_grupo"           column="ID_GRUPO" />
+        <result property="grupo"              column="GRUPO" />
+        <result property="id_modelo_ahorro"   column="ID_MODELO_AHORRO" />
+        <result property="gestion"            column="GESTION" />
+        <result property="periodo"            column="PERIODO" />
+        <result property="id_fase"            column="ID_FASE" />
+        <result property="fase"               column="FASE" />
+        <result property="id_tipo_evaluacion" column="ID_TIPO_EVALUACION" />
+        <result property="tipo_evaluacion"    column="TIPO_EVALUACION" />
+        <result property="id_tipo_docente"    column="id_tipo_docente" />
+        <result property="id_tipo_asignacion" column="id_tipo_asignacion" />
+        <result property="observacion"        column="observacion" />
+        <result property="fec_inicio2"        column="fec_inicio" />
+        <result property="fec_fin2"           column="fec_fin" />
+        <result property="nro_resolucion"     column="nro_resolucion" />
+        <result property="nro_resolucionhcc"     column="nro_resolucionhcc" />
+        <result property="nro_resolucionhcf"     column="nro_resolucionhcf" />
+        <result property="nro_resolucionhcu"     column="nro_resolucionhcu" />
+        <result property="fec_resolucion"     column="fec_resolucion" />
+        <result property="id_fase_resolucion" column="id_fase_resolucion" />
+        <result property="fec_registro"       column="fec_registro" />
+        <result property="ult_usuario"        column="ult_usuario" />
+        <result property="tipo_docente"       column="tipo_docente" />
+        <result property="tipo_asignacion"    column="tipo_asignacion" />
+        <result property="nivel_academico"    column="nivel_academico" />
+    </resultMap>
+  
+    <select id="getDctBuscarAsignacionDocente" resultMap="datosAsignacion">
+        SELECT * FROM mi_dct_buscar_asignacion_docente(#{id_asignacion})
+        AS (id_asignacion integer, id_docente dentero, id_departamento dentero, id_materia dentero, sigla dtexto, materia dtexto, id_grupo dentero, grupo dtexto, 
+        id_modelo_ahorro dentero2, gestion dentero, periodo dentero, id_fase dentero2, fase dtexto, id_tipo_evaluacion dentero, 
+        tipo_evaluacion dtexto, id_tipo_docente dentero, id_tipo_asignacion dentero, observacion dtexto2, fec_inicio dfecha, 
+        fec_fin dfecha, nro_resolucion dentero, nro_resolucionhcc dtexto2,nro_resolucionhcf dtexto2,nro_resolucionhcu dtexto2,fec_resolucion dfecha,id_fase_resolucion dentero2, fec_registro dfec_modificacion, ult_usuario did_usuario, tipo_docente dtexto, tipo_asignacion dtexto,nivel_academico dentero);
+    </select>
+    <resultMap id="datosAsignacion1" type="org.fautapo.domain.Asignaciones">
+        <result property="id_asignacion"      column="id_asignacion" />
+        <result property="id_docente"         column="ID_DOCENTE" />
+        <result property="id_departamento"    column="id_departamento" />
+        <result property="id_materia"         column="ID_MATERIA" />
+        <result property="sigla"              column="SIGLA" />
+        <result property="materia"            column="MATERIA" />
+        <result property="id_grupo"           column="ID_GRUPO" />
+        <result property="grupo"              column="GRUPO" />
+        <result property="id_modelo_ahorro"   column="ID_MODELO_AHORRO" />
+        <result property="gestion"            column="GESTION" />
+        <result property="periodo"            column="PERIODO" />
+        <result property="id_fase"            column="ID_FASE" />
+        <result property="fase"               column="FASE" />
+        <result property="id_tipo_evaluacion" column="ID_TIPO_EVALUACION" />
+        <result property="tipo_evaluacion"    column="TIPO_EVALUACION" />
+        <result property="id_tipo_docente"    column="id_tipo_docente" />
+        <result property="id_tipo_asignacion" column="id_tipo_asignacion" />
+        <result property="observacion"        column="observacion" />
+        <result property="fec_inicio2"        column="fec_inicio" />
+        <result property="fec_fin2"           column="fec_fin" />
+        <result property="nro_resolucion"     column="nro_resolucion" />
+        <result property="nro_resolucionhcc"     column="nro_resolucionhcc" />
+        <result property="nro_resolucionhcf"     column="nro_resolucionhcf" />
+        <result property="nro_resolucionhcu"     column="nro_resolucionhcu" />
+        <result property="fec_resolucion"     column="fec_resolucion" />
+        <result property="id_fase_resolucion" column="id_fase_resolucion" />
+        <result property="fec_registro"       column="fec_registro" />
+        <result property="ult_usuario"        column="ult_usuario" />
+        <result property="tipo_docente"       column="tipo_docente" />
+        <result property="tipo_asignacion"    column="tipo_asignacion" />
+        <result property="nivel_academico"    column="nivel_academico" />
+        <result property="descripcion"    column="descripcion" />
+        <result property="departamento"    column="departamento" />
+        <result property="nro_memo"    column="nro_memo" />
+	
+        <result property="hrs_periodo"    column="hrs_periodo" />
+    </resultMap>
+    <select id="getDctBuscarAsignacionDocentemaslafuncion" resultMap="datosAsignacion1">
+        SELECT * FROM mi_dct_buscar_asignacion_docentemaslafuncion(#{id_asignacion})
+        AS (id_asignacion integer, id_docente dentero, id_departamento dentero, id_materia dentero, sigla dtexto, materia dtexto, id_grupo dentero, grupo dtexto, 
+        id_modelo_ahorro dentero2, gestion dentero, periodo dentero, id_fase dentero2, fase dtexto, id_tipo_evaluacion dentero, 
+        tipo_evaluacion dtexto, id_tipo_docente dentero, id_tipo_asignacion dentero, observacion dtexto2, fec_inicio dfecha, 
+        fec_fin dfecha, nro_resolucion dentero, nro_resolucionhcc dtexto2,nro_resolucionhcf dtexto2,nro_resolucionhcu dtexto2,fec_resolucion dfecha,id_fase_resolucion dentero2, fec_registro dfec_modificacion, ult_usuario did_usuario, tipo_docente dtexto, tipo_asignacion dtexto,nivel_academico dentero,descripcion dtexto,departamento dtexto,nro_memo dentero2,hrs_periodo dentero2);
+    </select>
+  
+    <select id="getDctBuscarAsignacionDocenteDesignacion" resultMap="datosAsignacion">
+        SELECT * FROM mi_dct_buscar_asignacion_docente_designacion(#{id_departamento},#{gestion},#{periodo},#{id_tipo_evaluacion})
+        AS (id_asignacion integer, id_docente dentero, id_departamento dentero, id_materia dentero, sigla dtexto, materia dtexto, id_grupo dentero, grupo dtexto, 
+        id_modelo_ahorro dentero2, gestion dentero, periodo dentero, id_fase dentero2, fase dtexto, id_tipo_evaluacion dentero, 
+        tipo_evaluacion dtexto, id_tipo_docente dentero, id_tipo_asignacion dentero, observacion dtexto2, fec_inicio dfecha, 
+        fec_fin dfecha, nro_resolucion dentero, nro_resolucionhcc dtexto2,nro_resolucionhcf dtexto2,nro_resolucionhcu dtexto2,fec_resolucion dfecha,id_fase_resolucion dentero2, fec_registro dfec_modificacion, ult_usuario did_usuario, tipo_docente dtexto, tipo_asignacion dtexto,nivel_academico dentero);
+    </select>
+    <!-- FIN - Buscar Asignacion -->
+
+    <!--Cerrar Libreta Programa Materia-->  
+    <resultMap id="cerrarLib" type="org.fautapo.domain.Asignaciones">
+        <result property="id_asignacion"   column="id_asignacion" />
+        <result property="id_docente"          column="id_docente" />
+        <result property="nombres"             column="nombres" />
+        <result property="id_materia"          column="id_materia" />
+        <result property="materia"             column="materia" />
+        <result property="id_fase"             column="id_fase" />
+        <result property="id_grupo"            column="id_grupo" />
+        <result property="id_modelo_ahorro"    column="id_modelo_ahorro"/>
+        <result property="modelo_ahorro"       column="modelo_ahorro" />
+        <result property="grupo"               column="grupo" />
+        <result property="id_tipo_evaluacion"  column="id_tipo_evaluacion" />
+        <result property="fase"  column="fase" />
+    </resultMap>
+   
+    <select id="getListarMateriasCerrarLibretaDctAsignacion" resultMap="cerrarLib">
+        SELECT * FROM mi_dct_listar_materias_cerrar_libreta_dct_asignacion_materia(#{gestion}, #{periodo}, #{id_tipo_evaluacion}, #{id_materia}) 
+        AS (id_asignacion integer, id_docente dentero, nombres text, id_materia dentero, materia dtexto, id_fase integer, id_grupo dentero, id_modelo_ahorro dentero2, 
+        modelo_ahorro text, grupo dtexto, id_tipo_evaluacion dentero, fase text)
+        ORDER BY materia, id_modelo_ahorro;    
+    </select>
+    <!--Fin Cerrar Libreta Programa Materia-->  
+   
+    <!--Eliminar Asignacion Docente-->  
+    <select id="setEliminarAsignacionDocenteMateria" resultType="java.lang.Integer">
+        SELECT * FROM  mi_eliminar_asignacion_docente(#{id_asignacion}, #{id_rol}, #{ult_usuario});
+    </select>
+    <!-- Fin Eliminar Asignacion Docente-->  
+  
+    <!--Devuelve la fase de resolucion en la designacion de docentes-->  
+    <select id="setBuscar_id_fase_resolucion" resultType="java.lang.Integer">
+        SELECT * FROM  mi_buscar_id_fase_resolucion(#{id_programa}, #{id_tipo_evaluacion}, #{gestion}, #{periodo});
+        <!--FIN Devuelve la fase de resolucion en la designacion de docentes-->  
+    </select>
+  
+    <select id="setBuscar_id_fase_resolucionFinal" resultType="java.lang.Integer">
+        SELECT * FROM  mi_buscar_id_fase_resolucionfinal(#{id_programa},#{id_plan}, #{id_tipo_evaluacion}, #{gestion}, #{periodo});
+        <!--FIN Devuelve la fase de resolucion en la designacion de docentes-->  
+    </select>
+
+    <!-- INICIO - METODOS ADICIONADOS POR LA UAP -->
+
+    <!-- Dct asignacion Docentes Materia -->
+    <resultMap id="asignacionDctMat" type="org.fautapo.domain.Asignaciones">
+        <result property="id_asignacion"      column="id_asignacion"/>
+        <result property="id_docente"         column="id_docente"/>
+        <result property="id_programa"        column="id_programa"/>
+        <result property="id_materia"         column="id_materia"/>
+        <result property="materia"            column="materia"/>
+        <result property="sigla"              column="sigla"/>
+        <result property="nivel_academico"    column="nivel_academico"/>
+        <result property="id_grupo"           column="id_grupo"/>
+        <result property="grupo"              column="grupo"/>
+        <result property="id_fase"            column="id_fase"/>
+        <result property="fec_registro"       column="fec_registro"/>
+        <result property="gestion"            column="gestion"/>
+        <result property="periodo"            column="periodo"/>
+        <result property="id_departamento"    column="id_departamento"/>
+        <result property="id_persona"         column="id_persona"/>
+        <result property="nombres"            column="nombres"/>
+        <result property="paterno"            column="paterno"/>
+        <result property="materno"            column="materno"/>
+        <result property="id_tipo_evaluacion" column="id_tipo_evaluacion"/>
+        <result property="tipo_evaluacion" column="tipo_evaluacion"/>
+    </resultMap>
+  
+    <select id="getDctListarAsignacionDocenteMateria" resultMap="asignacionDctMat">
+        SELECT * FROM mi_dct_listar_asignacion_docente_materia(#{id_programa},#{id_plan}, #{gestion}, #{periodo})
+        AS (id_asignacion integer, id_docente dentero, id_programa dentero, id_materia int4, materia dtexto, sigla dtexto, nivel_academico dentero,
+        id_grupo dentero, grupo dtexto, id_fase dentero2, fec_registro dfec_modificacion, gestion dentero, periodo dentero, id_departamento integer,
+        id_persona dentero, paterno dtexto2, materno dtexto2, nombres dtexto, id_tipo_evaluacion dentero, tipo_evaluacion dtexto);    	
+    </select>
+    <!-- Dct asignacion Docentes Materia -->
+    <resultMap id="asignacionDctMatFun" type="org.fautapo.domain.Asignaciones">
+        <result property="id_asignacion"      column="id_asignacion"/>
+        <result property="id_docente"         column="id_docente"/>
+        <result property="id_programa"        column="id_programa"/>
+        <result property="id_materia"         column="id_materia"/>
+        <result property="materia"            column="materia"/>
+        <result property="sigla"              column="sigla"/>
+        <result property="nivel_academico"    column="nivel_academico"/>
+        <result property="id_grupo"           column="id_grupo"/>
+        <result property="grupo"              column="grupo"/>
+        <result property="id_fase"            column="id_fase"/>
+        <result property="fec_registro"       column="fec_registro"/>
+        <result property="gestion"            column="gestion"/>
+        <result property="periodo"            column="periodo"/>
+        <result property="id_departamento"    column="id_departamento"/>
+        <result property="id_persona"         column="id_persona"/>
+        <result property="nombres"            column="nombres"/>
+        <result property="paterno"            column="paterno"/>
+        <result property="materno"            column="materno"/>
+        <result property="dip"            column="dip"/>
+        <result property="id_tipo_evaluacion" column="id_tipo_evaluacion"/>
+        <result property="tipo_evaluacion" column="tipo_evaluacion"/>
+        <result property="descripcion" column="descripcion"/>
+        <result property="tipo_docente" column="tipo_docente"/>
+        <result property="tipo_asignacion" column="tipo_asignacion"/>
+        <result property="hrs_periodo" column="hrs_periodo"/>
+    </resultMap>
+    <!-- Para el reporte de docentes designados con su funcion administrativa -->
+    <select id="getDctListarAsignacionDocenteMateriaFuncion" resultMap="asignacionDctMatFun">
+        SELECT * FROM mi_dct_listar_asignacion_docente_materia_funcion(#{id_programa},#{id_plan}, #{gestion}, #{periodo},#{id_tipo_evaluacion})
+        AS (id_asignacion integer, id_docente dentero, id_programa dentero, id_materia int4, materia dtexto, sigla dtexto, nivel_academico dentero,
+        id_grupo dentero, grupo dtexto, id_fase dentero2, fec_registro dfec_modificacion, gestion dentero, periodo dentero, id_departamento integer,
+        id_persona dentero, paterno dtexto2, materno dtexto2, nombres dtexto,dip dtexto2, id_tipo_evaluacion dentero, tipo_evaluacion dtexto,descripcion dtexto,tipo_docente dtexto,tipo_asignacion dtexto,hrs_periodo dentero2);    	
+    </select>
+    <select id="getDctListarAsignacionDocenteMateriaFuncionxid" resultMap="asignacionDctMatFun">
+        SELECT * FROM mi_dct_listar_asignacion_docente_materia_funcionxid(#{id_programa},#{id_plan}, #{gestion}, #{periodo},#{id_tipo_evaluacion})
+        AS (id_asignacion integer, id_docente dentero, id_programa dentero, id_materia int4, materia dtexto, sigla dtexto, nivel_academico dentero,
+        id_grupo dentero, grupo dtexto, id_fase dentero2, fec_registro dfec_modificacion, gestion dentero, periodo dentero, id_departamento integer,
+        id_persona dentero, paterno dtexto2, materno dtexto2, nombres dtexto, dip dtexto2,id_tipo_evaluacion dentero, tipo_evaluacion dtexto,descripcion dtexto,tipo_docente dtexto,tipo_asignacion dtexto,hrs_periodo dentero2);    	
+    </select>
+    <!-- Para los memos, listar las designaciones menos los titulares -->
+    <select id="getDctListarAsignacionDocenteMateriaFuncionsintitular" resultMap="asignacionDctMatFun">
+        SELECT * FROM mi_dct_listar_asignacion_docente_materia_funcionsintitular(#{id_programa},#{id_plan}, #{gestion}, #{periodo},#{id_tipo_evaluacion})
+        AS (id_asignacion integer, id_docente integer, id_programa integer, id_materia int4, materia text, sigla text, nivel_academico integer,
+        id_grupo integer, grupo text, id_fase integer, fec_registro timestamp , gestion integer, periodo integer, id_departamento integer,
+        id_persona integer, paterno text, materno text, nombres text,dip text, id_tipo_evaluacion integer, tipo_evaluacion text,descripcion text,tipo_docente text,tipo_asignacion text,hrs_periodo integer);      	
+    </select>
+  
+    <resultMap id="asignacionDctMatFun1" type="org.fautapo.domain.Asignaciones">
+   
+        <result property="id_docente"         column="id_docente"/>
+        <result property="nro_designacion"    column="nro_designacion"/>
+        <result property="id_persona"         column="id_persona"/>
+        <result property="paterno"            column="paterno"/>
+        <result property="materno"            column="materno"/>
+        <result property="nombres"            column="nombres"/>
+        <result property="dip"                column="dip"/> 
+        <result property="descripcion"        column="descripcion"/>
+        <result property="tipo_asignacion"    column="tipo_asignacion"/>
+  
+    </resultMap>
+    <select id="getDctListarAsignacionDocenteMateriaFuncionsintitularfinal" resultMap="asignacionDctMatFun1">
+        SELECT * FROM mi_dct_listar_asignacion_docente_materia_funcionsintitularfinal(#{id_programa},#{id_plan}, #{gestion}, #{periodo},#{id_tipo_evaluacion})
+        AS (id_docente integer, nro_designacion bigint, id_persona integer, paterno text, materno text, nombres text, dip text, descripcion text,tipo_asignacion text); 
+     	
+    </select>
+  
+  
+    <resultMap id="asignacionDctMatFunsoloid" type="org.fautapo.domain.Asignaciones">
+        <result property="id_asignacion"      column="id_asignacion"/>
+    </resultMap> 
+    <!-- Para el reporte de docentes designados con su funcion administrativa -->
+    <select id="getDctListarAsignacionDocenteMateriaFuncionsoloid" resultMap="asignacionDctMatFunsoloid">
+        SELECT * FROM mi_dct_listar_asignacion_docente_materia_funcionsoloid(#{id_programa},#{id_plan}, #{gestion}, #{periodo},#{id_tipo_evaluacion})
+        AS (id_asignacion integer);    	
+    </select> 
+  
+    <!-- CONTAR CUANTAS ASIGNACIONES TIENE CADA DOCENTE -->
+    <resultMap id="nroasignacionDctMatFun" type="org.fautapo.domain.Asignaciones">
+        <result property="id_docente"         column="id_docente"/>
+        <result property="nro_designacion"    column="nro_designacion"/>
+        <result property="id_persona"         column="id_persona"/>
+        <result property="paterno"            column="paterno"/>
+        <result property="materno"            column="materno"/>
+        <result property="nombres"            column="nombres"/>
+        <result property="dip"                column="dip"/> 
+        <result property="descripcion"        column="descripcion"/>
+        <result property="tipo_asignacion"    column="tipo_asignacion"/>
+	
+    </resultMap>
+    <!-- Para el reporte de docentes designados con su funcion administrativa -->
+    <select id="getDctListarNroAsignacionDocenteMateriaFuncionxid" resultMap="nroasignacionDctMatFun">
+        SELECT * FROM mi_dct_listar_nro_asignacion_docente_materia_funcionxid(#{id_programa},#{id_plan}, #{gestion}, #{periodo},#{id_tipo_evaluacion})
+        AS (id_docente dentero, nro_designacion bigint, id_persona dentero, paterno dtexto2, materno dtexto2, nombres dtexto, dip dtexto2, descripcion dtexto,tipo_asignacion dtexto); 
+		
+    </select>
+  
+    <!-- Dct asignacion Docentes Materia para el listado de las asignaciones, se usara en los memos -->
+    <resultMap id="memo" type="org.fautapo.domain.Asignaciones">
+        <result property="id_asignacion"      column="id_asignacion"/>
+        <result property="id_docente"         column="id_docente"/>
+        <result property="id_programa"        column="id_programa"/>
+        <result property="id_materia"         column="id_materia"/>
+        <result property="materia"            column="materia"/>
+        <result property="sigla"              column="sigla"/>
+        <result property="nivel_academico"    column="nivel_academico"/>
+        <result property="id_grupo"           column="id_grupo"/>
+        <result property="grupo"              column="grupo"/>
+        <result property="id_fase"            column="id_fase"/>
+        <result property="fec_registro"       column="fec_registro"/>
+        <result property="gestion"            column="gestion"/>
+        <result property="periodo"            column="periodo"/>
+        <result property="id_departamento"    column="id_departamento"/>
+        <result property="id_persona"         column="id_persona"/>
+        <result property="nombres"            column="nombres"/>
+        <result property="paterno"            column="paterno"/>
+        <result property="materno"            column="materno"/>
+        <result property="id_tipo_evaluacion" column="id_tipo_evaluacion"/>
+        <result property="tipo_evaluacion" column="tipo_evaluacion"/>
+        <result property="descripcion" column="descripcion"/>
+        <result property="tipo_docente" column="tipo_docente"/>
+        <result property="tipo_asignacion" column="tipo_asignacion"/>
+    </resultMap>
+    <!-- Para el listado de las asignaciones, esto se usara en los memos -->
+    <select id="getDctListarAsignacionDocenteMateriaFuncionparamemo" resultMap="memo">
+        SELECT * FROM mi_dct_listar_asignacion_docente_materia_funcionparamemos(#{id_programa},#{id_plan}, #{gestion}, #{periodo},#{id_tipo_evaluacion})
+        AS (id_asignacion integer, id_docente dentero, id_programa dentero, id_materia int4, materia dtexto, sigla dtexto, nivel_academico dentero,
+        id_grupo dentero, grupo dtexto, id_fase dentero2, fec_registro dfec_modificacion, gestion dentero, periodo dentero, id_departamento integer,
+        id_persona dentero, paterno dtexto2, materno dtexto2, nombres dtexto, id_tipo_evaluacion dentero, tipo_evaluacion dtexto,descripcion dtexto,tipo_docente dtexto,tipo_asignacion dtexto);    	
+    </select>
+  
+    <!-- Reporte de todos los docentes tiempos completos -->
+    <resultMap id="contadortc" type="org.fautapo.domain.Asignaciones">
+        <result property="count"         column="count"/>
+        <result property="id_docente"         column="id_docente"/>
+        <result property="paterno"            column="paterno"/>
+        <result property="materno"            column="materno"/>
+        <result property="nombres"            column="nombres"/>
+        <result property="gestion"            column="gestion"/>
+        <result property="periodo"            column="periodo"/>
+        <result property="tipo_evaluacion" column="tipo_evaluacion"/>
+        <result property="descripcion" column="descripcion"/>
+	
+    </resultMap>
+    <!-- Para el  Reporte de todos los docentes tiempos completos -->
+    <select id="getDctListarAsignacionDocenteMateriacontador" resultMap="contadortc">
+        SELECT * FROM mi_dct_listar_asignacion_docente_contador_tiemposcompletos(#{gestion}, #{periodo},#{id_tipo_evaluacion})
+        AS (count bigint, id_docente dentero,paterno dtexto2, materno dtexto2, nombres dtexto, gestion dentero, periodo dentero,
+        tipo_evaluacion dtexto,descripcion dtexto);    	
+    </select>
+    <resultMap id="listartc" type="org.fautapo.domain.Asignaciones">
+        <result property="id_asignacion"      column="id_asignacion"/>
+        <result property="id_docente"         column="id_docente"/>
+        <result property="id_programa"        column="id_programa"/>
+        <result property="departamento"        column="departamento"/>
+        <result property="id_materia"         column="id_materia"/>
+        <result property="materia"            column="materia"/>
+        <result property="sigla"              column="sigla"/>
+        <result property="nivel_academico"    column="nivel_academico"/>
+        <result property="id_grupo"           column="id_grupo"/>
+        <result property="grupo"              column="grupo"/>
+        <result property="id_fase"            column="id_fase"/>
+        <result property="fec_registro"       column="fec_registro"/>
+        <result property="gestion"            column="gestion"/>
+        <result property="periodo"            column="periodo"/>
+        <result property="id_departamento"    column="id_departamento"/>
+        <result property="id_persona"         column="id_persona"/>
+        <result property="nombres"            column="nombres"/>
+        <result property="paterno"            column="paterno"/>
+        <result property="materno"            column="materno"/>
+        <result property="dip"            column="dip"/>
+        <result property="id_tipo_evaluacion" column="id_tipo_evaluacion"/>
+        <result property="tipo_evaluacion" column="tipo_evaluacion"/>
+        <result property="descripcion" column="descripcion"/>
+        <result property="tipo_docente" column="tipo_docente"/>
+        <result property="tipo_asignacion" column="tipo_asignacion"/>
+        <result property="hrs_periodo" column="hrs_periodo"/>
+    </resultMap>
+    <!-- Para el reporte de docentes designados con su funcion administrativa -->
+    <select id="getDctListarAsignacionDocenteMateriatc" resultMap="listartc">
+        SELECT * FROM mi_dct_listar_asignacion_docente_materia_tiemposcompletos(#{gestion}, #{periodo},#{id_tipo_evaluacion})
+        AS (id_asignacion integer, id_docente dentero, id_programa dentero,departamento dtexto, id_materia int4, materia dtexto, sigla dtexto, nivel_academico dentero,
+        id_grupo dentero, grupo dtexto, id_fase dentero2, fec_registro dfec_modificacion, gestion dentero, periodo dentero, id_departamento integer,
+        id_persona dentero, paterno dtexto2, materno dtexto2, nombres dtexto, dip dtexto2,id_tipo_evaluacion dentero, tipo_evaluacion dtexto,descripcion dtexto,tipo_docente dtexto,tipo_asignacion dtexto,hrs_periodo dentero2);
+    </select>
+    
+    <!-- fin del  Reporte de todos los docentes tiempos completos -->
+    <!-- Dct asignacion Axiliares Materia -->
+    <resultMap id="asignacionAuxtMat" type="org.fautapo.domain.Asignaciones">
+        <result property="id_asignacion"      column="id_asignacion"/>
+        <result property="id_docente"         column="id_docente"/>
+        <result property="id_programa"        column="id_programa"/>
+        <result property="id_materia"         column="id_materia"/>
+        <result property="materia"            column="materia"/>
+        <result property="sigla"              column="sigla"/>
+        <result property="nivel_academico"    column="nivel_academico"/>
+        <result property="fec_registro"       column="fec_registro"/>
+        <result property="gestion"            column="gestion"/>
+        <result property="periodo"            column="periodo"/>
+        <result property="id_departamento"    column="id_departamento"/>
+        <result property="id_persona"         column="id_persona"/>
+        <result property="nombres"            column="nombres"/>
+        <result property="paterno"            column="paterno"/>
+        <result property="materno"            column="materno"/>
+        <result property="id_tipo_evaluacion" column="id_tipo_evaluacion"/>
+        <result property="tipo_evaluacion" column="tipo_evaluacion"/>
+    </resultMap>
+  
+    <select id="getDctListarAsignacionAuxiliarMateria" resultMap="asignacionAuxtMat">
+        SELECT * FROM mi_dct_listar_asignacion_auxiliar_materia(#{id_programa},#{id_plan}, #{gestion}, #{periodo})
+        AS (id_asignacion integer, id_docente dentero, id_programa dentero, id_materia int4, materia dtexto, sigla dtexto, nivel_academico dentero,
+        id_fase dentero2, fec_registro dfec_modificacion, gestion dentero, periodo dentero, id_departamento integer,
+        id_persona dentero, paterno dtexto2, materno dtexto2, nombres dtexto, id_tipo_evaluacion dentero, tipo_evaluacion dtexto);   
+    </select>
+    <!-- Dct asignacion Auxiliares Materia -->
+
+
+  
+    <!--asignacion auxiliar de docencia-->
+    <resultMap id="datosAsignacionAuxiliares" type="org.fautapo.domain.Asignaciones">
+        <result property="id_asignacion"      column="id_asignacion" />
+        <result property="id_docente"         column="ID_DOCENTE" />
+        <result property="id_departamento"    column="id_departamento" />
+        <result property="id_materia"         column="ID_MATERIA" />
+        <result property="sigla"              column="SIGLA" />
+        <result property="materia"            column="MATERIA" />
+        <result property="id_grupo"           column="ID_GRUPO" />
+        <result property="grupo"              column="GRUPO" />
+        <result property="id_modelo_ahorro"   column="ID_MODELO_AHORRO" />
+        <result property="gestion"            column="GESTION" />
+        <result property="periodo"            column="PERIODO" />
+        <result property="id_fase"            column="ID_FASE" />
+        <result property="fase"               column="FASE" />
+        <result property="id_tipo_evaluacion" column="ID_TIPO_EVALUACION" />
+        <result property="tipo_evaluacion"    column="TIPO_EVALUACION" />
+        <result property="id_tipo_docente"    column="id_tipo_docente" />
+        <result property="id_tipo_asignacion" column="id_tipo_asignacion" />
+        <result property="observacion"        column="observacion" />
+        <result property="fec_inicio2"        column="fec_inicio" />
+        <result property="fec_fin2"           column="fec_fin" />
+        <result property="snro_resolucion"     column="snro_resolucion" />
+        <result property="fec_resolucion"     column="fec_resolucion" />
+        <result property="fec_registro"       column="fec_registro" />
+        <result property="ult_usuario"        column="ult_usuario" />
+        <result property="tipo_docente"       column="tipo_docente" />
+        <result property="tipo_asignacion"    column="tipo_asignacion" />
+        <result property="carga_horaria"    column="carga_horaria" />
+    </resultMap>
+
+    <select id="setRegistrarAsignacionAuxiliar" resultType="java.lang.Integer">
+        SELECT * FROM registrar_designacion_auxiliar_materias(#{id_docente}, #{id_departamento}, #{id_materia}, #{id_grupo}, #{id_modelo_ahorro}, #{id_fase}, #{id_tipo_evaluacion}, #{id_tipo_docente}, #{id_tipo_asignacion}, #{gestion}, 
+        #{periodo}, #{observacion}, #{fec_inicio},#{fec_fin}, #{snro_resolucion}, #{fec_resolucion}, #{ult_usuario}, #{id_asignacion},#{carga_horaria},#{id_plan});
+    </select>
+
+    <select id="getDctBuscarAsignacionAuxiliar" resultMap="datosAsignacionAuxiliares">
+        SELECT * FROM mi_dct_buscar_asignacion_auxiliar(#{id_asignacion})
+        AS (id_asignacion integer, id_docente dentero, id_departamento dentero, id_materia dentero, sigla dtexto, materia dtexto, id_grupo dentero, grupo dtexto, 
+        id_modelo_ahorro dentero2, gestion dentero, periodo dentero, id_fase dentero2, fase dtexto, id_tipo_evaluacion dentero, 
+        tipo_evaluacion dtexto, id_tipo_docente dentero, id_tipo_asignacion dentero, observacion dtexto2, fec_inicio dfecha, 
+        fec_fin dfecha, snro_resolucion dtexto, fec_resolucion dfecha, fec_registro dfec_modificacion, ult_usuario did_usuario, tipo_docente dtexto, tipo_asignacion dtexto,carga_horaria dtexto);
+    </select>  
+
+    <select id="setEliminarAsignacionAuxiliarMateria" resultType="java.lang.Integer">
+        SELECT * FROM  mi_eliminar_asignacion_auxiliar(#{id_asignacion}, #{id_rol}, #{ult_usuario});
+    </select>  
+    <!-- FIN - METODOS ADICIONADOS POR LA UAP -->
+    <resultMap id="datosAsignacionEvaluarGrupo" type="org.fautapo.domain.Asignaciones">
+        <result property="id_asignacion"      column="id_asignacion" />     
+        <result property="id_materia"      column="id_materia" />     
+        <result property="gestion"      column="gestion" />     
+        <result property="periodo"      column="periodo" />     
+        <result property="id_departamento"      column="id_departamento" />
+        <result property="id_tipo_evaluacion"      column="id_tipo_evaluacion" />  
+        <result property="id_grupo"      column="id_grupo" />
+         <result property="id_estado"      column="id_estado" />      
+    </resultMap>
+    <select id="getEvaluarAsignacionesGrupo" resultMap="datosAsignacionEvaluarGrupo">
+        select id_asignacion, id_materia, gestion, periodo, id_departamento,id_tipo_evaluacion,id_grupo, id_estado from dct_asignaciones
+        where id_materia=#{id_materia}
+        and gestion=#{gestion}
+        and periodo=#{periodo}
+        and id_departamento=#{id_departamento}
+        and id_tipo_evaluacion=#{id_tipo_evaluacion}
+        and id_grupo=#{id_grupo}
+        and id_estado!='X'
+    </select>  
+</mapper>

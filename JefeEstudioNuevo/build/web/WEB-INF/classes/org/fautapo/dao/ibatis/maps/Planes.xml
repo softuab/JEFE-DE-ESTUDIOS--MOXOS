@@ -1,0 +1,580 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--
+ * @autor FAUTAPO
+ * @fec_registro 2005-11-01
+ * @ult_usuario FAUTAPO
+ * @fec_modificacion 2005-11-01
+-->
+
+<mapper namespace="Planes">
+
+    <resultMap id="plancito" type="org.fautapo.domain.Planes">
+        <result property="id_programa" column="id_programa"/>
+        <result property="id_prg_plan" column="id_prg_plan"/>
+        <result property="id_plan"     column="id_plan"/>
+        <result property="tipo_grado"  column="tipo_grado"/>
+    </resultMap>
+  
+    <select id="getPrgListarPlanes" resultMap="plancito">
+        SELECT * FROM mi_prg_listar_planes(#{id_programa})
+        AS (id_programa dentero, id_prg_plan integer, id_plan dtexto, tipo_grado dtexto);
+    </select>
+
+    <select id="getFclListarPlanes" resultMap="plancito">
+        SELECT * FROM mi_fcl_listar_planes(#{id_facultad})
+        AS (id_programa dentero, id_prg_plan integer, id_plan dtexto, tipo_grado dtexto);
+    </select>
+
+    <resultMap id="plancito2" type="org.fautapo.domain.Planes">
+        <result property="id_prg_plan"   column="id_prg_plan"/>
+        <result property="id_programa"   column="id_programa"/>
+        <result property="id_plan"       column="id_plan"/>
+        <result property="id_tipo_grado" column="id_tipo_grado"/>
+        <result property="tipo_grado"    column="tipo_grado"/>
+    </resultMap>
+  
+    <select id="getUnvListarPlanes" resultMap="plancito2">
+        SELECT * FROM mi_unv_listar_planes(#{id_universidad})
+        AS (id_prg_plan integer, id_programa dentero, id_plan dtexto, id_tipo_grado dentero, tipo_grado dtexto);
+    </select>
+  
+    <select id="getUnvGrdListarPlanes" resultMap="plancito2">
+        SELECT * FROM mi_unv_listar_planes(#{id_universidad}, #{id_tipo_grado})
+        AS (id_prg_plan integer, id_programa integer, id_plan dtexto, id_tipo_grado dentero, tipo_grado dtexto);
+    </select>
+
+    <resultMap id="plan_nro_niveles" type="org.fautapo.domain.Planes">
+        <result property="nivel_academico" column="nivel_academico" />
+        <result property="numero"          column="numero" />
+    </resultMap>
+
+    <select id="getPlnListarMateriasNivel" resultMap="plan_nro_niveles">
+        SELECT * FROM mi_pln_listar_materias_nivel(#{id_plan},#{id_programa}) AS (nivel_academico dentero, numero dentero);
+    </select>
+
+    <select id="getPlnListarNroNiveles" resultType="java.lang.Integer">
+        SELECT * FROM mi_pln_listar_nro_niveles(#{id_plan}, #{id_programa}) AS niveles;
+    </select>
+
+    <resultMap id="plan_materias_requisitos" type="org.fautapo.domain.Planes">
+        <result property="id_materia"     column="id_materia" />
+        <result property="id_materia_ant" column="id_materia_ant" />
+    </resultMap>
+
+    <select id="getPlnListarMateriasRequisitos" resultMap="plan_materias_requisitos">
+        SELECT * FROM mi_pln_listar_materias_requisitos(#{id_plan}, #{id_programa})
+        AS (id_materia dentero, id_materia_ant dentero);
+    </select>
+
+    <resultMap id="plan_materias_nro_requisitos" type="org.fautapo.domain.Planes">
+        <result property="id_materia"     column="id_materia" />
+        <result property="numero"          column="numero" />
+    </resultMap>
+
+    <select id="getPlnListarMateriasNroRequisitos" resultMap="plan_materias_nro_requisitos">
+        SELECT * FROM mi_pln_listar_materias_nro_requisitos(#{id_plan},#{id_programa}) as (id_materia dentero, numero dentero);
+    </select>
+    <!--HORARIOS-->
+    <resultMap id="listaPlan" type="org.fautapo.domain.Modelos_ahorros">
+        <result property="nivel_academico"  column="NIVEL_ACADEMICO"/>
+        <result property="id_materia"       column="ID_MATERIA"/>
+        <result property="sigla"            column="SIGLA"/>
+        <result property="materia"          column="MATERIA"/>
+        <result property="id_modelo_ahorro" column="ID_MODELO_AHORRO"/>
+        <result property="cupo_restante"    column="CUPO_RESTANTE"/>
+        <result property="nro_grupos"       column="NRO_GRUPOS"/>
+    </resultMap>
+  
+    <select id="getListarPlanProgramaModeloAhorro" resultMap="listaPlan">
+        SELECT nivel_academico, id_materia, sigla, materia, id_modelo_ahorro, 0 AS cupo_restante, 0 AS nro_grupos
+        FROM mi_listar_plan_programa_modelo_ahorro(#{id_programa}, #{id_plan}, #{gestion}, #{periodo}, #{id_tipo_grado})
+        AS (nivel_academico dentero, id_materia dentero, sigla dtexto, materia dtexto, id_modelo_ahorro integer)
+        ORDER BY nivel_academico, id_materia;
+    </select>
+  
+    <resultMap id="buscarPlanPrograma" type="org.fautapo.domain.Planes">
+        <result property="id_plan"          column="id_plan"/>
+        <result property="id_programa"      column="id_programa"/>
+    </resultMap>
+  
+    <select id="getMtrBuscarPlanPrograma" resultMap="buscarPlanPrograma">
+        SELECT distinct id_plan, id_programa
+        FROM mi_mtr_buscar_plan_programa(#{id_plan}, #{id_programa});
+    </select>
+    <!--FIN HORARIOS-->
+  
+    <!--PROGRAMACION COMO ESTUDIANTE-->
+    <resultMap id="menciones" type="org.fautapo.domain.Planes">
+        <result property="id_mencion"      column="id_mencion"/>
+        <result property="id_programa"     column="id_programa"/>
+        <result property="id_plan"         column="id_plan"/>
+        <result property="id_estado"       column="id_estado"/>
+        <result property="mencion"         column="mencion"/>
+    </resultMap>
+
+    <select id="getMncListarMenciones" resultMap="menciones">
+        SELECT * FROM mi_mnc_listar_menciones(#{id_programa}, #{id_plan}, #{id_tipo_grado});
+    </select>
+  
+    <select id="setEstRegistrarMencionEstudiante" resultType="java.lang.Integer">
+        SELECT * FROM mi_est_registrar_mencion_estudiante(#{id_estudiante}, #{id_programa}, #{id_plan}, #{id_mencion}, #{id_rol}, #{ult_usuario});
+    </select>
+    <!--FIN-->
+  
+    <!--MI SEGUNDA PARTE-->
+    <resultMap id="listarTiposGrados" type="org.fautapo.domain.Planes">
+        <result property="id_tipo_grado"   column="id_tipo_grado"/>
+        <result property="tipo_grado"      column="tipo_grado"/>
+    </resultMap>
+
+    <select id="getListarTiposGrados" resultMap="listarTiposGrados">
+        SELECT * FROM  mi_listar_tipos_grados();
+    </select>
+  
+    <select id="getBuscarTiposGrados" resultMap="listarTiposGrados">
+        SELECT * FROM mi_buscar_tipo_grado(#{id_tipo_grado});
+    </select>
+  
+    <resultMap id="planes" type="org.fautapo.domain.Planes">
+        <result property="plan"          column="plan"/>
+        <result property="resolucion"    column="resolucion"/>
+        <result property="actual"        column="actual"/>
+        <result property="detalles"      column="detalles"/>
+        <result property="id_programa"   column="id_programa"/>
+        <result property="id_facultad"   column="id_facultad"/>
+        <result property="tipo_grado"    column="tipo_grado"/>
+    </resultMap>
+
+    <select id="getListarPrgPlanesActual" resultMap="planes">
+        SELECT * FROM mi_buscar_prg_plan_actual(#{id_programa})
+        AS (plan dtexto, resolucion dtexto, actual dbooleano2, detalles dtexto2, id_programa dentero, id_facultad dentero, tipo_grado dtexto);
+    </select>
+    <!-- FIN MI SEGUNDA PARTE-->
+  
+    <!-- INICIO - CONVALIDACION AUTOMATICA -->
+    <resultMap id="datosPlanesGrupo" type="org.fautapo.domain.Planes">
+        <result property="nivel_academico"  column="nivel_academico"/>
+        <result property="id_materia"       column="id_materia"/>
+        <result property="sigla"            column="sigla"/>
+        <result property="materia"          column="materia"/>
+        <result property="id_grupo"         column="id_grupo"/>
+        <result property="grupo"            column="grupo"/>
+    </resultMap>
+  
+    <select id="getListarMateriasPlanGrupo" resultMap="datosPlanesGrupo">
+        SELECT * FROM mi_listar_materias_plan_grupo(#{id_programa}, #{id_plan}, #{id_tipo_grado}, #{id_tipo_evaluacion}, #{gestion}, #{periodo})
+        AS (nivel_academico dentero, id_materia integer, sigla dtexto, materia dtexto, id_grupo dentero, grupo dtexto);
+    </select>
+  
+    <resultMap id="datosPlanesGrupoCantidad" type="org.fautapo.domain.Planes">
+        <result property="nivel_academico"  column="nivel_academico"/>
+        <result property="id_materia"       column="id_materia"/>
+        <result property="sigla"            column="sigla"/>
+        <result property="materia"          column="materia"/>
+        <result property="id_grupo"         column="id_grupo"/>
+        <result property="grupo"            column="grupo"/>
+        <result property="numero"           column="cantidad"/>
+    </resultMap>
+  
+    <select id="getListarMateriasPlanGrupoCantidad" resultMap="datosPlanesGrupoCantidad">
+        SELECT * FROM mi_listar_materias_plan_grupo_cantidad(#{id_programa}, #{id_plan}, #{id_tipo_grado}, #{id_tipo_evaluacion}, #{gestion}, #{periodo})
+        AS (nivel_academico dentero, id_materia integer, sigla dtexto, materia dtexto, id_grupo dentero, grupo dtexto, cantidad integer);
+    </select>
+
+    <resultMap id="datosPlanes" type="org.fautapo.domain.Planes">
+        <result property="nivel_academico"  column="nivel_academico"/>
+        <result property="id_materia"       column="id_materia"/>
+        <result property="sigla"            column="sigla"/>
+        <result property="materia"          column="materia"/>
+        <result property="id_mencion"       column="id_mencion"/>
+        <result property="mencion"          column="mencion"/>
+    </resultMap>
+  
+    <select id="getListarMateriasPlan" resultMap="datosPlanes">
+        SELECT * FROM mi_listar_materias_plan(#{id_programa}, #{id_plan}, #{id_tipo_grado})
+        AS (nivel_academico dentero, id_materia integer, sigla dtexto, materia dtexto, id_mencion integer, mencion dtexto);
+    </select>
+  
+    <select id="getListarMateriasPlanTipoGrado" resultMap="datosPlanes">
+        SELECT * FROM mi_listar_materias_plan_tipo_grado(#{id_programa}, #{id_plan}, #{id_tipo_grado})
+        AS (nivel_academico dentero, id_materia integer, sigla dtexto, materia dtexto, id_mencion integer, mencion dtexto);
+    </select>
+
+    <resultMap id="datosPlanes2" type="org.fautapo.domain.Planes">
+        <result property="id_mtr_plan"         column="id_mtr_plan"/>
+        <result property="nivel_academico"     column="nivel_academico"/>
+        <result property="id_materia"          column="id_materia"/>
+        <result property="sigla"               column="sigla"/>
+        <result property="materia"             column="materia"/>
+        <result property="id_mencion"          column="id_mencion"/>
+        <result property="mencion"             column="mencion"/>
+        <result property="materias_anteriores" column="materias_anteriores"/>
+        <result property="id_tipo_grado"       column="id_tipo_grado"/>
+        <result property="id_tipo_materia"     column="id_tipo_materia"/>
+    </resultMap>
+  
+    <select id="getListarMateriasPlanConvalidado" resultMap="datosPlanes2">
+        SELECT * FROM mi_listar_materias_plan_convalidado(#{id_programa}, #{id_plan}, #{id_plan_ant})
+        AS (id_mtr_plan integer, nivel_academico dentero, id_materia integer, sigla dtexto, materia dtexto, id_mencion dentero, mencion dtexto, 
+        materias_anteriores text, id_tipo_grado dentero, id_tipo_materia dentero);
+    </select>
+
+    <resultMap id="datosPlanes3" type="org.fautapo.domain.Planes">
+        <result property="id_mtr_plan"     column="id_mtr_plan"/>
+        <result property="nivel_academico" column="nivel_academico"/>
+        <result property="id_materia_ant"  column="id_materia_ant"/>
+        <result property="id_materia"      column="id_materia"/>
+        <result property="sigla"           column="sigla"/>
+        <result property="materia"         column="materia"/>
+    </resultMap>
+  
+    <select id="getListarMateriasPlanAnterior" resultMap="datosPlanes3">
+        SELECT * FROM mi_listar_materias_plan_anterior(#{id_programa}, #{id_plan}, #{id_plan_ant}, #{id_materia}, #{id_mencion})
+        AS (id_mtr_plan integer, nivel_academico dentero, id_materia_ant dentero, id_materia integer, sigla dtexto, materia dtexto);
+    </select>
+
+    <select id="getListarMateriasPlanAnterior2" resultMap="datosPlanes3">
+        SELECT * FROM mi_listar_materias_plan_anterior2(#{id_programa}, #{id_plan}, #{id_plan_ant}, #{id_materia}, #{id_mencion})
+        AS (id_mtr_plan integer, nivel_academico dentero, id_materia_ant dentero, id_materia integer, sigla dtexto, materia dtexto);
+    </select>
+
+    <select id="setRegistrarMtrPlan" resultType="java.lang.Integer">
+        SELECT mi_registrar_mtr_plan(#{id_programa}, #{id_plan_ant}, #{id_materia_ant}, #{id_plan}, #{id_materia}, #{id_mencion}, 
+        #{id_tipo_grado}, #{id_tipo_materia}, #{nivel_academico}, #{id_rol}, #{ult_usuario});
+    </select>
+
+    <select id="setEliminarMtrPlan" resultType="java.lang.Integer">
+        SELECT mi_eliminar_mtr_plan(#{id_mtr_plan}, #{id_rol}, #{ult_usuario});
+    </select>
+
+    <resultMap id="datosMencion" type="org.fautapo.domain.Planes">
+        <result property="id_mencion" column="id_mencion"/>
+        <result property="mencion"    column="mencion"/>
+    </resultMap>
+
+    <select id="getMncBuscarMencion" resultMap="datosMencion">
+        SELECT * FROM mi_mnc_buscar_mencion(#{id_mencion});
+    </select>
+
+    <resultMap id="datosMateriaPlan" type="org.fautapo.domain.Planes">
+        <result property="nivel_academico"    column="nivel_academico"/>
+        <result property="id_tipo_grado"      column="id_tipo_grado"/>
+        <result property="id_tipo_materia"    column="id_tipo_materia"/>
+    </resultMap>
+  
+    <select id="getBuscarMateriaPlan" resultMap="datosMateriaPlan">
+        SELECT * FROM mi_buscar_materia_plan(#{id_programa}, #{id_plan}, #{id_materia}, #{id_mencion})
+        AS (nivel_academico dentero, id_tipo_grado dentero, id_tipo_materia dentero);
+    </select>
+    <!-- FIN - CONVALIDACION AUTOMATICA -->
+  
+    <!-- INICIO- Admin Planes de Estudio -->
+    <resultMap id="datosPlanesRequisitos" type="org.fautapo.domain.Planes">
+        <result property="id_mtr_plan"         column="id_mtr_plan"/>
+        <result property="nivel_academico"     column="nivel_academico"/>
+        <result property="id_materia"          column="id_materia"/>
+        <result property="sigla"               column="sigla"/>
+        <result property="materia"             column="materia"/>
+        <result property="hrs_teoricas"        column="hrs_teoricas"/>
+        <result property="hrs_practicas"       column="hrs_practicas"/>
+        <result property="creditos"            column="creditos"/>
+        <result property="id_mencion"          column="id_mencion"/>
+        <result property="mencion"             column="mencion"/>
+        <result property="materias_anteriores" column="materias_requisitos"/>
+        <result property="id_tipo_grado"       column="id_tipo_grado"/>
+        <result property="id_tipo_materia"     column="id_tipo_materia"/>
+        <result property="tipo_materia"        column="tipo_materia"/>
+    </resultMap>
+  
+    <select id="getListarMateriasPlanRequisitos" resultMap="datosPlanesRequisitos">
+        SELECT * FROM mi_listar_materias_plan_requisitos(#{id_programa}, #{id_plan}, #{id_tipo_grado})
+        AS (id_mtr_plan integer, nivel_academico dentero, id_materia integer, sigla dtexto, materia dtexto, hrs_teoricas dentero2, 
+        hrs_practicas dentero2, creditos dreal2, id_mencion dentero, mencion dtexto,
+        materias_requisitos text, id_tipo_grado dentero, id_tipo_materia dentero, tipo_materia dtexto);
+    </select>
+
+    <select id="getListarMateriasElectivasPlan" resultMap="datosPlanesRequisitos">
+        SELECT * FROM mi_listar_materias_electivas_plan(#{id_programa}, #{id_plan}, #{id_tipo_grado})
+        AS (id_mtr_plan integer, nivel_academico dentero, id_materia integer, sigla dtexto, materia dtexto, hrs_teoricas dentero2, 
+        hrs_practicas dentero2, creditos dreal2, id_mencion dentero, mencion dtexto,
+        materias_requisitos text, id_tipo_grado dentero, id_tipo_materia dentero, tipo_materia dtexto);
+    </select>
+
+    <select id="getListarMateriasPlanMencion" resultMap="datosPlanesRequisitos">
+        SELECT * FROM mi_listar_materias_plan_requisitos_mencion(#{id_programa}, #{id_plan}, #{id_tipo_grado}, #{id_mencion})
+        AS (id_mtr_plan integer, nivel_academico dentero, id_materia integer, sigla dtexto, materia dtexto, hrs_teoricas dentero2, 
+        hrs_practicas dentero2, creditos dreal2, id_mencion dentero, mencion dtexto,
+        materias_requisitos text, id_tipo_grado dentero, id_tipo_materia dentero, tipo_materia dtexto);
+    </select>
+
+    <resultMap id="datosMateriasRequisitos" type="org.fautapo.domain.Planes">
+        <result property="id_mtr_plan"     column="id_mtr_plan"/>
+        <result property="nivel_academico" column="nivel_academico"/>
+        <result property="id_materia_ant"  column="id_materia_ant"/>
+        <result property="id_materia"      column="id_materia"/>
+        <result property="sigla"           column="sigla"/>
+        <result property="materia"         column="materia"/>
+    </resultMap>
+  
+    <select id="getListarMateriasRequisitos" resultMap="datosMateriasRequisitos">
+        SELECT * FROM mi_listar_materias_requisitos(#{id_programa}, #{id_plan}, #{id_materia}, #{id_mencion}, #{id_tipo_grado})
+        AS (id_mtr_plan integer, nivel_academico dentero, id_materia_ant dentero, id_materia integer, sigla dtexto, materia dtexto);
+    </select>
+
+    <select id="getListarMateriasNoRequisitos" resultMap="datosMateriasRequisitos">
+        SELECT * FROM mi_listar_materias_no_requisitos(#{id_programa}, #{id_plan}, #{id_materia}, #{id_mencion}, #{id_tipo_grado})
+        AS (id_mtr_plan integer, nivel_academico dentero, id_materia_ant dentero, id_materia integer, sigla dtexto, materia dtexto);
+    </select>
+
+    <resultMap id="datosMateriasConvalidadas" type="org.fautapo.domain.Planes">
+        <result property="id_mtr_plan"     column="id_mtr_plan"/>
+        <result property="nivel_academico" column="nivel_academico"/>
+        <result property="id_materia_ant"  column="id_materia_ant"/>
+        <result property="id_materia"      column="id_materia"/>
+        <result property="sigla"           column="sigla"/>
+        <result property="materia"         column="materia"/>
+    </resultMap>
+  
+    <select id="getListarMateriasConvalidadas" resultMap="datosMateriasConvalidadas">
+        SELECT * FROM mi_listar_materias_convalidadas(#{id_programa}, #{id_plan}, #{id_materia}, #{id_mencion}, #{id_tipo_grado})
+        AS (id_mtr_plan integer, nivel_academico dentero, id_materia_ant dentero, id_materia integer, sigla dtexto, materia dtexto);
+    </select>
+
+    <select id="getListarMateriasNoConvalidadas" resultMap="datosMateriasConvalidadas">
+        SELECT * FROM mi_listar_materias_no_convalidadas(#{id_programa}, #{id_plan}, #{id_materia}, #{id_mencion}, #{id_tipo_grado})
+        AS (id_mtr_plan integer, nivel_academico dentero, id_materia_ant dentero, id_materia integer, sigla dtexto, materia dtexto);
+    </select>
+
+    <resultMap id="datosMateriasNoPlan" type="org.fautapo.domain.Materias">
+        <result property="id_departamento" column="id_departamento"/>
+        <result property="id_materia"      column="id_materia"/>
+        <result property="sigla"           column="sigla"/>
+        <result property="materia"         column="materia"/>
+    </resultMap>
+  
+    <select id="getListarMateriasNoPlan" resultMap="datosMateriasNoPlan">
+        SELECT * FROM mi_listar_materias_no_plan(#{id_programa}, #{id_plan}, #{id_tipo_grado})
+        AS (id_departamento integer, id_materia integer, sigla text, materia text, nivel_academico integer);
+    </select>
+
+    <resultMap id="datosMtrTiposMaterias" type="org.fautapo.domain.Planes">
+        <result property="id_tipo_materia" column="id_tipo_materia"/>
+        <result property="tipo_materia"    column="tipo_materia"/>
+    </resultMap>
+  
+    <select id="getPlnListarTiposMaterias" resultMap="datosMtrTiposMaterias">
+        SELECT * FROM mi_listar_pln_tipos_materias();
+    </select>
+
+    <select id="getPlnBuscarTipoMateria" resultMap="datosMtrTiposMaterias">
+        SELECT * FROM mi_buscar_pln_tipo_materia(#{id_tipo_materia});
+    </select>
+
+    <resultMap id="datosPrgPlan" type="org.fautapo.domain.Planes">
+        <result property="id_programa"   column="id_programa"/>
+        <result property="id_plan"       column="plan"/>
+        <result property="id_tipo_grado" column="id_tipo_grado"/>
+    </resultMap>
+  
+    <select id="getBuscarPrgPlan" resultMap="datosPrgPlan">
+        SELECT * FROM mi_buscar_prg_plan(#{id_programa}, #{id_plan});
+    </select>
+
+    <resultMap id="datosPrgPlan2" type="org.fautapo.domain.Planes">
+        <result property="id_prg_plan"   column="id_prg_plan"/>
+        <result property="id_programa"   column="id_programa"/>
+        <result property="programa"      column="programa"/>
+        <result property="id_plan"       column="plan"/>
+        <result property="id_tipo_grado" column="id_tipo_grado"/>
+        <result property="tipo_grado"    column="tipo_grado"/>
+    </resultMap>
+  
+    <select id="getBuscarPrgPlan2" resultMap="datosPrgPlan2">
+        SELECT * FROM mi_buscar_prg_plan2(#{id_prg_plan})
+        AS (id_prg_plan integer, plan dtexto, id_programa dentero, programa dtexto, id_tipo_grado dentero, tipo_grado dtexto);
+    </select>
+  
+
+    <resultMap id="datosMtrPlan" type="org.fautapo.domain.Planes">
+        <result property="id_mtr_plan"        column="id_mtr_plan"/>
+        <result property="id_plan"            column="id_plan"/>
+        <result property="id_plan_ant"        column="id_plan_ant"/>
+        <result property="id_materia"         column="id_materia"/>
+        <result property="id_materia_ant"     column="id_materia_ant"/>
+        <result property="id_tipo_grado"      column="id_tipo_grado"/>
+        <result property="id_tipo_materia"    column="id_tipo_materia"/>
+        <result property="id_mencion"         column="id_mencion"/>
+        <result property="nivel_academico"    column="nivel_academico"/>
+    </resultMap>
+  
+    <select id="getBuscarMtrPlan" resultMap="datosMtrPlan">
+        SELECT * FROM mi_buscar_mtr_plan(#{id_mtr_plan});
+    </select>
+
+    <select id="setModificarMtrPlan" resultType="java.lang.Integer">
+        SELECT mi_modificar_mtr_plan(#{id_mtr_plan}, #{id_mencion}, #{id_tipo_grado}, 
+        #{id_tipo_materia}, #{nivel_academico}, #{id_rol}, #{ult_usuario});
+    </select>
+    <!-- FIN - Admin Planes de Estudio -->
+
+    <resultMap id="planesActual" type="org.fautapo.domain.Planes">
+        <result property="id_programa"    column="id_programa"/>
+        <result property="id_prg_plan"    column="id_prg_plan"/>
+        <result property="id_plan"        column="id_plan"/>
+        <result property="id_tipo_grado"  column="id_tipo_grado"/>
+        <result property="tipo_grado"     column="tipo_grado"/>
+    </resultMap>
+  
+    <select id="getListarPrgPlanesVestibulares" resultMap="planesActual">
+        SELECT * FROM mi_listar_prg_planes_vestibulares()
+        AS (id_programa dentero, id_prg_plan integer, id_plan dtexto, id_tipo_grado dentero, tipo_grado dtexto);
+    </select>
+
+    <select id="getListarPrgPlanesUniversitarios" resultMap="planesActual">
+        SELECT * FROM mi_listar_prg_planes_universitarios()
+        AS (id_programa dentero, id_prg_plan integer, id_plan dtexto, id_tipo_grado dentero, tipo_grado dtexto);
+    </select>
+
+    <resultMap id="maxPrgPlan" type="org.fautapo.domain.Planes">
+        <result property="plan" column="plan"/>
+    </resultMap>
+  
+    <select id="getBuscarMaxPrgPlanActual" resultMap="maxPrgPlan">
+        SELECT * FROM mi_buscar_prg_plan_max(#{id_programa}, #{id_tipo_grado})AS (plan text);
+    </select>
+  
+    <!--Inicio Convalidacion Manual-->
+    <resultMap id="listaTiposConvalidacion" type="org.fautapo.domain.Planes">
+        <result property="id_tipo_convalidacion"    column="id_tipo_convalidacion"/>
+        <result property="tipo_convalidacion"       column="tipo_convalidacion"/>
+    </resultMap>
+  
+    <select id="getListarTiposConvalidaciones" resultMap="listaTiposConvalidacion">
+        SELECT * FROM mi_listar_tipos_convalidaciones();
+    </select>
+  
+    <select id="getBuscarTipoConvalidacion" resultMap="listaTiposConvalidacion">
+        SELECT * FROM mi_buscar_tipo_convalidacion(#{id_tipo_convalidacion});
+    </select>
+  
+    <select id="setRegistrarConvalidacionManual" resultType="java.lang.Integer">
+        SELECT * FROM mi_registrar_convalidacion_manual(#{id_estudiante}, #{id_programa}, #{id_universidad}, #{id_plan}, #{id_tipo_convalidacion}, #{gestion}, #{periodo}, #{nro_resolucion}, #{ult_usuario});
+    </select>
+  
+    <select id="setRegistrarDetallesConvalidacionManual" resultType="java.lang.Integer">
+        SELECT * FROM mi_registrar_cnv_detalles_manual(#{id_convalidacion}, #{id_materia}, #{id_tipo_materia}, #{sigla_origen}, #{materia_origen}, #{similitud}, #{nota_origen}, #{ult_usuario})
+    </select>
+    <!--FIN Convalidacion Manual-->
+    <!-- Inicio Autorizar Convalidacion Manual-->
+    <resultMap id="listaConvalidacionManual" type="org.fautapo.domain.Planes">
+        <result property="id_convalidacion"       column="id_convalidacion"/>
+        <result property="id_programa"            column="id_programa"/>
+        <result property="programa"               column="programa"/>
+        <result property="id_universidad"         column="id_universidad"/>
+        <result property="universidad"            column="universidad"/>
+        <result property="id_plan"                column="id_plan"/>
+        <result property="id_tipo_convalidacion"  column="id_tipo_convalidacion"/>
+        <result property="tipo_convalidacion"     column="tipo_convalidacion"/>
+        <result property="id_estudiante"          column="id_estudiante"/>
+        <result property="paterno"                column="paterno"/>
+        <result property="materno"                column="materno"/>
+        <result property="nombres"                column="nombres"/>
+        <result property="gestion"                column="gestion"/>
+        <result property="periodo"                column="periodo"/>
+        <result property="nro_resolucion"         column="nro_resolucion"/>
+        <result property="id_estado"              column="id_estado"/>
+        <result property="estado"                 column="estado"/>
+        <result property="ult_usuario"            column="ult_usuario"/>
+    </resultMap>
+  
+    <select id="getListarConvalidacionManualPrograma2" resultMap="listaConvalidacionManual">
+        SELECT * FROM mi_listar_convalidacion_manual_programa2(#{id_programa}) 
+        AS(id_convalidacion integer, id_programa dentero, programa dtexto, id_universidad dentero, universidad dtexto, id_plan dtexto2, id_tipo_convalidacion dentero, tipo_convalidacion dtexto,
+        id_estudiante dentero, paterno dtexto2, materno dtexto2, nombres dtexto, gestion dentero, periodo dentero, nro_resolucion dtexto, id_estado did_estado, estado text, ult_usuario did_usuario);
+    </select>
+  
+    <select id="getListarConvalidacionManualPrograma" resultMap="listaConvalidacionManual">
+        SELECT * FROM mi_listar_convalidacion_manual_programa(#{id_programa}, #{ult_usuario}) 
+        AS(id_convalidacion integer, id_programa dentero, programa dtexto, id_universidad dentero, universidad dtexto, id_plan dtexto2, id_tipo_convalidacion dentero, tipo_convalidacion dtexto,
+        id_estudiante dentero, paterno dtexto2, materno dtexto2, nombres dtexto, gestion dentero, periodo dentero, nro_resolucion dtexto, id_estado did_estado, estado text, ult_usuario did_usuario);
+    </select>
+  
+    <select id="getBuscarConvalidacionManual" resultMap="listaConvalidacionManual">
+        SELECT * FROM mi_buscar_convalidacion_manual(#{id_convalidacion})
+        AS(id_convalidacion integer, id_programa dentero, programa dtexto, id_universidad dentero, universidad dtexto, id_plan dtexto2, id_tipo_convalidacion dentero, tipo_convalidacion dtexto,
+        id_estudiante dentero, paterno dtexto2, materno dtexto2, nombres dtexto, gestion dentero, periodo dentero, nro_resolucion dtexto, id_estado did_estado, estado text, ult_usuario did_usuario);
+    </select>
+  
+  
+    <resultMap id="listaCnvDetalleConvalidacion" type="org.fautapo.domain.Planes">
+        <result property="id_cnv_detalle"         column="id_cnv_detalle"/>
+        <result property="id_convalidacion"       column="id_convalidacion"/>
+        <result property="id_materia"             column="id_materia"/>
+        <result property="sigla"                  column="sigla"/>
+        <result property="materia"                column="materia"/>
+        <result property="id_tipo_materia"        column="id_tipo_materia"/>
+        <result property="tipo_materia"           column="tipo_materia"/>
+        <result property="sigla_origen"           column="sigla_origen"/>
+        <result property="materia_origen"         column="materia_origen"/>
+        <result property="similitud"              column="similitud"/>
+        <result property="nota_origen"            column="nota"/>
+        <result property="ult_usuario"            column="ult_usuario"/>
+    </resultMap>
+    <select id="getListarCnvDetallesConvalidacion2" resultMap="listaCnvDetalleConvalidacion">
+        SELECT * FROM mi_listar_cnv_detalles_convalidacion2(#{id_convalidacion})
+        AS(id_cnv_detalle integer, id_convalidacion dentero, id_materia dentero, sigla dtexto, materia dtexto, id_tipo_materia dentero, tipo_materia dtexto,
+        sigla_origen dtexto, materia_origen dtexto, similitud dentero, nota dentero, ult_usuario did_usuario);
+    </select>
+    <select id="getListarCnvDetallesConvalidacion" resultMap="listaCnvDetalleConvalidacion">
+        SELECT * FROM mi_listar_cnv_detalles_convalidacion(#{id_convalidacion}, #{ult_usuario#{ )
+        AS(id_cnv_detalle integer, id_convalidacion dentero, id_materia dentero, sigla dtexto, materia dtexto, id_tipo_materia dentero, tipo_materia dtexto,
+        sigla_origen dtexto, materia_origen dtexto, similitud dentero, nota dentero, ult_usuario did_usuario);
+    </select>
+  
+    <resultMap id="listaNotasnvDetalles" type="org.fautapo.domain.Planes">
+        <result property="id_nota"                column="id_nota"/>
+        <result property="gestion"                column="gestion"/>
+        <result property="periodo"                column="periodo"/>
+        <result property="sigla"                  column="sigla"/>
+        <result property="materia"                column="materia"/>
+        <result property="id_materia"             column="id_materia"/>
+        <result property="id_estudiante"          column="id_estudiante"/>
+    </resultMap>
+  
+    <select id="getListarNotasCruceCnvDetalles" resultMap="listaNotasnvDetalles">
+        SELECT * FROM mi_listar_notas_cruce_cnv_detalles(#{id_convalidacion}, #{id_estudiante})
+        AS(id_nota integer, gestion dentero, periodo dentero, id_estudiante dentero, id_materia dentero, sigla dtexto, materia dtexto);
+    </select>
+  
+    <select id="setRegistrarEstNotasConvalidacionManual" resultType="java.lang.Integer">
+        SELECT * FROM  mi_registrar_notas_convalidacion_manual(#{id_convalidacion}, #{id_matricula}, #{id_estudiante}, #{gestion}, #{periodo}, #{nro_resolucion}, #{ult_usuario});
+    </select>
+  
+    <select id="setEliminarCnvDetalle" resultType="java.lang.Integer">
+        SELECT * FROM mi_eliminar_cnv_detalle(#{id_cnv_detalle}, #{ult_usuario});
+    </select>
+    <!--FIN  Autorizar Convalidacion Manual-->
+    <select id="getListarMateriasElectivasOptativasPlan" resultType="org.fautapo.domain.Planes">
+        SELECT * FROM mi_listar_materias_elecoptativas_plan(#{id_programa}, #{id_plan}, #{id_tipo_grado})
+        AS (id_mtr_plan integer, nivel_academico dentero, id_materia integer, sigla dtexto, materia dtexto, hrs_teoricas dentero2, 
+        hrs_practicas dentero2, creditos dreal2, id_mencion dentero, mencion dtexto,
+        materias_requisitos text, id_tipo_grado dentero, id_tipo_materia dentero, tipo_materia dtexto);
+    </select>
+    
+    <resultMap id="listadogestion" type="org.fautapo.model.ItemModel">
+        <result property="value"            column="value" />
+        <result property="display"    column="display" />
+    </resultMap>
+    <select id="GetCarrerasOrfertadas"  resultMap="listadogestion">
+        SELECT coc.id_programa::text as value,  'CARRERA DE '||fp.programa  as display
+        FROM  control_ofertas_academicas coc inner join  fcl_programas fp on fp.id_programa = coc.id_programa
+        WHERE  coc.id_estado='A' 
+        and coc.id_facultad=#{id_facultad} 
+    </select>
+    <select id="GetCarrerasConvalidar" resultMap="listadogestion">
+        SELECT fp.id_programa::text as value,  'CARRERA DE '||fp.programa  as display
+        FROM  facultades coc inner join  fcl_programas fp on fp.id_facultad = coc.id_facultad
+        WHERE  coc.id_estado='A' 
+        and coc.id_facultad=2 
+    </select>
+</mapper>

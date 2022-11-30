@@ -1,0 +1,310 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+ * @autor FAUTAPO
+ * @fec_registro 2006-03-15
+ * @ult_usuario FAUTAPO
+ * @fec_modificacion 2006-03-23
+-->
+
+<mapper namespace="Actividades">
+
+  <!-- Administracion de actividades -->
+  <resultMap id="listadoActividades" type="org.fautapo.domain.Actividades">
+    <result property="id_proceso"            column="id_proceso" />
+    <result property="id_actividad"          column="id_actividad" />
+    <result property="actividad"             column="actividad" />
+    <result property="rol"                   column="rol" />
+    <result property="duracion"              column="duracion" />
+    <result property="orden"                 column="orden" />     
+    <result property="tipo_actuacion"        column="tipo_actuacion" />
+    <result property="actuacion"             column="actuacion" />
+    <result property="id_ubicacion_organica" column="id_ubicacion_organica" />
+    <result property="ubicacion_organica"    column="ubicacion_organica" />
+    <result property="alerta"                column="alerta" />
+    <result property="puente"                column="puente" />
+    <result property="ruta"                  column="ruta" />
+    <result property="fin_flujo"             column="fin_flujo" />
+    <result property="tipo_duracion"         column="tipo_duracion" />
+  </resultMap>
+ 
+  <select id="getListarActividades" resultMap="listadoActividades">
+    SELECT * FROM tr_listar_actividades(#{id_proceso})
+    AS (id_proceso dentero, id_actividad integer, actividad dtexto, rol dtexto, duracion dentero2, orden dentero2,
+        tipo_actuacion dtexto, actuacion dtexto2, id_ubicacion_organica dentero, ubicacion_organica dtexto, alerta dbooleano2, puente dbooleano2, 
+        ruta dtexto2, fin_flujo dbooleano2, tipo_duracion dtexto);
+  </select>
+  
+  <select id="getListarActividadesNoLimbo" resultMap="listadoActividades">
+    SELECT * FROM tr_listar_actividades_no_limbo(#{id_proceso})
+    AS (id_proceso dentero, id_actividad integer, actividad dtexto, rol dtexto, duracion dentero2, orden dentero2,
+        tipo_actuacion dtexto, actuacion dtexto2, id_ubicacion_organica dentero, ubicacion_organica dtexto, alerta dbooleano2, puente dbooleano2, 
+        ruta dtexto2, fin_flujo dbooleano2, tipo_duracion dtexto);
+  </select>
+  
+  <select id="getListarActividadesLimbo" resultMap="listadoActividades">
+    SELECT * FROM tr_listar_actividades_limbo(#{id_proceso})
+    AS (id_proceso dentero, id_actividad integer, actividad dtexto, rol dtexto, duracion dentero2, orden dentero2,
+        tipo_actuacion dtexto, actuacion dtexto2, id_ubicacion_organica dentero, ubicacion_organica dtexto, alerta dbooleano2, puente dbooleano2, 
+        ruta dtexto2, fin_flujo dbooleano2, tipo_duracion dtexto);
+  </select>
+  
+  <resultMap id="listadoAlertasAct" type="org.fautapo.domain.Actividades">
+    <result property="id_actividad"   column="id_actividad"/>
+    <result property="id_tipo_alerta" column="id_tipo_alerta"/>
+    <result property="tipo_alerta"    column="tipo_alerta"/>
+  </resultMap>
+
+  <select id="getListarTiposAlertasAct" resultMap="listadoAlertasAct">
+    SELECT id_actividad, id_tipo_alerta, tipo_alerta
+    FROM tr_listar_tipos_alertas_act(#{id_actividad})
+    AS (id_actividad integer, id_tipo_alerta integer, tipo_alerta dtexto);
+  </select>
+
+  <resultMap id="listadoTiposAlertas" type="org.fautapo.domain.Actividades">
+    <result property="id_tipo_alerta" column="id_tipo_alerta"/>
+    <result property="tipo_alerta"    column="tipo_alerta"/>
+  </resultMap>
+
+  <select id="getBuscarTipoAlerta" resultMap="listadoTiposAlertas">
+    SELECT id_tipo_alerta, tipo_alerta
+    FROM tr_buscar_tipo_alerta(#{id_tipo_alerta});
+  </select>
+
+  <select id="getListarTiposAlertas" resultMap="listadoTiposAlertas">
+    SELECT id_tipo_alerta, tipo_alerta
+    FROM tr_listar_tipos_alertas();
+  </select>
+
+  <resultMap id="proceso" type="org.fautapo.domain.Actividades">
+    <result property="id_proceso"            column="id_proceso" />
+    <result property="id_ubicacion_organica" column="id_ubicacion_organica" />
+    <result property="id_estado"             column="id_estado" />
+    <result property="id_tipo_proceso"       column="id_tipo_proceso" />
+    <result property="proceso"               column="proceso" />
+    <result property="codigo_proceso"        column="codigo_proceso" />
+    <result property="correlativo"           column="correlativo" />
+    <result property="fec_registro"          column="fec_registro" />
+    <result property="fec_modificacion"      column="fec_modificacion" />
+    <result property="ult_usuario"           column="ult_usuario" />
+  </resultMap>
+
+  <select id="getBuscarProceso" resultMap="proceso">
+     SELECT * FROM tr_buscar_proceso(#{id_proceso});
+  </select>
+  
+  <resultMap id="listadoProcesosAcceso" type="org.fautapo.domain.Actividades">
+    <result property="id_proceso"            column="id_proceso" />
+    <result property="id_ubicacion_organica" column="id_ubicacion_organica" />
+    <result property="id_tipo_proceso"       column="id_tipo_proceso" />
+    <result property="id_estado"             column="id_estado" />
+    <result property="proceso"               column="proceso" />
+    <result property="correlativo"           column="correlativo" />
+    <result property="codigo_proceso"        column="codigo_proceso" />
+    <result property="fec_registro"          column="fec_registro" />
+    <result property="fec_modificacion"      column="fec_modificacion" />
+    <result property="ult_usuario"           column="ult_usuario" />
+    <result property="tipo_proceso"          column="tipo_proceso" />
+  </resultMap>
+
+  <select id="getListarProcesosAcceso" resultMap="listadoProcesosAcceso">
+    SELECT * FROM tr_listar_procesos_acceso(#{id_ubicacion_organica})
+    AS (id_proceso integer, id_ubicacion_organica dentero, id_tipo_proceso dentero, id_estado did_estado, proceso dtexto, codigo_proceso dtexto,
+        correlativo dentero2, fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, ult_usuario did_usuario, tipo_proceso dtexto);
+  </select>
+
+  <!-- Tramites -->
+  <resultMap id="listadoProcesosAcceso2" type="org.fautapo.domain.Actividades">
+    <result property="id_proceso"   column="id_proceso" />
+    <result property="proceso"      column="proceso" />
+    <result property="id_actividad" column="id_actividad" />
+    <result property="puente"       column="puente" />
+    <result property="ruta"         column="ruta" />
+  </resultMap>
+
+  <select id="getListarProcesosAccesoTramites2" resultMap="listadoProcesosAcceso2">
+    SELECT * FROM tr_listar_procesos_acceso_tramites2(#{id_ubicacion_organica})
+    AS (id_proceso integer, proceso dtexto, id_actividad integer, ruta text, puente boolean);
+  </select>
+
+  <!-- Correspondencias -->
+  <select id="getListarProcesosAccesoCorresp" resultMap="listadoProcesosAcceso">
+    SELECT * FROM tr_listar_procesos_acceso_corresp_todos()
+    AS (id_proceso integer, id_ubicacion_organica dentero, id_tipo_proceso dentero, id_estado did_estado, proceso dtexto, codigo_proceso dtexto,
+        correlativo dentero2, fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, ult_usuario did_usuario, tipo_proceso dtexto);
+  </select>
+
+  <resultMap id="actividad" type="org.fautapo.domain.Actividades">
+    <result property="id_actividad"          column="id_actividad"/>
+    <result property="id_proceso"            column="id_proceso"/>
+    <result property="id_rol"                column="id_rol"/>
+    <result property="id_tipo_actuacion"     column="id_tipo_actuacion" />
+    <result property="id_ubicacion_organica" column="id_ubicacion_organica" />
+    <result property="orden"                 column="orden" />
+    <result property="actividad"             column="actividad"/>
+    <result property="duracion"              column="duracion" />
+    <result property="actuacion"             column="actuacion" />
+    <result property="alerta"                column="alerta" />
+    <result property="puente"                column="puente" />
+    <result property="ruta"                  column="ruta" />
+    <result property="fin_flujo"             column="fin_flujo" />
+    <result property="id_tipo_duracion"      column="id_tipo_duracion" />
+  </resultMap>
+
+  <select id="getBuscarActividad" resultMap="actividad">
+    SELECT * FROM tr_buscar_actividad(#{id_actividad});
+  </select>
+
+  <select id="getBuscarActividadOrden" resultMap="actividad">
+    SELECT * FROM tr_buscar_actividad_orden(#{id_proceso}, #{orden});
+  </select>
+
+  <resultMap id="ubicacionesOrganicas" type="org.fautapo.domain.Actividades">
+    <result property="id_ubicacion_organica"       column="id_ubicacion_organica"/>
+    <result property="id_ubicacion_organica_padre" column="id_ubicacion_organica_padre"/>
+    <result property="ubicacion_organica"          column="ubicacion_organica"/>
+    <result property="fec_registro"                column="fec_registro" />
+    <result property="fec_modificacion"            column="fec_modificacion" />
+    <result property="ult_usuario"                 column="ult_usuario" />
+  </resultMap>
+
+  <select id="getListarUbicacionesOrganicas" resultMap="ubicacionesOrganicas">
+    SELECT * FROM ubc_listar_ubicaciones_organicas();
+  </select>
+
+  <select id="getBuscarUbicacionOrganica" resultMap="ubicacionesOrganicas">
+    SELECT * FROM ubc_buscar_ubicacion_organica(#{id_ubicacion_organica});
+  </select>
+
+  <resultMap id="tiposActuaciones" type="org.fautapo.domain.Actividades">
+    <result property="id_tipo_actuacion"  column="id_tipo_actuacion" />
+    <result property="id_estado"          column="id_estado" />
+    <result property="tipo_actuacion"     column="tipo_actuacion" />
+    <result property="fec_registro"       column="fec_registro" />
+    <result property="fec_modificacion"   column="fec_modificacion" />
+    <result property="ult_usuario"        column="ult_usuario" />
+  </resultMap>
+
+  <select id="getListarTiposActuaciones" resultMap="tiposActuaciones">
+    SELECT * FROM tr_listar_tipos_actuaciones();
+  </select>
+
+  <select id="getBuscarTipoActuacion" resultMap="tiposActuaciones">
+    SELECT * FROM tr_buscar_tipo_actuacion(#{id_tipo_actuacion});
+  </select>
+
+  <select id="setRegistrarActividad" resultType="java.lang.Integer">
+    SELECT tr_registrar_actividad(#{id_actividad}, #{id_proceso}, #{id_rol}, #{id_tipo_actuacion}, #{id_ubicacion_organica}, #{orden}, #{actividad},
+                                  #{duracion}, #{actuacion}, #{ult_usuario}, #{alerta}, #{puente}, #{ruta}, #{fin_flujo}, #{id_tipo_duracion}) as valor;
+  </select>
+
+  <select id="setReiniciarTiposAlertas" resultType="java.lang.Integer">
+    SELECT tr_reiniciar_tipos_alertas(#{id_actividad}) as valor;
+  </select>
+
+  <select id="setRegistrarTipoAlerta" resultType="java.lang.Integer">
+    SELECT tr_registrar_tipo_alerta(#{id_actividad}, #{id_tipo_alerta}, #{ult_usuario}) as valor;
+  </select>
+
+  <select id="setEliminarActividad" resultType="java.lang.Integer">
+    SELECT tr_eliminar_actividad(#{id_actividad}, #{ult_usuario}) as valor;
+  </select>
+  <!-- Fin Administracion de actividades --> 
+  
+  <resultMap id="listadoTiposProcesos" type="org.fautapo.domain.Actividades">
+    <result property="id_tipo_proceso"  column="id_tipo_proceso"/>
+    <result property="tipo_proceso"     column="tipo_proceso"/>
+    <result property="fec_registro"     column="fec_registro" />
+    <result property="fec_modificacion" column="fec_modificacion" />
+    <result property="ult_usuario"      column="ult_usuario" />
+  </resultMap>
+
+  <select id="getListarTiposProcesos" resultMap="listadoTiposProcesos">
+    SELECT * FROM tr_listar_tipos_procesos();
+  </select>
+
+  <!-- Redireccionar tramites -->
+  <resultMap id="listarActividadesTramite" type="org.fautapo.domain.Actividades">
+    <result property="id_actividad"          column="id_actividad" />    
+    <result property="actividad"             column="actividad" />
+    <result property="id_rol"                column="id_rol" />
+  </resultMap>
+ 
+  <select id="getListarActividades2" resultMap="listarActividadesTramite">
+    SELECT * FROM tr_listar_actividades_menos_actual(#{id_proceso}, #{id_actividad})
+    AS (id_actividad integer, actividad text, id_rol integer);
+  </select>
+  
+  <resultMap id="usuariosActividad" type="org.fautapo.domain.Personas">
+    <result property="id_usuario"            column="id_usuario" />
+    <result property="nombres"               column="nombres" />
+  </resultMap>
+
+  <select id="getListarUsuariosRolActividad" resultMap="usuariosActividad">
+    SELECT * FROM tr_listar_usuarios_rol_actividad(#{id_actividad})
+    AS (id_usuario integer, id_persona integer, nombres text);
+  </select>
+  <!-- Fin Redireccionar tramites -->
+
+  <!-- Reporte de actividades por roles -->
+  <select id="getListarActividadesRoles" resultType="java.lang.String">
+    SELECT tr_listar_roles_actividades(#{id_proceso}) as valor;
+  </select>
+  <!-- Fin Reporte de actividades por roles -->
+
+  <!-- Tipos de duraciones -->
+  <resultMap id="tiposDuraciones" type="org.fautapo.domain.Actividades">
+    <result property="id_tipo_duracion"  column="id_tipo_duracion" />
+    <result property="id_estado"         column="id_estado" />
+    <result property="tipo_duracion"     column="tipo_duracion" />
+    <result property="fec_registro"      column="fec_registro" />
+    <result property="fec_modificacion"  column="fec_modificacion" />
+    <result property="ult_usuario"       column="ult_usuario" />
+  </resultMap>
+
+  <select id="getListarTiposDuraciones" resultMap="tiposDuraciones">
+    SELECT * FROM tr_listar_tipos_duraciones();
+  </select>
+
+  <select id="getBuscarTipoDuracion" resultMap="tiposDuraciones">
+    SELECT * FROM tr_buscar_tipo_duracion(#{id_tipo_duracion});
+  </select>
+  <!-- Fin Tipos de duraciones -->
+  
+  <!--Administrar Kardex-->
+  <select id="getListarProcesosAccesoKardex" resultMap="listadoProcesosAcceso">
+    SELECT * FROM tr_listar_procesos_acceso_kardex_todos()
+    AS (id_proceso integer, id_ubicacion_organica dentero, id_tipo_proceso dentero, id_estado did_estado, proceso dtexto, correlativo dentero2,
+        fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, ult_usuario did_usuario, tipo_proceso dtexto);
+  </select>
+
+  <resultMap id="listadoProcesosKardex" type="org.fautapo.domain.Actividades">
+    <result property="id_proceso"              column="id_proceso" />    
+    <result property="id_ubicacion_organica"   column="id_ubicacion_organica" />
+    <result property="id_tipo_proceso"         column="id_tipo_proceso" />
+    <result property="proceso"                 column="proceso" />
+    <result property="correlativo"             column="correlativo" />
+    <result property="id_form"                 column="id_form" />
+    <result property="form"                    column="form" />
+  </resultMap>
+
+  <select id="getListarProcesosKardexs" resultMap="listadoProcesosKardex">
+    SELECT * FROM tr_listar_procesos_kardex()
+      AS (id_proceso integer, id_ubicacion_organica dentero, id_tipo_proceso dentero, proceso dtexto,
+          correlativo dentero2, id_form integer, form dtexto);  
+  </select>
+  
+  <select id="setRegistrarProcesoKardex" resultType="java.lang.Integer">
+    SELECT * FROM tr_registrar_proceso_form_actividad_kardex(#{id_tipo_proceso}, #{proceso}, #{form}, #{ult_usuario}) as valor;				  
+  </select>
+  
+  <select id="setModificarProcesoKardex" resultType="java.lang.Integer">
+    SELECT * FROM tr_modificar_proceso_form_actividad_kardex(#{id_proceso},#{id_form}, #{proceso}, #{form}, #{ult_usuario}) as valor;
+  </select> 
+  
+  <select id="setEliminarProcesoKardex" resultType="java.lang.Integer">
+    SELECT * FROM tr_eliminar_proceso_form_actividad_kardex(#{id_proceso},#{id_form}, #{ult_usuario}) as valor;
+  </select>
+  <!--Fin Administrar Kardex-->
+
+</mapper>

@@ -1,0 +1,68 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="Proveidos">
+
+  <resultMap id="datosProveido" type="org.fautapo.domain.Proveidos">
+    <result property="id_tramite"           column="id_tramite" />
+    <result property="id_proceso"           column="id_proceso" />
+    <result property="id_actividad_actual"  column="id_actividad_actual" />
+    <result property="para"                 column="para" />
+    <result property="de"                   column="de" />
+    <result property="fec_registro"         column="fec_registro" />
+    <result property="fec_modificacion"     column="fec_modificacion" />
+    <result property="proceso"              column="proceso" />
+    <result property="actividad"            column="actividad" />
+    <result property="correlativo"          column="correlativo" />    
+    <result property="id_proveido"          column="id_proveido" />
+    <result property="proveido"             column="proveido" />
+    <result property="ult_usuario"          column="ult_usuario" />    
+    <result property="nombre_completo"      column="nombre_completo" />    
+  </resultMap>
+ 
+  <select id="getBuscarUltimoProveido" resultMap="datosProveido">
+    SELECT * FROM tr_buscar_ultimo_proveido(#{id_tramite})
+    AS (id_tramite integer, id_proceso dentero, id_actividad_actual dentero, para did_usuario, de did_usuario, correlativo dentero2,
+        fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, proceso dtexto, actividad dtexto, id_proveido integer, proveido dtexto2,
+	ult_usuario did_usuario, nombre_completo dtexto);
+  </select>
+
+  <select id="getBuscarUltimoProveido2" resultType="java.lang.String">
+    SELECT tr_buscar_ultimo_proveido(#{id_tramite}, #{id_actividad}, #{id_usuario}, #{id_tipo_proveido}) AS valor;
+  </select>
+
+  <select id="setRegistrarProveido" resultType="java.lang.Integer">
+    SELECT tr_registrar_proveido(#{id_tramite}, #{id_actividad}, #{proveido}, #{id_tipo_proveido}, #{ult_usuario}) as valor; 
+  </select>
+
+  <resultMap id="listadoProveidos" type="org.fautapo.domain.Proveidos">
+    <result property="id_actividad"       column="id_actividad"/>
+    <result property="proveido"           column="proveido"/>
+    <result property="ult_usuario"        column="id_usuario"/>
+    <result property="usuario"            column="nombres" />
+    <result property="cargo"              column="cargo" />
+    <result property="ubicacion_organica" column="ubicacion_organica" />
+    <result property="fec_registro"       column="fec_registro" />
+  </resultMap>
+  
+  <select id="getListarProveidosHistoricos" resultMap="listadoProveidos">
+    SELECT * FROM tr_listar_proveidos_historicos(#{id_tramite})
+    AS (id_actividad dentero, proveido dtexto2, id_usuario integer, nombres text, cargo text, ubicacion_organica text, fec_registro dfec_modificacion);
+  </select>
+
+  <resultMap id="datosProveido2" type="org.fautapo.domain.Proveidos">
+    <result property="id_tramite"       column="id_tramite"/>
+    <result property="id_proveido"      column="id_proveido" />
+    <result property="id_actividad"     column="id_actividad" />
+    <result property="proveido"         column="proveido" />
+    <result property="id_tipo_proveido" column="id_tipo_proveido" />
+  </resultMap>
+ 
+  <select id="getBuscarProveido" resultMap="datosProveido2">
+     SELECT * FROM tr_buscar_proveido(#{id_tramite}, #{id_actividad});
+  </select>
+
+  <!-- Correspondencia -->
+  <select id="getBuscarProveidoCorresp" resultMap="datosProveido2">
+     SELECT * FROM tr_buscar_proveido_correspondencia(#{id_tramite}, #{id_actividad}, #{id_usuario});
+  </select>  
+
+</mapper>

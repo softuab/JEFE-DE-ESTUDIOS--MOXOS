@@ -1,0 +1,100 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+ * @autor FAUTAPO
+ * @fec_registro 2006-04-03
+ * @ult_usuario FAUTAPO
+ * @fec_modificacion 2006-04-03
+-->
+
+<mapper namespace="Tableros">
+ 
+  <resultMap id="listaNoticias" type="org.fautapo.domain.Tableros">
+    <result property="id_tablero"    column="id_tablero" />
+    <result property="fec_registro"  column="fec_registro" />
+    <result property="noticia"       column="noticia" />
+    <result property="mensaje"       column="mensaje" />
+    <result property="tipo_aviso"    column="tipo_aviso" />
+    <result property="id_rol"        column="id_rol" />
+    <result property="ult_usuario"   column="envia" />
+    <result property="correo"        column="correo" />
+  </resultMap>
+ 
+  <select id="getListarNoticias" resultMap="listaNoticias">
+    SELECT * FROM tr_tbl_listar_tableros()
+    AS (id_tablero integer, fec_registro dfec_modificacion, noticia dtexto2, mensaje dtexto2, tipo_aviso dtexto, id_rol dentero, 
+        envia did_usuario, correo dtexto2);
+  </select>
+  
+   <resultMap id="listaTiposTableros" type="org.fautapo.domain.Tableros">
+    <result property="id_tipo_tablero"    column="id_tipo_tablero" />
+    <result property="tipo_tablero"       column="tipo_tablero" />
+  </resultMap>
+ 
+  <select id="getListarTiposTableros" resultMap="listaTiposTableros">
+    SELECT * FROM tr_tbl_listar_tipos_tableros();
+  </select>
+  
+  <resultMap id="listaTiposAvisos" type="org.fautapo.domain.Tableros">
+    <result property="id_tipo_aviso"    column="id_tipo_aviso" />
+    <result property="tipo_aviso"       column="tipo_aviso" />
+  </resultMap>
+ 
+  <select id="getListarTiposAvisos" resultMap="listaTiposAvisos">
+    SELECT * FROM tr_tbl_listar_tipos_avisos();
+  </select>
+ 
+  <select id="setRegistrarTablero" resultType="java.lang.Integer">
+    SELECT tr_tbl_registrar_tablero(#{id_tablero}, #{id_tipo_tablero}, #{id_tipo_aviso}, #{noticia}, #{mensaje}, #{id_rol}, #{ult_usuario});
+  </select> 
+
+  <resultMap id="buscarTablero" type="org.fautapo.domain.Tableros">
+    <result property="id_tablero"     column="id_tablero" />
+    <result property="id_tipo_aviso"  column="id_tipo_aviso" />
+    <result property="id_rol"         column="id_rol" />
+    <result property="fec_registro"   column="fec_registro" />
+    <result property="noticia"        column="titulo" />
+    <result property="mensaje"        column="cuerpo" />
+    <result property="ult_usuario"    column="envia" />
+  </resultMap>
+ 
+  <select id="getBuscarTablero" resultMap="buscarTablero">
+    SELECT * FROM tr_tbl_buscar_tablero(#{id_tablero});
+  </select>
+  
+  <select id="setEliminarTablero" resultType="java.lang.Integer">
+    SELECT tr_tbl_eliminar_tablero(#{id_tablero}, #{ult_usuario});
+  </select> 
+
+  <!-- INICIO - MI -->
+  <resultMap id="listaNoticias2" type="org.fautapo.domain.Tableros">
+    <result property="id_tablero"    column="id_tablero" />
+    <result property="fec_registro"  column="fec_registro" />
+    <result property="noticia"       column="noticia" />
+    <result property="mensaje"       column="mensaje" />
+    <result property="tipo_aviso"    column="tipo_aviso" />
+    <result property="id_rol"        column="id_rol" />
+    <result property="ult_usuario"   column="envia" />
+    <result property="correo"        column="correo" />
+    <result property="rol"           column="rol" />
+  </resultMap>
+
+  <select id="getListarNoticiasRol" resultMap="listaNoticias2">
+    SELECT * FROM mi_tbl_listar_tableros_rol(#{id_rol})
+    AS (id_tablero integer, fec_registro dfec_modificacion, noticia dtexto2, mensaje dtexto2, tipo_aviso dtexto, id_rol dentero, rol dtexto, 
+        envia did_usuario, correo dtexto2);
+  </select>
+  
+  <resultMap id="listaRolNoticias" type="org.fautapo.domain.Tableros">
+    <result property="id_rol"        column="id_rol" />
+    <result property="rol"           column="rol" />
+  </resultMap>
+ 
+  <select id="getListarRolesNoticias" resultMap="listaRolNoticias">
+   SELECT DISTINCT id_rol, rol FROM mi_tbl_listar_tableros()
+    AS (id_tablero integer, fec_registro dfec_modificacion, noticia dtexto2, mensaje dtexto2, tipo_aviso dtexto, id_rol dentero, rol dtexto,
+        envia did_usuario, correo dtexto2);	
+  </select>
+  <!-- FIN - MI -->
+
+</mapper>

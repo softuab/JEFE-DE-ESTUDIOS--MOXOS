@@ -1,0 +1,23 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+ * @autor FAUTAPO
+ * @fec_registro 2005-11-01
+ * @ult_usuario FAUTAPO
+ * @fec_modificacion 2005-11-01
+-->
+
+<mapper namespace="Herramientas">
+
+    <resultMap id="combo" type="org.fautapo.domain.Herramientas">
+    <result property="id_campo"    column="id_campo"/>
+    <result property="campo"       column="campo"/>
+    <result property="campo_padre" column="campo_padre"/>
+  </resultMap>
+
+  <select id="getListarCombosPagina" resultMap="combo">
+    SELECT split_part(s1.valor, '##~~##', 1) AS id_campo, split_part(s1.valor, '##~~##', 2) AS campo, split_part(s1.valor, '##~~##', 3) AS campo_padre
+    FROM (SELECT * FROM dib_listar_combos(#{tabla_foranea}, #{campo}, #{condicion},#{pagina}) AS valor) s1;
+  </select>
+
+</mapper>

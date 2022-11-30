@@ -1,0 +1,135 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+ * @autor FAUTAPO
+ * @fec_registro 2006-04-04
+ * @ult_usuario FAUTAPO
+ * @fec_modificacion 2006-04-04
+-->
+
+<mapper namespace="Hilos">
+
+  <resultMap id="destinatarios"  type="org.fautapo.domain.Hilos">
+    <result property="id_destinatario"   column="id_destinatario" />
+    <result property="destinatario"      column="destinatario"/>
+  </resultMap>
+
+  <select id="getListarDestinatarios" resultMap="destinatarios">
+    SELECT * FROM mo_listar_destinatarios_hilos(#{id_hilo}, #{id_duenio})
+      AS (id_destinatario integer, destinatario text);
+  </select>
+
+  <resultMap id="tiposHilos"  type="org.fautapo.domain.Hilos">
+    <result property="id_tipo_hilo"   column="id_tipo_hilo" />
+    <result property="tipo_hilo"      column="tipo_hilo"/>
+  </resultMap>
+
+  <select id="getListarTiposHilos" resultMap="tiposHilos">
+    SELECT id_tipo_hilo, tipo_hilo
+    FROM mo_listar_tipos_hilos()
+    WHERE id_tipo_hilo is not null;
+  </select>
+
+  <select id="setRegistrarHilo" resultType="java.lang.Integer">
+    SELECT mo_registrar_nuevo_hilo(#{id_duenio}, #{id_tipo_hilo}, #{asunto}, #{privado}, #{id_destinatario}) AS valor;
+  </select>
+
+  <resultMap id="tiposSegmentos"  type="org.fautapo.domain.Hilos">
+    <result property="id_tipo_segmento"   column="id_tipo_segmento" />
+    <result property="tipo_segmento"      column="tipo_segmento"/>
+  </resultMap>
+
+  <select id="getListarTiposSegmentos" resultMap="tiposSegmentos">
+    SELECT id_tipo_segmento, tipo_segmento
+    FROM mo_listar_tipos_segmentos()
+    WHERE id_tipo_segmento is not null;
+  </select>
+
+  <resultMap id="segmentos"  type="org.fautapo.domain.Hilos">
+    <result property="id_segmento"   column="id_segmento" />
+    <result property="segmento"      column="segmento"/>
+    <result property="tipo_segmento" column="tipo_segmento"/>
+    <result property="id_remitente"  column="id_remitente"/>
+    <result property="remitente"     column="remitente"/>
+    <result property="imagen"        column="imagen"/>
+    <result property="fecha1"        column="fecha"/>
+  </resultMap>
+
+  <select id="getListarSegmentos" resultMap="segmentos">
+    SELECT *
+    FROM mo_listar_segmentos(#{id_destinatario}, #{id_hilo})
+      AS (id_segmento integer, segmento text, tipo_segmento text, imagen text, id_remitente did_usuario, remitente text, fecha text);
+  </select>
+
+  <select id="setRegistrarSegmento" resultType="java.lang.Integer">
+    SELECT mo_registrar_nuevo_segmento(#{id_hilo}, #{id_remitente}::did_usuario, #{id_tipo_segmento}, #{segmento}) AS valor;
+  </select>
+
+  <select id="setRegistrarSgmAdjunto" resultType="java.lang.Integer">
+    SELECT mo_registrar_nuevo_sgm_adjunto(#{id_segmento}, #{adjunto}, #{nombre_archivo}) AS valor;
+  </select>
+
+  <resultMap id="adjuntos"  type="org.fautapo.domain.Hilos">
+    <result property="adjunto" column="adjunto"/>
+    <result property="archivo" column="archivo"/>
+  </resultMap>
+
+  <select id="getListarAdjuntosHilos" resultMap="adjuntos">
+    SELECT *
+    FROM mo_listar_sgm_adjuntos(#{id_segmento});
+  </select>
+
+  <resultMap id="hilo"  type="org.fautapo.domain.Hilos">
+    <result property="hilo"         column="hilo"/>
+    <result property="id_duenio"    column="id_duenio"/>
+    <result property="id_tipo_hilo" column="id_tipo_hilo"/>
+    <result property="privado"      column="privado"/>
+  </resultMap>
+
+  <select id="getBuscarHilo" resultMap="hilo">
+    SELECT hilo, id_duenio, id_tipo_hilo, privado
+    FROM mo_buscar_hilo(#{id_hilo});
+  </select>
+
+  <select id="setBorrarHilo" resultType="java.lang.Integer">
+    SELECT mo_borrar_hilo(#{id_hilo}) AS valor;
+  </select>
+  
+  <resultMap id="hilos"  type="org.fautapo.domain.Hilos">
+    <result property="id_hilo"      column="id_hilo" />
+    <result property="hilo"         column="hilo" />
+    <result property="tipo_hilo"    column="tipo_hilo" />
+    <result property="imagen"       column="imagen" />
+    <result property="destinatario" column="destinatario"/>
+    <result property="fec_registro" column="fec_registro" />
+  </resultMap>
+
+  <select id="getListarHilosMios" resultMap="hilos">
+    SELECT * FROM mo_listar_hilos_mios(#{id_duenio})
+      AS (id_hilo integer, hilo dtexto, tipo_hilo text, imagen text, destinatario text, fec_registro dfec_modificacion);
+  </select>
+
+  <select id="getListarHilosAMi" resultMap="hilos">
+    SELECT * FROM mo_listar_hilos_a_mi(#{id_duenio})
+      AS (id_hilo integer, hilo dtexto, tipo_hilo text, imagen text, destinatario text, fec_registro dfec_modificacion);
+  </select>
+
+  <select id="getNroMensajes" resultType="java.lang.Integer">
+    SELECT mo_nro_mensajes(#{id_duenio}, #{id_hilo}) AS valor;
+  </select>
+
+  <select id="getNroMensajesNuevos" resultType="java.lang.Integer">
+    SELECT mo_nro_mensajes_nuevos(#{id_duenio}, #{id_hilo}) AS valor;
+  </select>
+  
+  <resultMap id="usuarios"  type="org.fautapo.domain.Usuarios">
+    <result property="id_usuario"   column="id_usuario" />
+    <result property="nombres"      column="usuario"/>
+  </resultMap>
+
+  <select id="getListarUsuariosHilos" resultMap="usuarios">
+    SELECT * FROM mo_listar_usuarios(#{id_usuario})
+      AS (id_usuario integer, usuario text);
+  </select>
+
+</mapper>

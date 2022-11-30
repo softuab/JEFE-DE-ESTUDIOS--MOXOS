@@ -1,0 +1,272 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+ * @autor FAUTAPO
+ * @fec_registro 2005-11-01
+ * @ult_usuario FAUTAPO
+ * @fec_modificacion 2005-11-01
+-->
+
+<mapper namespace="Materias">
+    <!--PLANES-->
+    <resultMap id="materias" type="org.fautapo.domain.Materias">
+        <result property="id_materia"      column="id_materia" />
+        <result property="id_tipo_materia" column="id_tipo_materia" />
+        <result property="id_departamento" column="id_departamento" />
+        <result property="id_estado"       column="id_estado" />
+        <result property="materia"         column="materia" />
+        <result property="sigla"           column="sigla" />
+        <result property="hrs_teoricas"    column="hrs_teoricas" />
+        <result property="hrs_practicas"   column="hrs_practicas" />
+        <result property="creditos"        column="creditos" />
+        <result property="fec_registro"    column="fec_registro" />
+        <result property="ult_usuario"     column="ult_usuario" />
+    </resultMap>
+
+    <select id="getPlnListarMaterias" resultMap="materias">
+        SELECT * FROM mi_pln_listar_materias(#{id_plan}, #{id_programa}, #{id_tipo_grado});
+    </select>
+    <!--FIN PLANES-->
+  
+    <!--LIBRETAS-->
+    <resultMap id="buscarMateria" type="org.fautapo.domain.Materias">
+        <result property="id_materia"      column="id_materia"/>
+        <result property="materia"         column="materia"/>
+        <result property="sigla"           column="sigla"/>
+        <result property="hrs_teoricas"    column="hrs_teoricas"/>
+        <result property="hrs_practicas"   column="hrs_practicas"/>
+        <result property="hrs_periodo"     column="hrs_periodo"/>
+        <result property="creditos"        column="creditos"/>
+        <result property="id_tipo_materia" column="id_tipo_materia"/>
+        <result property="id_departamento" column="id_departamento"/>
+    </resultMap>
+
+    <select id="getMtrBuscarMateria" resultMap="buscarMateria">
+        SELECT *
+        FROM mi_mtr_buscar_materia(#{id_materia})
+        WHERE id_materia is not null;
+    </select>
+    <!--FIN LIBRETAS-->
+  
+    <!--EST_PROGRAMACIONES-->  
+    <resultMap id="inscripcion" type="org.fautapo.domain.Materias">
+        <result property="id_mencion"         column="id_mencion"/>
+        <result property="nivel_academico"    column="nivel_academico"/>
+        <result property="id_materia"         column="id_materia"/>
+        <result property="sigla"              column="sigla"/>
+        <result property="materia"            column="materia"/>
+        <result property="id_programa"        column="id_programa"/>
+        <result property="id_modelo_ahorro"   column="id_modelo_ahorro"/>
+        <result property="modelo_ahorro"      column="modelo_ahorro"/>
+        <result property="id_tipo_materia"    column="id_tipo_materia"/>
+        <result property="cupo_restante"      column="cupo_restante"/>
+        <result property="id_estado"          column="id_estado"/>
+        <result property="id_grupo"           column="id_grupo"/>
+        <result property="grupo"              column="grupo"/>
+    </resultMap>
+
+    <select id="getEstPrgListarProgramacionMateriasAut" resultMap="inscripcion">
+        SELECT *
+        FROM mi_est_prg_listar_programacion_materias_aut(#{id_estudiante}, #{gestion}, #{periodo}, #{id_tipo_evaluacion})
+        AS (id_mencion integer, nivel_academico dentero, id_materia dentero, sigla dtexto, materia dtexto,
+        id_programa dentero, id_modelo_ahorro integer, modelo_ahorro text, id_tipo_materia integer, cupo_restante integer,
+        id_estado varchar, id_grupo dentero, grupo varchar);
+    </select>
+
+    <resultMap id="grupos2" type="org.fautapo.domain.Materias">
+        <result property="id_grupo"         column="id_grupo"/>
+        <result property="grupo"            column="grupo"/>
+        <result property="cupo_restante"    column="cupo_restante"/>
+        <result property="nombre_completo"    column="nombre_completo"/>
+    </resultMap>
+
+    <select id="getDptoListarMateriaGrupo" resultMap="grupos2">
+        SELECT * FROM mi_dpto_listar_materia_grupo2(#{id_materia},#{gestion},#{periodo}, #{id_modelo_ahorro}, #{id_tipo_evaluacion}) AS(id_grupo integer, grupo dtexto, cupo_restante integer,nombre_completo text) ;
+    </select>
+  
+    <resultMap id="grupos" type="org.fautapo.domain.Materias">
+        <result property="id_grupo"         column="id_grupo"/>
+        <result property="grupo"            column="grupo"/>
+        <result property="cupo_restante"    column="cupo_restante"/>
+    </resultMap>
+
+    <select id="getDptoListarMateriaGrupo2" resultMap="grupos">
+        SELECT * FROM mi_dpto_listar_materia_grupo(#{id_materia},#{gestion},#{periodo}, #{id_modelo_ahorro}, #{id_tipo_evaluacion}) AS(id_grupo integer, grupo dtexto, cupo_restante integer) ;
+    </select>
+
+
+    <resultMap id="grupoMinimo" type="org.fautapo.domain.Materias">
+        <result property="id_grupo"         column="id_grupo"/>
+    </resultMap>
+
+    <select id="getDptoListarMateriaGrupoMinimo" resultMap="grupoMinimo">
+        SELECT min(id_grupo) as id_grupo FROM mi_dpto_listar_materia_grupo(#{id_materia},#{gestion},#{periodo}, #{id_modelo_ahorro}) AS(id_grupo integer, grupo dtexto, cupo_restante integer);
+    </select>
+  
+    <resultMap id="inscripcionpostulante" type="org.fautapo.domain.Materias">
+        <result property="id_mencion"         column="id_mencion"/>
+        <result property="nivel_academico"    column="nivel_academico"/>
+        <result property="id_materia"         column="id_materia"/>
+        <result property="sigla"              column="sigla"/>
+        <result property="materia"            column="materia"/>
+        <result property="id_programa"        column="id_programa"/>
+        <result property="cupo_restante"      column="cupo_restante"/>
+        <result property="id_estado"          column="id_estado"/>
+        <result property="grupo"              column="grupo"/>
+    </resultMap>
+
+    <select id="getPstPrgListarProgramacionMateriasAut" resultMap="inscripcionpostulante">
+        SELECT *
+        FROM mi_pst_prg_listar_programacion_materias_aut(#{id_postulante}, #{gestion}, #{periodo})
+        AS (id_mencion integer, nivel_academico dentero, id_materia dentero, sigla dtexto, materia dtexto, id_programa dentero, cupo_restante integer, id_estado varchar, grupo varchar);
+    </select>
+    <!--FIN EST_PROGRAMACIONES-->
+
+    <!--PROGRAMACION COMO ESTUDIANTE-->
+    <resultMap id="inscripcioncomoestudiante" type="org.fautapo.domain.Materias">
+        <result property="id_mencion"         column="id_mencion"/>
+        <result property="mencion"            column="mencion"/>
+        <result property="nivel_academico"    column="nivel_academico"/>
+        <result property="id_materia"         column="id_materia"/>
+        <result property="sigla"              column="sigla"/>
+        <result property="materia"            column="materia"/>
+        <result property="id_programa"        column="id_programa"/>
+        <result property="id_modelo_ahorro"   column="id_modelo_ahorro"/>
+        <result property="modelo_ahorro"      column="modelo_ahorro"/>
+        <result property="id_tipo_materia"    column="id_tipo_materia"/>
+        <result property="cupo_restante"      column="cupo_restante"/>
+        <result property="id_estado"          column="id_estado"/>
+        <result property="id_grupo"           column="id_grupo"/>
+        <result property="grupo"              column="grupo"/>
+        <result property="es_electiva"        column="es_electiva"/>
+    </resultMap>
+
+    <select id="getEstListarProgramacionMateriasReq" resultMap="inscripcioncomoestudiante">
+        SELECT DISTINCT *
+        FROM mi_est_listar_programacion_materias_req(#{id_estudiante}, #{gestion}, #{periodo}, #{id_tipo_evaluacion})
+        AS (id_mencion integer, mencion dtexto, nivel_academico dentero, id_materia dentero, sigla dtexto, materia dtexto,
+        id_programa dentero, id_modelo_ahorro integer, modelo_ahorro text, id_tipo_materia integer, cupo_restante integer,
+        id_estado varchar, id_grupo dentero, grupo varchar, es_electiva boolean);
+    </select>
+    <!--FIN PROGRAMACION COMO ESTUDIANTE-->
+    
+    <!--listar materias por plan,grado y programa-->
+    <resultMap id="lmateriaGradoPlan" type="org.fautapo.domain.Materias">
+        <result property="id_materia"    column="id_materia"/>
+        <result property="materia"       column="materia"/>
+        <result property="departamento"  column="departamento"/>
+    </resultMap>
+
+    <select id="getListarMateriasGradoPlanPrograma" resultMap="lmateriaGradoPlan">
+        SELECT * FROM listar_materias_grado_plan_programa(#{plan},#{id_tipo_grado},#{id_programa}) AS (id_materia integer, materia dtexto, departamento dtexto);
+    </select>
+    <!--fin listar materias por plan,grado y programa-->
+
+    <!--INICIO - ADMIN MATERIAS-->
+    <resultMap id="datosMaterias" type="org.fautapo.domain.Materias">
+        <result property="id_materia"      column="id_materia"/>
+        <result property="id_tipo_materia" column="id_tipo_materia"/>
+        <result property="id_departamento" column="id_departamento"/>
+        <result property="departamento"    column="departamento"/>
+        <result property="sigla"           column="sigla"/>
+        <result property="materia"         column="materia"/>
+        <result property="hrs_teoricas"    column="hrs_teoricas"/>
+        <result property="hrs_practicas"   column="hrs_practicas"/>
+        <result property="hrs_periodo"     column="hrs_periodo"/>
+        <result property="creditos"        column="creditos"/>
+        <result property="tipo_materia"    column="tipo_materia"/>
+        <result property="nivel_academico" column="nivel_academico"/>
+        <result property="id_plan"         column="id_plan"/>
+        <result property="programa"        column="programa"/>
+        <result property="tipo_grado"      column="tipo_grado"/>
+    </resultMap>
+
+    <select id="getListarMateriasPorDepartamento" resultMap="datosMaterias">
+        SELECT *
+        FROM mi_listar_materias_por_departamento(#{id_departamento})
+        AS (id_materia integer, id_tipo_materia dentero, id_departamento dentero, departamento dtexto, sigla dtexto, materia dtexto, 
+        hrs_teoricas dentero2, hrs_practicas dentero2, hrs_periodo dentero2, creditos dreal2, tipo_materia dtexto, nivel_academico integer, 
+        id_plan text, programa text, tipo_grado text);
+    </select>
+
+    <select id="getListarMateriasPorSigla" resultMap="datosMaterias">
+        SELECT *
+        FROM mi_listar_materias_por_sigla(#{id_universidad}, #{id_departamento}, #{sigla})
+        AS (id_materia integer, id_tipo_materia dentero, id_departamento dentero, departamento dtexto, sigla dtexto, materia dtexto, 
+        hrs_teoricas dentero2, hrs_practicas dentero2, hrs_periodo dentero2, creditos dreal2, tipo_materia dtexto, nivel_academico integer, 
+        id_plan text, programa text, tipo_grado text);
+    </select>
+
+    <select id="getListarMateriasPorMateria" resultMap="datosMaterias">
+        SELECT *
+        FROM mi_listar_materias_por_materia(#{id_universidad}, #{id_departamento}, #{materia})
+        AS (id_materia integer, id_tipo_materia dentero, id_departamento dentero, departamento dtexto, sigla dtexto, materia dtexto, 
+        hrs_teoricas dentero2, hrs_practicas dentero2, hrs_periodo dentero2, creditos dreal2, tipo_materia dtexto, nivel_academico integer, 
+        id_plan text, programa text, tipo_grado text);
+    </select>
+
+    <resultMap id="datosTipoMateria" type="org.fautapo.domain.Materias">
+        <result property="id_tipo_materia" column="id_tipo_materia"/>
+        <result property="tipo_materia"    column="tipo_materia"/>
+    </resultMap>
+
+    <select id="getMtrListarTiposMaterias" resultMap="datosTipoMateria">
+        SELECT * FROM mi_listar_tipos_materias();
+    </select>
+
+    <select id="getMtrBuscarTipoMateria" resultMap="datosTipoMateria">
+        SELECT * FROM mi_buscar_tipo_materia(#{id_tipo_materia});
+    </select>
+
+    <select id="setRegistrarMateria" resultType="java.lang.Integer">
+        SELECT mi_registrar_materia(#{id_materia}, #{id_tipo_materia}, #{id_departamento}, #{materia}, #{sigla}, #{hrs_teoricas}, #{hrs_practicas}, #{hrs_periodo}, #{creditos}, #{id_rol}, #{ult_usuario}) as valor;
+    </select>
+
+    <select id="setEliminarMateria" resultType="java.lang.Integer">
+        SELECT mi_eliminar_materia(#{id_materia}, #{id_rol}, #{ult_usuario}) as valor;
+    </select>
+  
+    <select id="getBuscar_nro_excepcion_calendario" resultType="java.lang.Integer">
+        SELECT * FROM cal_buscar_nro_excepcion_calendario(#{id_materia});
+    </select>
+    <!--FIN - ADMIN MATERIAS-->
+    <select id="GetListaAreasConocimientoMaterias" resultType="org.fautapo.domain.AreasConocimientoMaterias">
+        SELECT id_areas_materias, am.id_materia, sigla, materia, mp.id_plan,area, am.id_estado, am.fec_registro, am.fec_modificacion, am.ult_usuario, tipo, ciclo_materia
+        FROM  areas_materias am inner join materias m on m.id_materia=am.id_materia inner join  mtr_planes mp on m.id_materia=mp.id_materia
+        where am.id_estado='A' and id_plan=#{id_plan} and id_departamento=#{id_departamento} AND upper(materia) like '%'||upper(#{materia})||'%'
+    </select>
+    <select id="GetAreasConocimientoMaterias" resultType="org.fautapo.domain.AreasConocimientoMaterias">
+        SELECT id_areas_materias, am.id_materia, sigla, materia, mp.id_plan,area, am.id_estado, am.fec_registro, am.fec_modificacion, am.ult_usuario, tipo, ciclo_materia
+        FROM  areas_materias am inner join materias m on m.id_materia=am.id_materia inner join  mtr_planes mp on m.id_materia=mp.id_materia
+        where am.id_estado='A' and id_areas_materias=#{id_areas_materias}
+    </select>
+    <select id="GetListaPlanes" resultType="org.fautapo.util.ListViewItem">
+        SELECT distinct id_plan as id, id_plan as value
+        FROM public.mtr_planes
+        where id_programa=#{id_programa}
+        order by id_plan
+    </select>
+    <select id="GetListaMateriasPlan" resultType="org.fautapo.util.ListViewItem">
+        SELECT m.id_materia as id, materia as value
+        FROM materias m inner join  mtr_planes mp on m.id_materia=mp.id_materia
+        where mp.id_materia=mp.id_materia_ant and  m.id_estado='A' and id_plan=#{id_plan} and id_departamento=#{id_departamento}
+    </select>
+    <insert id="InsertarAreaConocimiento">
+        INSERT INTO areas_materias(  id_materia, area, id_estado, ult_usuario, tipo, ciclo_materia)
+        VALUES (#{id_materia}, area, 'A', #{ult_usuario}, #{tipo}, #{ciclo_materia});
+    </insert>
+    <update id="ActualizarAreaConocimiento">
+        UPDATE areas_materias
+        SET id_materia=#{id_materia}, 
+        area=#{area}, 
+        ult_usuario=#{ult_usuario}, 
+        tipo=#{tipo}, 
+        ciclo_materia=#{ciclo_materia}
+        WHERE id_areas_materias=#{id_areas_materias};
+    </update>
+    <update id="EliminarAreaConocimiento">
+        UPDATE areas_materias
+        SET id_estado='X'
+        WHERE id_areas_materias=#{id_areas_materias};
+    </update>
+</mapper>

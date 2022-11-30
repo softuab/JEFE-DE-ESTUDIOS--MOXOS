@@ -1,0 +1,561 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="Postulantes">
+ <!--EST_PROGRAMACIONES-->
+ <resultMap id="buscarPostulante" type="org.fautapo.domain.Postulantes">
+    <result property="id_postulante"     column="id_postulante"/>
+    <result property="id_persona"        column="id_persona"/>
+    <result property="id_programa"       column="id_programa"/>
+    <result property="id_plan"           column="id_plan"/>
+    <result property="id_tipo_grado"     column="id_tipo_grado"/>
+    <result property="id_tipo_admision"  column="id_tipo_admision"/>
+    <result property="id_estado"         column="id_estado"/>
+    <result property="gestion"           column="gestion"/>
+    <result property="periodo"         column="periodo"/>
+  </resultMap>
+
+  <select id="getPstBuscarPostulante" resultMap="buscarPostulante">
+    SELECT * FROM mi_pst_buscar_postulante(#{id_postulante});
+  </select>  
+
+  <select id="getPstBuscarPostulantePrograma" resultMap="buscarPostulante">
+    SELECT * FROM mi_pst_buscar_postulante_programa(#{id_postulante}, #{id_programa});
+  </select>
+  
+  <resultMap id="listarNombresPostulante" type="org.fautapo.domain.Postulantes">
+    <result property="id_postulante"     column="id_postulante"/>
+    <result property="id_persona"        column="id_persona"/>
+    <result property="id_programa"       column="id_programa"/>
+    <result property="id_plan"           column="id_plan"/>
+    <result property="nombre_completo"   column="nombre_completo"/>
+    <result property="paterno"           column="paterno"/>
+    <result property="materno"           column="materno"/>
+    <result property="nombres"           column="nombres"/>
+    <result property="dip"               column="dip"/>
+    <result property="programa"          column="programa"/>
+  </resultMap>
+
+  <select id="getPstListarPostulantesNombres" resultMap="listarNombresPostulante">
+   SELECT * FROM mi_pst_listar_postulantes_nombres(#{nombres}, #{id_programa})
+    AS(id_postulante integer, id_persona integer, id_programa dentero, id_plan dtexto,nombre_completo varchar, paterno dtexto2, materno dtexto2, nombres dtexto, dip dtexto2, programa dtexto); 
+
+  </select>
+  <select id="getPstListarPostulantesDip" resultMap="listarNombresPostulante">
+    SELECT * FROM mi_pst_listar_postulantes_dip(#{dip},#{id_programa})
+    AS(id_postulante integer, id_persona integer, id_programa dentero, id_plan dtexto,nombre_completo varchar, paterno dtexto2, materno dtexto2, nombres dtexto, dip dtexto2, programa dtexto);       
+  </select> 
+  <!--FIN EST_PROGRAMACIONES-->  
+  
+  <!--MI SEGUNDA PARTE-->  
+  <!--BUSCAR  POSTULANTE-->  
+  <resultMap id="listarPostulantes" type="org.fautapo.domain.Postulantes">
+    <result property="id_postulante"         column="id_postulante"/>
+    <result property="id_persona"            column="id_persona"/>
+    <result property="id_programa"           column="id_programa"/>
+    <result property="id_plan"               column="id_plan"/>
+    <result property="id_tipo_grado"         column="id_tipo_grado"/>
+    <result property="id_tipo_admision"      column="id_tipo_admision"/>
+    <result property="id_tipo_clasificacion" column="id_tipo_clasificacion"/>
+    <result property="gestion"               column="gestion"/>
+    <result property="periodo"               column="periodo"/>
+    <result property="nombre_completo"       column="nombre_completo"/>
+    <result property="paterno"               column="paterno"/>
+    <result property="materno"               column="materno"/>
+    <result property="nombres"               column="nombres"/>
+    <result property="dip"                   column="dip"/>
+    <result property="programa"              column="programa"/>
+    <result property="facultad"              column="facultad"/> 
+    <result property="id_estado"             column="id_estado"/>
+    <result property="tipo_admision"         column="tipo_admision"/>
+    <result property="tipo_grado"            column="tipo_grado"/>
+    <result property="tipo_clasificacion"    column="tipo_clasificacion"/>
+    
+  </resultMap>
+  <select id="getMiListarPostulantesDip" resultMap="listarPostulantes">
+    SELECT * FROM mi_listar_postulantes_dip(#{dip})
+     AS(id_postulante integer, id_persona integer, id_plan dtexto,id_tipo_grado dentero, id_tipo_admision dentero, id_tipo_clasificacion dentero, 
+     gestion dentero, periodo dentero, nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, nombre_completo dtexto2, id_programa integer, programa dtexto, facultad dtexto, id_estado did_estado,
+     tipo_admision dtexto, tipo_grado dtexto, tipo_clasificacion dtexto); 
+  </select>
+
+  <select id="getMiListarPostulantesNombre" resultMap="listarPostulantes">
+    SELECT * FROM mi_listar_postulantes_nombre(#{nombres})
+      AS(id_postulante integer, id_persona integer, id_plan dtexto, id_tipo_grado dentero, id_tipo_admision dentero, id_tipo_clasificacion dentero,
+         gestion dentero, periodo dentero, nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, nombre_completo dtexto2, id_programa integer, programa dtexto, facultad dtexto, id_estado did_estado,
+      tipo_admision dtexto, tipo_grado dtexto, tipo_clasificacion dtexto); 
+  </select>
+  
+  <select id="getMiListarPstDipGestionPeriodo" resultMap="listarPostulantes">
+    SELECT * FROM mi_listar_postulantes_dip_gestion(#{dip}, #{gestion}, #{periodo})
+    AS(id_postulante integer, id_persona integer, id_plan dtexto, id_tipo_grado dentero, id_tipo_admision dentero, id_tipo_clasificacion dentero, 
+     gestion dentero, periodo dentero, nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, nombre_completo dtexto2, id_programa integer, programa dtexto, facultad dtexto, id_estado did_estado,
+      tipo_admision dtexto, tipo_grado dtexto, tipo_clasificacion dtexto); 
+  </select>
+
+  <select id="getMiListarPstNombreGestionPeriodo" resultMap="listarPostulantes">
+    SELECT * FROM mi_listar_postulantes_nombre_gestion(#{nombres}, #{gestion}, #{periodo})
+     AS(id_postulante integer, id_persona integer, id_plan dtexto, id_tipo_grado dentero, id_tipo_admision dentero, id_tipo_clasificacion dentero, 
+        gestion dentero, periodo dentero, nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, nombre_completo dtexto2, id_programa integer, programa dtexto, facultad dtexto, id_estado did_estado,
+      tipo_admision dtexto, tipo_grado dtexto, tipo_clasificacion dtexto);  
+  </select>
+  
+  <select id="getMiListarPstAprobadoDipGestionPeriodo" resultMap="listarPostulantes">
+    SELECT * FROM mi_listar_postulantes_aprobados_dip_gestion(#{dip}, #{gestion}, #{periodo})
+    AS(id_postulante integer, id_persona integer, id_plan dtexto, id_tipo_grado dentero, id_tipo_admision dentero, id_tipo_clasificacion dentero, 
+     gestion dentero, periodo dentero, nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, nombre_completo dtexto2, id_programa integer, programa dtexto, facultad dtexto, id_estado did_estado,
+      tipo_admision dtexto, tipo_grado dtexto, tipo_clasificacion dtexto);  
+  </select>
+
+  <select id="getMiListarPstAprobadoNombreGestionPeriodo" resultMap="listarPostulantes">
+    SELECT * FROM mi_listar_postulantes_aprobados_nombre_gestion(#{nombres}, #{gestion}, #{periodo})
+     AS(id_postulante integer, id_persona integer, id_plan dtexto, id_tipo_grado dentero, id_tipo_admision dentero, id_tipo_clasificacion dentero, 
+        gestion dentero, periodo dentero, nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, nombre_completo dtexto2, id_programa integer, programa dtexto, facultad dtexto, id_estado did_estado,
+      tipo_admision dtexto, tipo_grado dtexto, tipo_clasificacion dtexto);  
+  </select>
+  
+  <select id="getMiListarPstProgramaGestionPeriodo" resultMap="listarPostulantes">
+    SELECT * FROM mi_pst_listar_postulantes_programa(#{id_programa}, #{gestion}, #{periodo})
+       AS(id_postulante integer, id_persona integer, id_plan dtexto,id_tipo_grado dentero, id_tipo_admision dentero, id_tipo_clasificacion dentero, 
+     gestion dentero, periodo dentero, nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, nombre_completo dtexto2, id_programa integer, programa dtexto, facultad dtexto, id_estado did_estado,
+     tipo_admision dtexto, tipo_grado dtexto, tipo_clasificacion dtexto);     
+  </select>
+  
+  <select id="getMiListarPstProgramaGestionPeriodoSede" resultMap="listarPostulantes">
+    SELECT * FROM mi_pst_listar_postulantes_programa_por_sede(#{id_programa}, #{gestion}, #{periodo},#{ins_sede})
+       AS(id_postulante integer, id_persona integer, id_plan dtexto,id_tipo_grado dentero, id_tipo_admision dentero, id_tipo_clasificacion dentero, 
+     gestion dentero, periodo dentero, nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, nombre_completo dtexto2, id_programa integer, programa dtexto, facultad dtexto, id_estado did_estado,
+     tipo_admision dtexto, tipo_grado dtexto, tipo_clasificacion dtexto);     
+  </select>
+  <select id="getMiListarPstPsaGestionPeriodo" resultMap="listarPostulantes">
+    SELECT * FROM mi_pst_listar_postulantes_psa(#{gestion}, #{periodo})
+       AS(id_postulante integer, id_persona integer, id_plan dtexto,id_tipo_grado dentero, id_tipo_admision dentero, id_tipo_clasificacion dentero, 
+     gestion dentero, periodo dentero, nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, nombre_completo dtexto2, id_programa integer, programa dtexto, facultad dtexto, id_estado did_estado,
+     tipo_admision dtexto, tipo_grado dtexto, tipo_clasificacion dtexto);     
+  </select>
+  <!-- INICIO REPORTE DETALLADO DE ASISTENCIA DE POSTULANTES PSA-->
+   <resultMap id="datosRepAsistencia" type="org.fautapo.domain.Postulantes">        
+	<result property="id_postulante"         column="id_postulante"/>
+    <result property="id_persona"            column="id_persona"/>
+    <result property="id_programa"           column="id_programa"/>
+    <result property="id_plan"               column="id_plan"/>
+    <result property="id_tipo_grado"         column="id_tipo_grado"/>
+    <result property="id_tipo_admision"      column="id_tipo_admision"/>
+    <result property="id_tipo_clasificacion" column="id_tipo_clasificacion"/>
+    <result property="gestion"               column="gestion"/>
+    <result property="periodo"               column="periodo"/>
+    <result property="nombre_completo"       column="nombre_completo"/>
+    <result property="paterno"               column="paterno"/>
+    <result property="materno"               column="materno"/>
+    <result property="nombres"               column="nombres"/>
+    <result property="dip"                   column="dip"/>
+    <result property="programa"              column="programa"/>
+    <result property="facultad"              column="facultad"/> 
+    <result property="id_estado"             column="id_estado"/>
+    <result property="tipo_admision"         column="tipo_admision"/>
+    <result property="tipo_grado"            column="tipo_grado"/>
+	<result property="tipo_clasificacion"    column="tipo_clasificacion"/>
+    <result property="lugar"    column="lugar"/>
+	<result property="fecha"    column="fecha"/>
+	<result property="hora"    column="hora"/>
+	<result property="nro_maquinas"    column="nro_maquinas"/>
+	<result property="asistencia"    column="asistencia"/>
+	
+      	
+  </resultMap> 
+  
+  <select id="getRepAsistenciapostulantepsa" resultMap="datosRepAsistencia">
+    select * from mi_pst_listar_postulantes_psa_asistencia(#{gestion},#{periodo})
+      AS(id_postulante integer, id_persona integer, id_plan dtexto,id_tipo_grado dentero, id_tipo_admision dentero, id_tipo_clasificacion dentero, 
+     gestion dentero, periodo dentero, nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, nombre_completo dtexto2, id_programa integer, programa dtexto, facultad dtexto, id_estado did_estado,
+     tipo_admision dtexto, tipo_grado dtexto, tipo_clasificacion dtexto,lugar dtexto2,fecha dfecha2,hora dtexto2,nro_maquinas dentero,asistencia dbooleano2);
+  </select>
+     <select id="setPstModificarAsistenciaPostulante" resultType="java.lang.Integer">
+    SELECT * FROM mi_modificar_asistencia_postulante(#{id_postulante})
+  </select> 
+     <resultMap id="datosPostulantes" type="org.fautapo.domain.Postulantes">        
+	<result property="id_postulante"         column="id_postulante"/>
+    <result property="id_persona"            column="id_persona"/>
+    <result property="id_programa"           column="id_programa"/>
+    <result property="id_plan"               column="id_plan"/>
+    <result property="id_tipo_grado"         column="id_tipo_grado"/>
+    <result property="id_tipo_admision"      column="id_tipo_admision"/>
+    <result property="id_tipo_clasificacion" column="id_tipo_clasificacion"/>
+    <result property="gestion"               column="gestion"/>
+    <result property="periodo"               column="periodo"/>
+    <result property="nombre_completo"       column="nombre_completo"/>
+    <result property="paterno"               column="paterno"/>
+    <result property="materno"               column="materno"/>
+    <result property="nombres"               column="nombres"/>
+    <result property="dip"                   column="dip"/>
+    <result property="programa"              column="programa"/>
+    <result property="facultad"              column="facultad"/> 
+    <result property="id_estado"             column="id_estado"/>
+    <result property="tipo_admision"         column="tipo_admision"/>
+    <result property="tipo_grado"            column="tipo_grado"/>
+	<result property="tipo_clasificacion"    column="tipo_clasificacion"/>
+    <result property="lugar"    column="lugar"/>
+	<result property="fecha"    column="fecha"/>
+	<result property="hora"    column="hora"/>
+	<result property="nro_maquinas"    column="nro_maquinas"/>
+	<result property="asistencia"    column="asistencia"/>
+	
+      	
+  </resultMap> 
+  
+  <select id="getRepAsistenciapostulantepsaci" resultMap="datosPostulantes">
+    select * from mi_pst_listar_postulantes_psa_asistenciaci(#{dip},#{gestion},#{periodo})
+      AS(id_postulante integer, id_persona integer, id_plan dtexto,id_tipo_grado dentero, id_tipo_admision dentero, id_tipo_clasificacion dentero, 
+     gestion dentero, periodo dentero, nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, nombre_completo dtexto2, id_programa integer, programa dtexto, facultad dtexto, id_estado did_estado,
+     tipo_admision dtexto, tipo_grado dtexto, tipo_clasificacion dtexto,lugar dtexto2,fecha dfecha2,hora dtexto2,nro_maquinas dentero,asistencia dbooleano2);
+  </select>
+  <select id="getMiListarPostulantesDipTipoAdm" resultMap="listarPostulantes">
+    SELECT * FROM mi_listar_postulantes_dip_tipo_admision(#{dip}, #{id_tipo_admision})
+     AS(id_postulante integer, id_persona integer, id_plan dtexto,id_tipo_grado dentero, id_tipo_admision dentero, id_tipo_clasificacion dentero, 
+     gestion dentero, periodo dentero, nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, nombre_completo dtexto2, id_programa integer, programa dtexto, facultad dtexto, id_estado did_estado,
+     tipo_admision dtexto, tipo_grado dtexto, tipo_clasificacion dtexto); 
+  </select>
+
+  <select id="getMiListarPostulantesNombreTipoAdm" resultMap="listarPostulantes">
+    SELECT * FROM mi_listar_postulantes_nombre_tipo_admision(#{nombres}, #{id_tipo_admision})
+      AS(id_postulante integer, id_persona integer, id_plan dtexto, id_tipo_grado dentero, id_tipo_admision dentero, id_tipo_clasificacion dentero,
+         gestion dentero, periodo dentero, nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, nombre_completo dtexto2, id_programa integer, programa dtexto, facultad dtexto, id_estado did_estado,
+      tipo_admision dtexto, tipo_grado dtexto, tipo_clasificacion dtexto); 
+  </select>
+   <resultMap id="nropostulantes" type="org.fautapo.domain.Postulantes">
+    <result property="num"      column="num"/>
+	 
+    </resultMap> 
+   <select id="getNroPostulantesPsa" resultMap="nropostulantes">
+    SELECT * FROM nro_postulantes_psa(#{gestion}, #{periodo})
+    AS (num bigint);    	
+  </select>
+   <select id="setRegistrarasignacion" resultType="java.lang.Integer">
+    SELECT * FROM trn_pst_registrar_maquina(#{id_postulante},_cadena_fecha(#{fecha}),#{hora},#{lugar},#{nro_maquinas},#{id_rol},#{ult_usuario});
+  </select> 
+  <!--REGISTRO DE POSTULANTE-->  
+  <select id="setMiRegistrarPstPersona" resultType="java.lang.Integer">
+    SELECT * FROM mi_registrar_pst_persona(#{id_persona}, #{id_pais}, #{id_departamento}, #{id_provincia}, #{id_localidad}, #{id_tipo_estado_civil}, #{id_tipo_sexo}, #{id_tipo_empresa_telefonica}, #{nombres}, #{paterno}, #{materno}, #{dip},
+                       _cadena_fecha(#{fec_nacimiento}), #{direccion}, #{telefono}, #{celular}, #{correo}, #{ult_usuario});
+  </select>
+  
+  <select id="setMiRegistrarPostulante" resultType="java.lang.Integer">
+    SELECT * FROM mi_registrar_postulante(#{id_persona}, #{id_programa}, #{id_plan}, #{id_tipo_grado}, #{id_tipo_admision}, #{id_tipo_clasificacion}, #{gestion}, #{periodo}, #{id_rol}, #{ult_usuario});
+  </select> 
+  
+  <select id="setMiRegistrarPostulanteC" resultType="java.lang.Integer">
+    SELECT * FROM mi_registrar_postulantec(#{id_persona}, #{id_programa}, #{id_plan}, #{id_tipo_grado}, #{id_tipo_admision}, #{id_tipo_clasificacion}, #{gestion}, #{periodo}, #{id_rol}, #{ult_usuario});
+  </select> 
+
+  <select id="setPstRegistrarDocumentos" resultType="java.lang.Integer">
+    SELECT * FROM mi_pst_registrar_documentos(#{id_persona}, #{id_tipo_documento}, #{numero}, #{observacion}, #{ult_usuario}) as valor;
+  </select> 
+  
+  <resultMap id="listarPersonaPst" type="org.fautapo.domain.Postulantes">
+    <result property="id_persona"                  column="id_persona"/>
+    <result property="nombre_completo"             column="nombre_completo"/>
+    <result property="nombres"                     column="nombres"/>
+    <result property="paterno"                     column="paterno"/>
+    <result property="materno"                     column="materno"/>
+    <result property="dip"                         column="dip"/>
+    <result property="direccion"                   column="direccion"/>
+    <result property="telefono"                    column="telefono"/>
+    <result property="celular"                     column="celular"/>
+    <result property="correo"                      column="correo"/>
+    <result property="fec_nacimiento2"             column="fec_nacimiento"/>
+    <result property="id_pais"                     column="id_pais"/>
+    <result property="id_departamento"             column="id_departamento"/>
+    <result property="id_provincia"                column="id_provincia"/>
+    <result property="id_localidad"                column="id_localidad"/>
+    <result property="id_tipo_sexo"                column="id_tipo_sexo"/>    
+    <result property="id_tipo_estado_civil"        column="id_tipo_estado_civil"/>    
+    <result property="id_tipo_empresa_telefonica"  column="id_tipo_empresa_telefonica"/>    
+    
+  </resultMap>
+  <select id="getPstBuscarPersona" resultMap="listarPersonaPst">
+    SELECT * FROM mi_buscar_pst_persona(#{id_persona});
+  </select>
+  
+ <!-- Inicio Cambiado  tipos_documentos y clf_tipos_documentos-->
+ <resultMap id="listarTiposDocumentos" type="org.fautapo.domain.Postulantes">
+    <result property="id_tipo_documento"     column="id_tipo_documento"/>
+    <result property="tipo_documento"        column="tipo_documento"/>
+  </resultMap>
+  <select id="getListarTiposDocumentos" resultMap="listarTiposDocumentos">
+    SELECT * FROM  mi_listar_tipos_documentos();
+  </select>
+ 
+  <resultMap id="lClfTiposDocumentos" type="org.fautapo.domain.Postulantes">
+    <result property="id_clf_tipo_documento"     column="id_clf_tipo_documento"/>
+    <result property="id_tipo_clasificacion"     column="id_tipo_clasificacion"/>
+    <result property="tipo_clasificacion"        column="tipo_clasificacion"/>
+    <result property="id_tipo_documento"         column="id_tipo_documento"/>
+    <result property="tipo_documento"            column="tipo_documento"/>
+    <result property="vigente"                   column="vigente"/>
+    <result property="compromiso"                column="compromiso"/>
+  </resultMap>
+  <select id="getListarTiposDocumentosClasificacionVigente" resultMap="lClfTiposDocumentos">
+    SELECT * FROM  mi_listar_tipos_documentos_clasificacion_vig(#{id_tipo_clasificacion})
+      AS(id_clf_tipo_documento integer, id_tipo_clasificacion dentero, tipo_clasificacion dtexto,
+         id_tipo_documento dentero, tipo_documento dtexto, vigente dbooleano2, compromiso dbooleano2);
+  </select>
+  <!-- Fin Cambiado clf_tipos_documentos--> 
+  
+  <select id="setPstRegistrarMatricula" resultType="java.lang.Integer">
+    SELECT * FROM mi_pst_registrar_matricula(#{id_postulante}, #{gestion}, #{periodo}, #{id_rol}, #{ult_usuario});
+  </select> 
+  
+  <resultMap id="listarTiposClasificaciones" type="org.fautapo.domain.Postulantes">
+    <result property="id_tipo_clasificacion"     column="id_tipo_clasificacion"/>
+    <result property="tipo_clasificacion"        column="tipo_clasificacion"/>
+  </resultMap>
+  <select id="getListarTiposClasificaciones" resultMap="listarTiposClasificaciones">
+    SELECT * FROM  mi_listar_tipos_clasificaciones();
+  </select>
+  
+  <select id="getListarTiposClasificacionesPost" resultMap="listarTiposClasificaciones">
+    SELECT * FROM  mi_listar_tipos_clasificacionespost();
+  </select>
+
+  <resultMap id="listarProgramacionPst" type="org.fautapo.domain.Postulantes">
+    <result property="id_programacion" column="id_programacion"/>
+    <result property="id_postulante"   column="id_postulante"/>
+    <result property="id_materia"      column="id_materia"/>
+    <result property="id_grupo"        column="id_grupo"/>
+    <result property="materia"         column="materia"/>
+    <result property="sigla"           column="sigla"/>
+    <result property="grupo"           column="grupo"/>
+    
+  </resultMap>
+  <select id="getListarPstMateriasProgramadas" resultMap="listarProgramacionPst">
+    SELECT * FROM mi_pst_listar_materias_programadas(#{id_postulante},#{gestion}, #{periodo}) AS (id_programacion integer, id_postulante dentero, id_materia dentero, id_grupo dentero, materia dtexto, sigla dtexto, grupo dtexto );
+  </select>
+  
+  <resultMap id="buscarNombrePostulante" type="org.fautapo.domain.Postulantes">
+    <result property="id_postulante"          column="id_postulante"/>
+    <result property="id_persona"             column="id_persona"/>
+    <result property="id_programa"            column="id_programa"/>
+    <result property="id_plan"                column="id_plan"/>
+    <result property="paterno"                column="paterno"/>
+    <result property="materno"                column="materno"/>
+    <result property="nombres"                column="nombres"/>
+    <result property="dip"                    column="dip"/>
+    <result property="programa"               column="programa"/>
+    <result property="gestion"                column="gestion"/>
+    <result property="periodo"                column="periodo"/>
+    <result property="id_tipo_grado"          column="id_tipo_grado"/>
+    <result property="id_tipo_admision"       column="id_tipo_admision"/>
+    <result property="id_tipo_clasificacion"  column="id_tipo_clasificacion"/>
+    <result property="fec_nacimiento2"        column="fec_nacimiento"/>
+    <result property="direccion"              column="direccion"/>
+    <result property="telefono"               column="telefono"/>
+    <result property="celular"                column="celular"/>
+    <result property="correo"                 column="correo"/>
+    <result property="facultad"               column="facultad"/>
+    <result property="tipo_grado"                  column="tipo_grado"/>
+    <result property="tipo_admision"               column="tipo_admision"/>
+    <result property="tipo_clasificacion"          column="tipo_clasificacion"/>
+    <result property="pais"                        column="pais"/>
+    <result property="departamento"                column="departamento"/>
+    <result property="provincia"                   column="provincia"/>
+    <result property="localidad"                   column="localidad"/>
+    <result property="tipo_sexo"                   column="tipo_sexo"/>
+    <result property="tipo_estado_civil"           column="tipo_estado_civil"/>
+    <result property="nombre_usuario"              column="nombre_usuario"/>
+    <result property="fec_registro"                column="fec_registro"/>
+    <result property="id_estado"                   column="id_estado"/>
+    <result property="id_pais"                     column="id_pais"/>
+    <result property="id_departamento"             column="id_departamento"/>
+    <result property="id_provincia"                column="id_provincia"/>
+    <result property="id_localidad"                column="id_localidad"/>
+    <result property="id_tipo_sexo"                column="id_tipo_sexo"/>
+    <result property="id_tipo_estado_civil"        column="id_tipo_estado_civil"/>
+    <result property="id_tipo_empresa_telefonica"  column="id_tipo_empresa_telefonica"/>
+  </resultMap>
+
+  <select id="getPstBuscarPostulanteNombres" resultMap="buscarNombrePostulante">
+    SELECT * FROM mi_buscar_postulante_persona(#{id_postulante})
+    AS (id_postulante integer, id_programa dentero, id_plan dtexto, id_persona dentero, id_tipo_grado dentero, id_tipo_admision dentero, id_tipo_clasificacion dentero,
+      gestion dentero, periodo dentero, nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, fec_nacimiento dfecha2, direccion dtexto2,
+      telefono dtexto2, celular dtexto2, correo dtexto2, programa dtexto,
+      facultad dtexto, tipo_grado dtexto, tipo_admision dtexto, tipo_clasificacion dtexto,
+      id_pais dentero, pais dtexto, id_departamento dentero, departamento dtexto, id_provincia dentero, provincia dtexto, id_localidad dentero, localidad dtexto,
+      id_tipo_sexo dentero, tipo_sexo dtexto, id_tipo_estado_civil dentero, tipo_estado_civil dtexto, id_tipo_empresa_telefonica dentero,
+      nombre_usuario dtexto, fec_registro dfec_modificacion, id_estado did_estado);    
+  </select>
+  
+  <select id="getPstBuscarPostulanteNombresSede" resultMap="buscarNombrePostulante">
+    SELECT * FROM mi_buscar_postulante_persona_sede(#{id_postulante},#{ins_sede})
+    AS (id_postulante integer, id_programa dentero, id_plan dtexto, id_persona dentero, id_tipo_grado dentero, id_tipo_admision dentero, id_tipo_clasificacion dentero,
+      gestion dentero, periodo dentero, nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, fec_nacimiento dfecha2, direccion dtexto2,
+      telefono dtexto2, celular dtexto2, correo dtexto2, programa dtexto,
+      facultad dtexto, tipo_grado dtexto, tipo_admision dtexto, tipo_clasificacion dtexto,
+      id_pais dentero, pais dtexto, id_departamento dentero, departamento dtexto, id_provincia dentero, provincia dtexto, id_localidad dentero, localidad dtexto,
+      id_tipo_sexo dentero, tipo_sexo dtexto, id_tipo_estado_civil dentero, tipo_estado_civil dtexto, id_tipo_empresa_telefonica dentero,
+      nombre_usuario dtexto, fec_registro dfec_modificacion, id_estado did_estado);    
+  </select>
+  
+  <resultMap id="buscarPstMatricula" type="org.fautapo.domain.Postulantes">
+    <result property="id_matricula"      column="id_matricula"/>
+    <result property="id_postulante"     column="id_postulante"/>
+    <result property="clave"             column="clave"/>
+    <result property="id_persona"        column="id_persona"/>
+    <result property="id_programa"       column="id_programa"/>
+    <result property="id_plan"           column="id_plan"/>
+    <result property="paterno"           column="paterno"/>
+    <result property="materno"           column="materno"/>
+    <result property="nombres"           column="nombres"/>
+    <result property="dip"               column="dip"/>
+    <result property="programa"          column="programa"/>
+    <result property="gestion"           column="gestion"/>
+    <result property="periodo"           column="periodo"/>
+  </resultMap>
+
+  <select id="getPstBuscarMatriculaPostulante" resultMap="buscarPstMatricula">
+    SELECT * FROM mi_pst_buscar_matricula_postulante_persona(#{id_matricula})
+      AS (id_matricula integer, id_postulante dentero, clave dtexto2, gestion dentero, periodo dentero, id_programa dentero, id_plan dtexto,
+          id_persona dentero, nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, programa dtexto );
+  </select>
+  <!--FIN REGISTRO DE POSTULANTE-->  
+  <select id="setPstModificarEstadoPostulante" resultType="java.lang.Integer">
+    SELECT * FROM mi_modificar_estado_postulante(#{id_postulante}, #{id_estado}, #{ult_usuario})
+  </select> 
+  <!--Pst Persona-->
+  <select id="getPstListarPersonasNombre" resultMap="listarPersonaPst">
+    SELECT * FROM  mi_listar_pst_personas_nombres(#{nombres}); 
+  </select>
+  
+  <select id="getPstListarPersonasDip" resultMap="listarPersonaPst">
+    SELECT * FROM  mi_listar_pst_personas_dip(#{dip}); 
+  </select>
+  
+  <select id="getMiListarPostulantesPorPersona" resultMap="listarPostulantes">
+    SELECT * FROM mi_pst_listar_postulantes_persona(#{id_persona})
+     AS (id_postulante integer, id_persona integer, id_plan dtexto,id_tipo_grado dentero, id_tipo_admision dentero, id_tipo_clasificacion dentero, 
+        gestion dentero, periodo dentero, nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, nombre_completo dtexto2, id_programa integer, programa dtexto, facultad dtexto, id_estado did_estado,
+        tipo_admision dtexto, tipo_grado dtexto, tipo_clasificacion dtexto);     
+  </select>
+  
+  <select id="setRegistrarPstPrsColegio" resultType="java.lang.Integer">
+    SELECT * FROM mi_registrar_pst_prs_colegios(#{id_persona}, #{id_colegio}, #{id_tipo_turno}, #{anio_egreso}, #{ult_usuario})
+  </select>
+  
+  <resultMap id="datosPstPrsColegio" type="org.fautapo.domain.Postulantes">
+    <result property="id_pst_prs_colegio"       column="id_pst_prs_colegio" />  
+    <result property="id_persona"               column="id_persona" />
+    <result property="id_colegio"               column="id_colegio" />
+    <result property="colegio"                  column="colegio" />
+    <result property="anio_egreso"              column="anio_egreso" />
+    <result property="id_tipo_institucion"      column="id_tipo_institucion" />
+    <result property="tipo_institucion"         column="tipo_institucion" />
+    <result property="id_institucion"           column="id_institucion" />
+    <result property="institucion"              column="institucion" />
+    <result property="pais"                     column="pais" />    
+    <result property="departamento"             column="departamento" />
+    <result property="provincia"                column="provincia" />
+    <result property="localidad"                column="localidad" />
+    <result property="id_tipo_turno"            column="id_tipo_turno" />
+    <result property="tipo_turno"               column="tipo_turno" />
+
+  </resultMap>
+ 
+  <select id="getBuscarPstPersonaColegio" resultMap="datosPstPrsColegio">
+    SELECT * FROM mi_buscar_pst_persona_colegio(#{id_persona})
+      AS(id_pst_prs_colegio integer, id_persona dentero, id_colegio dentero, anio_egreso dentero, colegio dtexto,
+         id_tipo_institucion dentero, tipo_institucion dtexto,
+         id_institucion dentero, institucion dtexto, pais dtexto, departamento dtexto, provincia dtexto, localidad dtexto, 
+         id_tipo_turno dentero, tipo_turno dtexto);
+  </select>
+  <!-- fin MI SEGUNDA PARTE-->  
+
+  <!-- inicio  JOJO -->
+  <select id="getMiPrsBuscarPostulante" resultMap="buscarPostulante">
+    SELECT * FROM mi_prs_buscar_postulante(#{id_persona}, #{id_programa});
+  </select>
+
+  <select id="setPstRegistrarPrograma" >
+    SELECT mi_pst_registrar_programa(#{id_postulante}, #{id_programa}, #{id_plan}, #{id_rol}, #{ult_usuario},#{id_estado});
+  </select>
+  <!-- fin  JOJO -->
+  <!--Estadistica Nro Pst Inscritos-HAbilitados  FACULTAD-->
+  <resultMap id="datosPstInscritos" type="org.fautapo.domain.Postulantes">
+    <result property="id_programa"         column="id_programa" />
+    <result property="programa"            column="programa" />
+    <result property="inscritos"            column="inscritos" />
+    <result property="habilitados"           column="habilitados" />
+    <result property="inhabilitados"         column="inhabilitados" />
+
+  </resultMap>
+ 
+  <select id="getNroPstInscritosHabilitados" resultMap="datosPstInscritos">
+    SELECT * FROM nro_pst_inscritos_aprobados_programa(#{id_facultad}, #{gestion}, #{periodo}) 
+     AS (id_programa integer, programa dtexto, inscritos integer, habilitados integer, inhabilitados integer);
+  </select>
+  <!--Fin Estadistica Postulante FACULTAD-->
+ 
+  <!--Estadistica Nro Pst Inscritos-HAbilitados  admision especial-->
+  <resultMap id="datosPstInscritos2" type="org.fautapo.domain.Postulantes">
+    <result property="id_programa"              column="id_programa" />
+    <result property="programa"                 column="programa" />
+    <result property="inscritos"                column="inscritos" />
+    <result property="pre_habilitados"          column="pre_habilitados" />
+    <result property="pre_inhabilitados"        column="pre_inhabilitados" />
+    <result property="psa_habilitados"          column="psa_habilitados" />
+    <result property="psa_inhabilitados"        column="psa_inhabilitados" />
+    <result property="especial_habilitados"     column="especial_habilitados" />
+    <result property="especial_inhabilitados"   column="especial_inhabilitados" />
+  </resultMap>
+ 
+  <select id="getNroPstInscritosHabilitadosTipoAdmision" resultMap="datosPstInscritos2">
+    SELECT * FROM nro_pst_inscritos_aprobados_programa_tipo_admision(#{id_programa}, #{gestion}, #{periodo}) as(id_programa integer, programa dtexto, inscritos integer, pre_habilitados integer,
+    pre_inhabilitados integer, psa_habilitados integer,  psa_inhabilitados integer, especial_habilitados integer, especial_inhabilitados integer);
+  </select>
+  <!--Fin Estadistica Postulante FACULTAD admision especial--> 
+
+  <!--Registro programa anterior postulante -->
+  <select id="setPstRegistrarProgramaAnterior" resultType="java.lang.Integer">
+    SELECT * FROM  mi_pst_registrar_programa_anterior(#{id_postulante}, #{id_programa_ant}, #{id_rol}, #{ult_usuario});
+  </select>
+  <!-- FIN Registro programa anterior postulante -->
+
+  <!-- INICIO - Listar PostulanteAprobadoReprobadoInscrito-->  
+    <resultMap id="PostulantesAproReproIns" type="org.fautapo.domain.Postulantes">
+    <result property="id_postulante"         column="id_postulante"/>
+    <result property="id_tipo_admision"      column="id_tipo_admision"/>
+    <result property="id_programa"           column="id_programa"/>
+    <result property="fec_registro"          column="fec_registro"/>
+    <result property="dip"                   column="dip"/>
+    <result property="paterno"               column="paterno"/>
+    <result property="materno"               column="materno"/>
+    <result property="nombres"               column="nombres"/>
+    <result property="programa"              column="programa"/>
+    <result property="id_estado"             column="id_estado"/>    
+    <result property="estado"                column="estado"/>    
+  </resultMap>
+
+  <select id="getPstListarInscritosPorProgramaTipoAdmision" resultMap="PostulantesAproReproIns">
+   SELECT * FROM mi_buscar_pst_inscritos(#{id_programa},#{id_tipo_admision}, #{gestion},#{periodo}) 
+   AS (id_postulante integer, id_tipo_admision dentero, id_programa dentero, paterno dtexto2, materno dtexto2, nombres dtexto, dip dtexto2, programa dtexto, id_estado did_estado, 
+       fec_registro dfec_modificacion, estado dtexto);
+  </select>
+
+  <select id="getPstListarAprobadosPorProgramaTipoAdmision" resultMap="PostulantesAproReproIns">
+   SELECT * FROM mi_buscar_pst_aprobados(#{id_programa},#{id_tipo_admision}, #{gestion},#{periodo}) 
+   AS (id_postulante integer, id_tipo_admision dentero, id_programa dentero, paterno dtexto2, materno dtexto2, nombres dtexto, dip dtexto2, programa dtexto, id_estado did_estado,
+      fec_registro dfec_modificacion, estado dtexto);
+  </select>
+
+  <select id="getPstListarReprobadosPorProgramaTipoAdmision" resultMap="PostulantesAproReproIns">
+   SELECT * FROM mi_buscar_pst_reprobados(#{id_programa},#{id_tipo_admision}, #{gestion},#{periodo}) 
+   AS (id_postulante integer, id_tipo_admision dentero, id_programa dentero, paterno dtexto2, materno dtexto2, nombres dtexto, dip dtexto2, programa dtexto, id_estado did_estado, 
+       fec_registro dfec_modificacion, estado dtexto);
+  </select>
+  <!-- FIN - Listar PostulanteAprobadoReprobadoInscrito-->  
+
+<!--INICIO - METODOS ADICIONADOS POR LA UAP-->  
+  <!--REGISTRO DE Personas_Pst para tramites-->  
+  <select id="setMiRegistrarPstPersonaTrn" resultType="java.lang.Integer">
+    SELECT * FROM mi_registrar_pst_persona_trn(#{nombres}, #{paterno}, #{materno}, #{dip}, _cadena_fecha(#{fec_nacimiento}), #{direccion}, #{telefono}, #{ult_usuario});
+  </select>
+<!--FIN - METODOS ADICIONADOS POR LA UAP-->  
+  
+</mapper>

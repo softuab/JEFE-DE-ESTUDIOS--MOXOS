@@ -1,0 +1,85 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--
+ * @autor FAUTAPO
+ * @fec_registro 2005-11-01
+ * @ult_usuario FAUTAPO
+ * @fec_modificacion 2005-11-01
+-->
+
+<mapper namespace="Roles">
+
+  <resultMap id="rol" type="org.fautapo.domain.Roles">
+    <result property="id_rol"       column="id_rol" />
+    <result property="rol"          column="rol" />
+    <result property="id_rol_padre" column="id_rol_padre" />
+    <result property="descripcion"  column="descripcion" />
+  </resultMap>
+
+  <select id="getBuscarRol" resultMap="rol">
+    SELECT *
+    FROM rol_buscar_rol(#{id_rol});
+  </select>
+
+  <select id="getListarRoles" resultMap="rol">
+    SELECT *
+    FROM rol_listar_roles();
+  </select>
+
+  <resultMap id="rolCliente" type="org.fautapo.domain.Roles">
+    <result property="id_usr_rol"            column="id_usr_rol" />
+    <result property="id_usuario"            column="id_usuario" />
+    <result property="id_rol"                column="id_rol" />
+    <result property="id_nivel_acceso"       column="id_nivel_acceso" />
+    <result property="id_universidad"        column="id_universidad" />
+    <result property="id_facultad"           column="id_facultad" />
+    <result property="id_programa"           column="id_programa" />
+    <result property="id_departamento"       column="id_departamento" />
+    <result property="id_ubicacion_organica" column="id_ubicacion_organica" />
+    <result property="id_almacen"            column="id_almacen" />
+    <result property="id_estado"             column="id_estado" />
+    <result property="fec_expiracion"        column="fec_expiracion" />
+    <result property="filtro"                column="filtro" />
+    <result property="permiso"               column="permiso" />
+    <result property="fec_registro"          column="fec_registro" />
+    <result property="fec_modificacion"      column="fec_modificacion" />
+    <result property="ult_usuario"           column="ult_usuario" />
+    <result property="rol"                   column="rol" />
+  </resultMap>
+
+  <select id="getBuscarRolCliente" resultMap="rolCliente">
+    SELECT * FROM rol_buscar_usr_rol(#{id_usuario}, #{id_rol})
+    AS (id_usr_rol integer, id_usuario dentero, id_rol dentero, id_nivel_acceso dentero, id_universidad dentero2, id_facultad dentero2,
+        id_programa dentero2, id_departamento dentero2, id_ubicacion_organica dentero2, id_almacen dentero2, id_estado did_estado, fec_expiracion dfecha2,
+	filtro dtexto2, permiso dtexto2, fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, ult_usuario did_usuario, rol dtexto);
+  </select>
+
+  <resultMap id="rolCliente2" type="org.fautapo.domain.Roles">
+    <result property="id_usuario"            column="id_usuario" />
+    <result property="id_rol"                column="id_rol" />
+    <result property="rol"                   column="rol" />
+  </resultMap>
+
+  <select id="getListarRolesCliente" resultMap="rolCliente2">
+    SELECT * FROM rol_listar_usr_roles(#{id_usuario})
+    AS (id_usuario dentero, id_rol dentero, rol dtexto);
+  </select>
+
+  <!-- Nuevo de almacenes -->
+  <resultMap id="almacen" type="org.fautapo.domain.Roles">
+    <result property="id_almacen" column="id_almacen" />
+    <result property="almacen"    column="almacen" />
+    <result property="permiso"    column="permiso" />
+  </resultMap>
+
+  <select id="getListarAlmacenesCliente" resultMap="almacen">
+    SELECT * FROM rol_listar_almacenes(#{id_usuario}, #{id_rol})
+    AS (id_almacen dentero2, permiso dtexto2, almacen dtexto);
+  </select>
+
+  <select id="getBuscarAlmacenCliente" resultMap="almacen">
+    SELECT * FROM rol_buscar_almacen(#{id_usuario}, #{id_rol}, #{id_almacen})
+    AS (id_almacen dentero2, permiso dtexto2, almacen dtexto);
+  </select>
+  <!-- Fin Nuevo de almacenes -->
+   
+</mapper>

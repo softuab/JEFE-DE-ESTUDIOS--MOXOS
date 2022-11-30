@@ -1,0 +1,29 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="Adjuntos">
+
+  <resultMap id="listadoAdjuntos" type="org.fautapo.domain.Adjuntos">
+    <result property="id_adjunto"       column="id_adjunto"/> 
+    <result property="id_tramite"       column="id_tramite"/>
+    <result property="id_actividad"     column="id_actividad"/>
+    <result property="id_estado"        column="id_estado" />      
+    <result property="archivo"          column="archivo"/>
+    <result property="adjunto"          column="adjunto"/>
+    <result property="fec_registro"     column="fec_registro" />    
+    <result property="fec_modificacion" column="fec_modificacion" />
+    <result property="ult_usuario"      column="ult_usuario" />
+    <result property="usuario"          column="nombres" />
+    <result property="cargo"            column="cargo" />
+  </resultMap>
+  
+  <select id="getListarAdjuntos" resultMap="listadoAdjuntos">
+    SELECT * FROM tr_listar_adjuntos(#{id_tramite})
+    AS (id_adjunto integer, id_tramite dentero, id_actividad dentero, id_estado did_estado, archivo dtexto, adjunto dtexto, 
+        fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, ult_usuario did_usuario, nombres dtexto, cargo dtexto2);
+  </select>
+
+  <select id="setRegistrarAdjunto" resultType="java.lang.Integer">
+    SELECT tr_registrar_adjunto(#{id_tramite}, #{id_actividad}, #{archivo}, #{ult_usuario}, #{adjunto}) as valor; 
+  </select>
+
+</mapper>

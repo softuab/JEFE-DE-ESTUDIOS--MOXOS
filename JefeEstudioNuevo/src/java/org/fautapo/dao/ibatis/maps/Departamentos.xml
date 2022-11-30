@@ -1,0 +1,39 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+ * @autor FAUTAPO
+ * @fec_registro 2005-11-01
+ * @ult_usuario FAUTAPO
+ * @fec_modificacion 2005-11-01
+-->
+
+<mapper namespace="Departamentos">
+
+  <resultMap id="departamento" type="org.fautapo.domain.Departamentos">
+    <result property="id_departamento" column="id_departamento"/>
+    <result property="id_facultad"     column="id_facultad"/>
+    <result property="id_estado"       column="id_estado"/>
+    <result property="departamento"    column="departamento"/>
+    <result property="direccion"       column="direccion"/>
+    <result property="telefono"        column="telefono"/>
+    <result property="fax"             column="fax"/>
+    <result property="correo"          column="correo"/>
+    <result property="fec_creacion"    column="fec_creacion"/>
+  </resultMap>
+
+  <select id="getDptBuscarDepartamento" resultMap="departamento">
+    SELECT *
+    FROM mi_dpt_buscar_departamento(#{id_departamento});
+  </select>
+
+  <select id="getFclListarDepartamentos" resultMap="departamento">
+    SELECT *
+    FROM mi_fcl_listar_departamentos(#{id_facultad});
+  </select>
+
+  <select id="getUnvListarDepartamentos" resultMap="departamento">
+    SELECT *
+    FROM mi_unv_listar_departamentos(#{id_universidad});
+  </select>
+
+</mapper>

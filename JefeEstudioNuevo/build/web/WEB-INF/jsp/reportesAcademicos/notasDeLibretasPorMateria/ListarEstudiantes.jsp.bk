@@ -1,0 +1,101 @@
+<%@ include file="../../Superior.jsp" %>
+<jsp:useBean id="now" class="java.util.Date" />
+
+<table border="0" width="100%">
+  <!-- SE REPITE-->
+  <thead>
+  <tr>
+    <td width="100%" align="center" cellspancin="0" cellpading="0">
+    <table width="100%">
+      <tr>
+        <td width="14%" align="center">
+          <img src="<c:url value='${datosInstitucion.logo}'/>" border="0" ALT="logo institucion">
+        </td>
+        <td width="72%" align="center">
+          <table width="100%" heigth="100%" cellpading="2" cellspacing="0">
+            <tr>
+              <td align="center"><font size="5"><b><c:out value='${datosInstitucion.institucion}'/></font></td>
+            <tr>
+            <tr>
+              <td align="center"><br/><font size="3"><b><c:out value='${datosInstitucion.localidad}'/> - <c:out value='${datosInstitucion.departamento}'/> - <c:out value='${datosInstitucion.pais}'/></b></font></td>
+            <tr>
+            </tr>
+              <td align="center"><c:out value='${datosInstitucion.actividad}'/></td>
+            </tr>
+          </table>
+        </td>
+        <td width="14%">
+          Fecha : <a href='javascript: window.print()'><fmt:formatDate value="${now}" pattern="${formatoFecha}"/></a> 
+        </td>
+      </tr>
+    </table>
+    <hr>
+    <table width="100%" align="center">
+      <tr>
+        <td align="center"><h1>LISTADO DE ESTUDIANTES POR GRUPO</h1></td>
+      </tr>
+    </table>
+    <table border="0" width="97%">
+      <tr>
+        <td>TIPO DE ACTA::</td>
+        <td><c:out value="${datosTipoEvaluacion.tipo_evaluacion}"/></td>
+        <td>CODIGO ::</td>
+        <td><c:out value="${datosMateria.id_materia}"/></td>
+      </tr>  
+      <tr>
+        <td>PLAN::</td>
+        <td><c:out value="${datosPrgPlan.id_plan}"/></td>
+        <td>PERIODO ::</td>
+        <td><c:out value="${periodo}"/> - <c:out value="${gestion}"/></td>
+      </tr>
+      <tr>
+        <td>MATERIA ::</td>
+        <td><c:out value="${datosMateria.materia}"/></td>
+        <td>SIGLA::</td>
+        <td><c:out value="${datosMateria.sigla}"/></td>
+      </tr>
+      <tr>
+        <td>PROGRAMA::</td>
+        <td><c:out value="${datosPrograma.programa}"/></td>
+        <td>AREA::</td>
+        <td><c:out value="${datosFacultad.facultad}"/></td>
+      </tr>
+    </table>
+    <br>
+    </td>
+  </tr>
+  </thead>
+  <!-- HASTA AQUI SE REPITE-->
+  <tr>
+    <td>
+      <table class="tabla" width="100%">
+        <thead>
+        <tr>
+          <th>Nro</th>
+          <th>R.U.</th>
+          <th>NOMBRES</th>
+          <th>FECHA PROGRAMACION</th>
+        </tr>
+        </thead>
+        <c:set var="id_grupo_ant" value="0"/>
+        <c:forEach var="lista" items="${lEstudiantes}" varStatus="contador">
+	  <c:if test="${id_grupo_ant != lista.id_grupo}">
+	    <tr>
+	      <td colspan="4">GRUPO :: <c:out value="${lista.grupo}"/></td>
+	    </tr>
+	  </c:if>
+          <tr>
+            <td><c:out value="${contador.count}"/></td>
+            <td><c:out value="${lista.id_estudiante}"/></td>
+            <td><c:out value="${lista.nombres}"/></td>
+            <td align="center"><fmt:formatDate value="${lista.fec_modificacion}" pattern="${formatoFecha} ${formatoHora}"/></td>
+          </tr>
+          <c:set var="id_grupo_ant" value="${lista.id_grupo}"/>
+        </c:forEach>
+      </table>
+    </td>
+  </tr>
+</table>
+
+
+<%@ include file="../../Inferior.jsp" %>

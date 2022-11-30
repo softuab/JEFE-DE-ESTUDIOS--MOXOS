@@ -1,0 +1,444 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="Personas">
+
+    <resultMap id="datosPersona" type="org.fautapo.domain.Personas">
+        <result property="id_usuario"                 column="id_usuario"/>
+        <result property="id_persona"                 column="id_persona"/>
+        <result property="nombres"                    column="nombres"/>
+        <result property="celular"                    column="celular"/>
+        <result property="correo"                     column="correo"/>
+        <result property="id_tipo_empresa_telefonica" column="id_tipo_empresa_telefonica"/>
+        <result property="direccion"                  column="direccion"/>
+    </resultMap>
+
+    <select id="getBuscarPersonaUsuario" resultMap="datosPersona">
+        SELECT * FROM usr_buscar_usuario(#{ult_usuario})
+        AS (id_usuario integer, id_persona integer, nombres dtexto, celular dtexto2, correo dtexto2, id_tipo_empresa_telefonica dentero, direccion dtexto2, cargo dtexto2);
+    </select>
+
+    <resultMap id="datosPersona2" type="org.fautapo.domain.Personas">
+        <result property="id_persona" column="id_persona"/>
+        <result property="nombres"    column="nombres"/>
+    </resultMap>
+
+    <select id="getBuscarPersona" resultMap="datosPersona2">
+        SELECT id_persona, (nombres || ' ' || paterno || ' ' || materno) as nombres
+        FROM per_buscar_persona(#{id_persona})
+    </select>
+
+    <!-- INICIO - MI -->
+    <resultMap id="buscarPersona" type="org.fautapo.domain.Personas">
+        <result property="id_persona"            column="id_persona"/>
+        <result property="id_pais"               column="id_pais"/>
+        <result property="id_departamento"       column="id_departamento"/>
+        <result property="id_provincia"          column="id_provincia"/>
+        <result property="id_localidad"          column="id_localidad"/>
+        <result property="id_tipo_estado_civil"  column="id_tipo_estado_civil"/>
+        <result property="id_tipo_sexo"          column="id_tipo_sexo"/>
+        <result property="dip"                   column="dip"/>
+        <result property="paterno"               column="paterno"/>
+        <result property="materno"               column="materno"/>
+        <result property="nombres"               column="nombres"/>
+        <result property="fec_nacimiento2"        column="fec_nacimiento"/>
+        <result property="direccion"             column="direccion"/>  
+        <result property="telefono"              column="telefono"/>
+        <result property="correo"                column="correo"/>
+        <result property="tipo_sanguineo"        column="tipo_sanguineo"/>
+        <result property="celular"               column="celular"/>
+        <result property="anio_titulacion"       column="anio_titulacion"/>
+        <result property="titulo"                column="titulo"/>
+        <result property="anio_titulacion"       column="anio_titulacion"/>
+        <result property="nro_hijos"             column="nro_hijos"/>
+        <result property="nro_dependientes"      column="nro_dependientes"/>
+        <result property="nro_seguro_medico"     column="nro_seguro_medico"/>
+    </resultMap>
+
+    <select id="getPrsBuscarPersona" resultMap="buscarPersona">
+        SELECT  * FROM mi_prs_buscar_persona(#{id_persona});
+    </select>
+  
+    <select id="getPrsBuscarPersonaDocente" resultMap="buscarPersona">
+        SELECT  * FROM mi_prs_buscar_persona_docente(#{id_docente});
+    </select>
+  
+    <select id="getPrsListarPersonasDip" resultMap="buscarPersona">
+        SELECT * FROM  mi_listar_prs_personas_dip(#{dip});
+    </select>
+    <!-- FIN - MI -->
+
+    <!-- INICIO- MI  SEGUNDA PARTE-->
+    <!--Listar Paises-->
+    <resultMap id="listadoPaises" type="org.fautapo.domain.Personas">
+        <result property="id_pais"  column="id_pais" />  
+        <result property="pais"     column="pais" />
+        <result property="nacionalidad"     column="nacionalidad" />
+    </resultMap>
+ 
+    <select id="getListarPaises" resultMap="listadoPaises">
+        SELECT * FROM mi_listar_paises(); 
+    </select>
+
+    <resultMap id="listadoDepartamentos" type="org.fautapo.domain.Personas">
+        <result property="id_pais"            column="id_pais" />  
+        <result property="id_departamento"    column="id_departamento" />  
+        <result property="departamento"       column="departamento" />
+    </resultMap>
+ 
+    <select id="getListarDepartamentos" resultMap="listadoDepartamentos">
+        SELECT * FROM mi_listar_departamentos(#{id_pais}); 
+    </select> 
+ 
+    <resultMap id="listadoProvincias" type="org.fautapo.domain.Personas">
+        <result property="id_pais"            column="id_pais" />  
+        <result property="id_departamento"    column="id_departamento" />  
+        <result property="id_provincia"       column="id_provincia" />  
+        <result property="provincia"          column="provincia" />
+    </resultMap>
+ 
+    <select id="getListarProvincias" resultMap="listadoProvincias">
+        SELECT * FROM mi_listar_provincias(#{id_pais}, #{id_departamento}); 
+    </select>  
+ 
+    <resultMap id="listadoLocalidades" type="org.fautapo.domain.Personas">
+        <result property="id_pais"            column="id_pais" />  
+        <result property="id_departamento"    column="id_departamento" />  
+        <result property="id_provincia"       column="id_provincia" />  
+        <result property="id_localidad"       column="id_localidad" />  
+        <result property="localidad"          column="localidad" />
+    </resultMap>
+ 
+    <select id="getListarLocalidades" resultMap="listadoLocalidades">
+        SELECT * FROM mi_listar_localidades(#{id_pais}, #{id_departamento}, #{id_provincia}); 
+    </select>  
+    <select id="getListarLocalidadesTodas" resultMap="listadoLocalidades">
+        SELECT * FROM mi_listar_localidades(); 
+    </select>  
+    <!-- FIN Listar Paises-->
+    <!--Listar Tipos Sexos, EstadosCiviles, etc --> 
+    <resultMap id="listadoTiposSexos" type="org.fautapo.domain.Personas">
+        <result property="id_tipo_sexo"   column="id_tipo_sexo" />  
+        <result property="tipo_sexo"      column="tipo_sexo" />
+    </resultMap>
+ 
+    <select id="getListarTiposSexos" resultMap="listadoTiposSexos">
+        SELECT * FROM mi_listar_tipos_sexos(); 
+    </select> 
+  
+    <resultMap id="listadoTiposEstadoCivil" type="org.fautapo.domain.Personas">
+        <result property="id_tipo_estado_civil"   column="id_tipo_estado_civil" />  
+        <result property="tipo_estado_civil"      column="tipo_estado_civil" />
+    </resultMap>
+ 
+    <select id="getListarTiposEstadosCiviles" resultMap="listadoTiposEstadoCivil">
+        SELECT * FROM mi_listar_tipos_estados_civiles(); 
+    </select>
+  
+    <resultMap id="listadoEmpresasTele" type="org.fautapo.domain.Personas">
+        <result property="id_tipo_empresa_telefonica"   column="id_tipo_empresa_telefonica" />  
+        <result property="tipo_empresa_telefonica"      column="tipo_empresa_telefonica" />
+    </resultMap>
+ 
+    <select id="getListarTiposEmpresasTelef" resultMap="listadoEmpresasTele">
+        SELECT * FROM mi_listar_tipos_empresas_telefonicas();
+    </select>
+  
+    <resultMap id="listadoTiposEstudiante" type="org.fautapo.domain.Personas">
+        <result property="id_tipo_estudiante"   column="id_tipo_estudiante" />  
+        <result property="tipo_estudiante"      column="tipo_estudiante" />
+    </resultMap>
+ 
+    <select id="getListarTiposEstudiantes" resultMap="listadoTiposEstudiante">
+        SELECT * FROM mi_listar_tipos_estudiantes();
+    </select>
+  
+    <select id="getBuscarTipoEstudiante" resultMap="listadoTiposEstudiante">
+        SELECT * FROM mi_buscar_tipo_estudiante(#{id_tipo_estudiante});
+    </select>
+  
+    <resultMap id="listadoTiposGraduacion" type="org.fautapo.domain.Personas">
+        <result property="id_tipo_graduacion"   column="id_tipo_graduacion" />  
+        <result property="tipo_graduacion"      column="tipo_graduacion" />
+    </resultMap>
+ 
+    <select id="getListarTiposGraduaciones" resultMap="listadoTiposGraduacion">
+        SELECT * FROM mi_listar_tipos_graduaciones(); 
+    </select>
+  
+    <resultMap id="listadoTiposInstitucion" type="org.fautapo.domain.Personas">
+        <result property="id_tipo_institucion"   column="id_tipo_institucion" />  
+        <result property="tipo_institucion"      column="tipo_institucion" />
+    </resultMap>
+ 
+    <select id="getListarTiposInstituciones" resultMap="listadoTiposInstitucion">
+        SELECT * FROM mi_listar_tipos_instituciones(); 
+    </select>
+  
+    <resultMap id="listadoColegios" type="org.fautapo.domain.Personas">
+        <result property="id_colegio"           column="id_colegio" />  
+        <result property="colegio"              column="colegio" />
+        <result property="id_tipo_institucion"  column="id_tipo_institucion" />
+        <result property="id_institucion"       column="id_institucion" />
+    </resultMap>
+ 
+    <select id="getListarColegiosTipoIns" resultMap="listadoColegios">
+        SELECT * FROM mi_listar_colegios_tipo_ins(#{id_tipo_institucion});
+    </select>
+ 
+    <resultMap id="listadoTiposTurno" type="org.fautapo.domain.Personas">
+        <result property="id_tipo_turno"   column="id_tipo_turno" />  
+        <result property="tipo_turno"      column="tipo_turno" />
+    </resultMap>
+ 
+    <select id="getListarTiposTurnos" resultMap="listadoTiposTurno">
+        SELECT * FROM mi_listar_tipos_turnos(); 
+    </select>
+
+    <resultMap id="listadoTiposProblemas" type="org.fautapo.domain.Personas">
+        <result property="id_tipo_problema"   column="id_tipo_problema" />  
+        <result property="tipo_problema"      column="tipo_problema" />
+        <result property="id_rol"             column="id_rol" />
+    </resultMap>
+ 
+    <select id="getListarTiposProblemasRol" resultMap="listadoTiposProblemas">
+        SELECT * FROM mi_listar_tipos_problemas_rol(#{id_rol});
+    </select>
+    <!-- Registrar persona--> 
+    <select id="setRegistrarPersona" resultType="java.lang.Integer">
+        SELECT * FROM mi_registrar_persona(#{id_persona}, #{id_pais}, #{id_departamento}, #{id_provincia}, #{id_localidad}, #{id_tipo_estado_civil}, #{id_tipo_sexo}, #{id_tipo_empresa_telefonica}, #{nombres}, #{paterno}, #{materno}, #{dip},
+        _cadena_fecha(#{fec_nacimiento}), #{direccion}, #{telefono}, #{celular}, #{correo}, #{anio_titulacion}, #{titulo}, #{tipo_sanguineo}, #{nro_hijos}, #{nro_dependientes}, #{nro_seguro_medico}, #{ult_usuario});
+    </select>
+  
+  
+    <select id="setRegistrarPrsColegio" resultType="java.lang.Integer">
+        SELECT * FROM mi_registrar_prs_colegios(#{id_persona}, #{id_colegio}, #{id_tipo_turno}, #{anio_egreso}, #{ult_usuario})
+    </select>
+  
+    <select id="setRegistrarPrsClasificacion" resultType="java.lang.Integer">
+        SELECT * FROM mi_registrar_prs_clasificaciones(#{id_persona}, #{id_tipo_clasificacion}, #{ult_usuario});
+    </select>
+  
+    <select id="setRegistrarPrsDocumentos" resultType="java.lang.Integer">
+        SELECT * FROM mi_prs_registrar_documentos(#{id_persona}, #{id_tipo_documento}, #{presento}, #{numero}, #{observacion}, #{ult_usuario});
+    </select>
+  
+    <select id="setRegistrarPrsCompromisos" resultType="java.lang.Integer">
+        SELECT * FROM mi_registrar_prs_compromisos(#{id_persona}, #{id_tipo_documento}, #{id_tipo_compromiso}, #{gestion}, #{periodo}, #{observacion}, _cadena_fecha(#{fec_vencimiento}), #{ult_usuario});
+    </select>
+  
+    <resultMap id="listadoPrsDocumentos" type="org.fautapo.domain.Personas">
+        <result property="id_documento"           column="id_documento" />  
+        <result property="id_persona"             column="id_persona" />  
+        <result property="id_tipo_documento"      column="id_tipo_documento" />  
+        <result property="tipo_documento"         column="tipo_documento" />  
+        <result property="id_estado"              column="id_estado" />  
+        <result property="numero"                 column="numero" />  
+        <result property="observacion"            column="observacion" />  
+        <result property="presento"               column="presento" />  
+    </resultMap>
+ 
+    <select id="getListarPrsDocumentosPersona" resultMap="listadoPrsDocumentos">
+        SELECT * FROM mi_listar_prs_documentos_persona(#{id_persona})
+        AS (id_documento integer, id_persona dentero, id_tipo_documento dentero, tipo_documento dtexto, id_estado did_estado, numero dtexto2,
+        observacion dtexto2, presento dbooleano2);
+    </select>
+  
+  
+    <resultMap id="listadoPrsClasificacion" type="org.fautapo.domain.Personas">
+        <result property="id_clasificacion"              column="id_clasificacion" />  
+        <result property="id_persona"                    column="id_persona" />  
+        <result property="id_tipo_clasificacion"         column="id_tipo_clasificacion" />  
+        <result property="tipo_clasificacion"            column="tipo_clasificacion" />  
+        <result property="id_tipo_clasificacion_inicial" column="id_tipo_clasificacion_inicial" />  
+        <result property="tipo_clasificacion_inicial"    column="tipo_clasificacion_inicial" />  
+    </resultMap>
+ 
+    <select id="getBuscarTipoClasificacionPersona" resultMap="listadoPrsClasificacion">
+        SELECT * FROM mi_buscar_tipo_clasificacion_persona(#{id_persona})
+        AS (id_clasificacion integer, id_persona dentero,id_tipo_clasificacion dentero, tipo_clasificacion dtexto, id_tipo_clasificacion_inicial dentero, tipo_clasificacion_inicial dtexto);
+    </select>
+
+    <resultMap id="listadoTiposCompromisos" type="org.fautapo.domain.Personas">
+        <result property="id_tipo_compromiso"   column="id_tipo_compromiso" />  
+        <result property="tipo_compromiso"      column="tipo_compromiso" />
+    </resultMap>
+ 
+    <select id="getListarTiposCompromisos" resultMap="listadoTiposCompromisos">
+        SELECT * FROM mi_listar_tipos_compromisos();
+    </select>
+  
+    <resultMap id="datosPrsColegio" type="org.fautapo.domain.Personas">
+        <result property="id_prs_colegio"           column="id_prs_colegio" />  
+        <result property="id_persona"               column="id_persona" />
+        <result property="id_tipo_institucion"      column="id_tipo_institucion" />
+        <result property="tipo_institucion"         column="tipo_institucion" />
+        <result property="id_colegio"               column="id_colegio" />
+        <result property="colegio"                  column="colegio" />
+        <result property="id_tipo_turno"            column="id_tipo_turno" />
+        <result property="tipo_turno"               column="tipo_turno" />
+        <result property="anio_egreso"              column="anio_egreso" />
+    </resultMap>
+ 
+    <select id="getBuscarPersonaColegio" resultMap="datosPrsColegio">
+        SELECT * FROM mi_buscar_persona_colegios(#{id_persona}) 
+        AS(id_prs_colegio integer, id_persona dentero, id_colegio dentero, colegio dtexto, id_tipo_institucion dentero, tipo_institucion dtexto,
+        id_tipo_turno dentero, tipo_turno dtexto, anio_egreso dentero);
+    </select>
+  
+    <!--Fin  Registrar persona--> 
+  
+    <!--Items Persona-->
+    <resultMap id="datosItemsPersona" type="org.fautapo.domain.Personas">
+        <result property="id_item"                  column="id_item" />  
+        <result property="id_persona"               column="id_persona" />
+        <result property="materno"                  column="materno" />
+        <result property="paterno"                  column="paterno" />
+        <result property="nombres"                  column="nombres" />
+        <result property="dip"                      column="dip" />
+        <result property="ubicacion_organica"       column="ubicacion_organica" />
+        <result property="cargo"                    column="cargo" />
+    </resultMap>
+ 
+    <select id="getListarItemsPersonasDip" resultMap="datosItemsPersona">
+        SELECT * FROM  mi_listar_items_personas_dip(#{dip})AS(id_item integer, id_persona dentero, paterno dtexto2, materno dtexto2, nombres dtexto, dip dtexto2, cargo dtexto, ubicacion_organica dtexto); 
+    </select>
+  
+    <select id="getBuscarItemPersona" resultMap="datosItemsPersona">
+        SELECT * FROM  mi_buscar_items_persona(#{id_item})AS(id_item integer, id_persona dentero, paterno dtexto2, materno dtexto2, nombres dtexto, dip dtexto2, cargo dtexto, ubicacion_organica dtexto); 
+    </select> 
+  
+    <resultMap id="datosItemsPersona2" type="org.fautapo.domain.Personas">
+        <result property="id_item"                  column="id_item" />  
+        <result property="id_persona"               column="id_persona" />
+        <result property="ubicacion_organica"       column="ubicacion_organica" />
+        <result property="cargo"                    column="cargo" />
+    </resultMap>
+ 
+    <select id="getBuscarItemsUsuario" resultMap="datosItemsPersona2">
+        SELECT * FROM tr_buscar_item_usuario(#{ult_usuario})
+        AS(id_item integer, id_persona dentero, id_cargo dentero, id_ubicacion_organica dentero, cargo dtexto, ubicacion_organica dtexto);
+    </select>
+    <!--Fin Items Persona-->
+  
+    <!--Listar Compromisos Personas Cambiado -->
+    <resultMap id="listadoPrsCompromisos" type="org.fautapo.domain.Personas">
+        <result property="id_compromiso"       column="id_compromiso" />  
+        <result property="id_tipo_documento"  column="id_tipo_documento" />  
+        <result property="tipo_documento"      column="tipo_documento" />  
+        <result property="id_tipo_compromiso"  column="id_tipo_compromiso" />  
+        <result property="tipo_compromiso"     column="tipo_compromiso" />  
+        <result property="id_persona"          column="id_persona" />  
+        <result property="gestion"             column="gestion" />  
+        <result property="periodo"             column="periodo" />  
+        <result property="observacion"         column="observacion" />  
+        <result property="fec_vencimiento"     column="fec_vencimiento" />  
+    </resultMap>
+ 
+    <select id="getListarPrsCompromisosPersona" resultMap="listadoPrsCompromisos">
+        SELECT * FROM mi_listar_prs_compromisos_persona(#{id_persona}) 
+        AS(id_compromiso integer, id_tipo_documento dentero, tipo_documento dtexto, id_tipo_compromiso dentero, tipo_compromiso dtexto, id_persona dentero, gestion dentero, periodo dentero, observacion dtexto2, fec_vencimiento dfecha2);
+    </select>
+  
+    <resultMap id="listadoPrsDocumentosClasificacion" type="org.fautapo.domain.Personas">
+        <result property="id_clf_tipo_documento"  column="id_clf_tipo_documento" />
+        <result property="id_tipo_documento"      column="id_tipo_documento" />  
+        <result property="tipo_documento"         column="tipo_documento" />  
+        <result property="vigente"                column="vigente" />  
+        <result property="compromiso"             column="compromiso" />
+        <result property="presento"               column="presento" />    
+        <result property="numero"                 column="numero" />  
+        <result property="observacion"            column="observacion" />  
+        <result property="prorroga"               column="prorroga" />  
+    </resultMap>
+ 
+    <select id="getListarPrsDocumentosClasificacion" resultMap="listadoPrsDocumentosClasificacion">
+        SELECT * FROM  mi_listar_prs_documentos_clasificacion(#{id_persona}, #{id_tipo_clasificacion})
+        AS(id_clf_tipo_documento integer, id_tipo_documento dentero, tipo_documento dtexto, vigente dbooleano2, compromiso dbooleano2,
+        presento dbooleano2, numero dtexto2, observacion dtexto2, prorroga dbooleano2);    
+    </select>
+  
+    <select id="getBuscarPrsDocumentacionCompleta" resultType="java.lang.Integer">
+        SELECT * FROM mi_buscar_prs_documentacion_completa(#{id_persona});    
+    </select>
+    <select id="getBuscarPrsDocumentacionCompletaEstudiante" resultType="Integer">
+        SELECT * FROM mi_buscar_prs_documentacion_completa_est(#{id_persona}, #{id_tipo_clasificacion});
+    </select>
+    <select id="getBuscarPrsDocumentacionCompletaDoc" resultType="Integer">
+        SELECT * FROM mi_buscar_prs_documentacion_completa_doc(#{id_persona}, #{id_tipo_clasificacion});
+    </select>
+    <!--Listar Compromisos Personas -->
+
+    <!-- FIN- MI  SEGUNDA PARTE-->
+
+    <!--  inicio - JOJO  -->
+    <resultMap id="compromiso" type="org.fautapo.domain.Personas">
+        <result property="id_compromiso"   column="id_compromiso" />  
+        <result property="tipo_documento"  column="tipo_documento" />  
+        <result property="fec_vencimiento" column="fec_vencimiento" />  
+        <result property="tipo_compromiso" column="tipo_compromiso" />  
+        <result property="observacion"     column="observacion" />  
+    </resultMap>
+    <select id="getMiBuscarCompromiso" resultMap="compromiso">
+        SELECT * FROM mi_buscar_compromiso(#{id_compromiso})
+        AS (id_compromiso integer, observacion dtexto2, tipo_documento dtexto, fec_vencimiento text, tipo_compromiso dtexto);
+    </select>
+
+    <select id="getMiPrsNroCompromisos" resultType="java.lang.Integer">
+        SELECT * FROM mi_nro_compromisos(#{id_tipo_documento}, #{id_persona});
+    </select>
+
+    <!--  fin - JOJO  -->
+    <!--  INICIO - CRCB  -->
+    <resultMap id="listarPersonas" type="org.fautapo.domain.Personas">
+        <result property="id_persona"      column="id_persona" />  
+        <result property="dip"             column="dip" />  
+        <result property="nombres"         column="nombres" />  
+    </resultMap>
+ 
+    <select id="getListarPersonas" resultMap="listarPersonas">
+        SELECT id_persona, (paterno ||' '||materno ||' '||nombres) as nombres, dip
+        FROM mi_listar_personas(#{patron}, #{pagina});
+    </select>
+
+    <!--INICIO - METODOS ADICIONADOS POR LA UAP-->
+
+    <resultMap id="datosEstDoc" type="org.fautapo.domain.Personas">
+        <result property="id_persona"               column="id_persona" />  
+        <result property="nombre_completo"          column="nombre_completo" />
+        <result property="materno"                  column="materno" />
+        <result property="paterno"                  column="paterno" />
+        <result property="nombres"                  column="nombres" />  
+        <result property="direccion"                column="direccion"/>  
+        <result property="telefono"                 column="telefono"/>
+        <result property="celular"                  column="celular"/>
+        <result property="nacionalidad"             column="nacionalidad" />
+        <result property="dip"                      column="dip" />  
+    </resultMap>
+  
+    <select id="getEstBuscarEstudianteDocente" resultMap="datosEstDoc">
+        SELECT * FROM mi_est_listar_docente_dip(#{dip})
+        AS (id_persona integer, nombre_completo text, dip text, nombres text, paterno text, materno text, direccion text, nacionalidad text, telefono text, celular text);    
+    </select>
+
+    <!-- INICIO CURSOS DE PRE INGLES OTROS-->
+    <resultMap id="listarCursosInglesOtros" type="org.fautapo.domain.Estudiantes">
+        <result property="nombre_completo"           column="nombre_completo"/>
+    </resultMap>
+  
+    <select id="getListarCursoPreInglesOtros" resultMap="listarCursosInglesOtros">
+        SELECT * FROM mi_listar_cursoPreInglesAdmEje()
+        AS (nombre_completo text);
+    </select>
+    <!-- FIN LISTADO DE CURSOS PRE INGLES OTROS-->
+
+    <resultMap id="listarCursosVariosOtros" type="org.fautapo.domain.Estudiantes">
+        <result property="nombre_completo"           column="nombre_completo"/>
+    </resultMap>
+ 
+    <select id="getListarCursoPsicoOtros" resultMap="listarCursosVariosOtros">
+        SELECT * FROM mi_listar_cursoPsicoOtros() AS (nombre_completo text);
+    </select>
+
+    <!--FIN - METODOS ADICIONADOS POR LA UAP-->
+
+</mapper>

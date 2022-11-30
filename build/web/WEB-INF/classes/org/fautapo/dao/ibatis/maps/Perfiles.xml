@@ -1,0 +1,997 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="Perfiles">
+
+  <resultMap id="perfil" type="org.fautapo.domain.Perfiles">
+    <result property="id_perfil"     column="id_perfil"/> 
+    <result property="perfil"        column="perfil"/>
+    <result property="codigo_perfil" column="codigo"/>
+  </resultMap>
+
+  <select id="getPrfBuscarPerfil" resultMap="perfil">
+    SELECT * FROM trn_buscar_perfil(#{id_perfil});
+  </select>
+
+<!--  <select id="getPstListarPerfiles" resultMap="perfil">
+    SELECT * FROM caj_pst_listar_perfiles(#{id_estudiante})
+	AS (nro_recibo dtexto2,total dmoneda2,gestion dentero,periodo dentero,fec_pago dfec_modificacion);
+  </select>-->
+
+  <select id="getTrnPrcListarPerfiles" resultMap="perfil">
+    SELECT * FROM trn_prc_listar_perfiles(#{id_perfil_proceso});
+  </select>
+
+  <resultMap id="concepto" type="org.fautapo.domain.Perfiles">
+    <result property="id_concepto" column="id_concepto"/>
+    <result property="concepto"    column="concepto"/>
+    <result property="id_perfil_concepto" column="id_perfil_concepto"/>
+    <result property="costo"       column="costo"/>
+  </resultMap>
+
+  <select id="getPrfListarConceptos" resultMap="concepto">
+    SELECT * FROM trn_prf_listar_conceptos(#{id_perfil})
+      AS (id_concepto integer, concepto dtexto, id_perfil_concepto integer, costo dmoneda);
+  </select>
+
+  <resultMap id="perfilConcepto" type="org.fautapo.domain.Perfiles">
+    <result property="id_perfil_concepto" column="id_perfil_concepto"/>
+    <result property="id_perfil"   column="id_perfil"/>
+    <result property="id_concepto" column="id_concepto"/>
+    <result property="costo"       column="costo"/>
+  </resultMap>
+
+  <select id="getBuscarPerfilConcepto" resultMap="perfilConcepto">
+    SELECT * FROM trn_buscar_perfil_concepto(#{id_perfil_concepto})
+      AS (id_perfil_concepto integer, id_perfil dentero, id_concepto dentero, costo dmoneda);
+  </select>
+
+  <resultMap id="concepto2" type="org.fautapo.domain.Perfiles">
+    <result property="id_perfil"   column="id_perfil"/>
+    <result property="id_concepto" column="id_concepto"/>
+    <result property="id_tipo_clasificacion" column="id_tipo_clasificacion"/>
+    <result property="concepto"    column="concepto"/>
+    <result property="costo"       column="costo"/>
+    <result property="cantidad"    column="cantidad"/>
+    <result property="descuento"   column="descuento"/>
+    <result property="pagado"      column="pagado"/>
+  </resultMap>
+
+  <select id="getPstListarConceptos" resultMap="concepto2">
+    SELECT * FROM trn_pst_listar_conceptos(#{id_postulante}, #{id_perfil_proceso}, #{descuento})
+    AS (id_perfil integer, id_concepto integer, id_tipo_clasificacion dentero, concepto dtexto, costo dmoneda, cantidad integer, descuento dmoneda, pagado dmoneda);
+  </select>
+
+  <select id="setPstRegistrarTransaccion" resultType="java.lang.Integer">
+    SELECT trn_pst_registrar_transaccion(#{id_persona}, #{id_programa}, #{id_perfil}, #{ult_usuario}, #{remitente}, #{id_tipo_descuento}, #{cantidad}, #{deposito}, #{gestion}, #{periodo}, #{ult_usuario}, #{id_sede});
+  </select>
+
+  <select id="getEstListarConceptos" resultMap="concepto2">
+    SELECT * FROM trn_est_listar_conceptos(#{id_estudiante}, #{id_perfil_proceso}, #{descuento})
+    AS (id_perfil integer, id_concepto integer, id_tipo_clasificacion dentero, concepto dtexto, costo dmoneda, cantidad integer, descuento dmoneda, pagado dmoneda);
+  </select>
+
+  <select id="getDctListarConceptos" resultMap="concepto2">
+    SELECT * FROM trn_dct_listar_conceptos(#{id_persona}, #{id_perfil_proceso}, #{descuento})
+    AS (id_perfil integer, id_concepto integer, id_tipo_clasificacion dentero, concepto dtexto, costo dmoneda, cantidad integer, descuento dmoneda, pagado dmoneda);
+  </select>
+
+  <select id="getUsrListarConceptos" resultMap="concepto2">
+    SELECT * FROM trn_usr_listar_conceptos(#{id_persona}, #{id_perfil_proceso}, #{descuento})
+    AS (id_perfil integer, id_concepto integer, id_tipo_clasificacion dentero, concepto dtexto, costo dmoneda, cantidad integer, descuento dmoneda, pagado dmoneda);
+  </select>
+
+  <select id="getPrsListarConceptos" resultMap="concepto2">
+    SELECT * FROM trn_prs_listar_conceptos(#{id_perfil_proceso}, #{descuento})
+    AS (id_perfil integer, id_concepto integer, id_tipo_clasificacion dentero, concepto dtexto, costo dmoneda, cantidad integer, descuento dmoneda, pagado dmoneda);
+  </select>
+  
+  <select id="setPrsRegistrarTransaccion" resultType="java.lang.Integer">
+    SELECT trn_prs_registrar_transaccion(#{id_persona}, #{id_programa}, #{id_perfil}, #{ult_usuario}, #{remitente}, #{id_tipo_descuento}, #{cantidad}, #{deposito}, #{gestion}, #{periodo}, #{ult_usuario}, #{id_sede});
+  </select>
+
+  <select id="setRegistrarTrnDetalle" resultType="java.lang.Integer">
+    SELECT trn_registrar_detalle(#{id_transaccion}, #{id_perfil}, #{id_concepto}, #{id_tipo_perfil}, #{id_tipo_clasificacion}, #{cantidad}, #{costo}, #{descuento}, #{ult_usuario});
+  </select>
+
+  <resultMap id="tipo_perfil" type="org.fautapo.domain.Perfiles">
+    <result property="id_perfil"      column="id_perfil"/>
+    <result property="id_tipo_perfil" column="id_tipo_perfil"/>
+  </resultMap>
+
+  <select id="getPrcBuscarPerfil" resultMap="tipo_perfil">
+    SELECT * FROM trn_buscar_prc_perfil(#{id_perfil_proceso}::integer);
+  </select>
+
+  <resultMap id="datosTransaccion" type="org.fautapo.domain.Perfiles">
+    <result property="id_transaccion" column="id_transaccion"/>
+    <result property="id_perfil"      column="id_perfil"/>
+    <result property="id_persona"     column="id_persona"/>
+    <result property="id_persona_pst" column="id_persona_pst"/>
+    <result property="id_programa"    column="id_programa"/>
+    <result property="nombres"        column="nombres"/>
+    <result property="total"          column="total"/>
+    <result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>
+    <result property="efectivo"       column="efectivo"/>
+    <result property="fec_pago"       column="fec_pago"/>
+    <result property="gestion"        column="gestion"/>
+    <result property="periodo"        column="periodo"/>
+    <result property="cantidad"       column="cantidad"/>
+    <result property="cantidad"       column="cantidad"/>
+    <result property="nro_recibo"     column="nro_recibo"/>
+  </resultMap>
+
+  <select id="getTrnBuscarTransaccion" resultMap="datosTransaccion">
+    SELECT * FROM trn_buscar_transaccion(#{id_transaccion})
+    AS (id_transaccion integer, id_perfil dentero, id_persona dentero, id_persona_pst dentero, id_programa dentero2, nombres text, total dmoneda2,
+    pagado dmoneda2, descuento dmoneda2, efectivo dmoneda2, fec_pago dfec_modificacion, gestion dentero, periodo dentero, cantidad dentero2, nro_recibo dtexto2);
+  </select>
+
+  <select id="getTrnListarTransacciones" resultMap="datosTransaccion">
+    SELECT * FROM trn_listar_transacciones(#{proceso})
+    AS (id_transaccion integer, id_perfil dentero, id_persona dentero, id_persona_pst dentero, id_programa dentero2, nombres text, total dmoneda2,
+        pagado dmoneda2, descuento dmoneda2, efectivo dmoneda2, fec_pago dfec_modificacion, gestion dentero, periodo dentero, cantidad dentero2, nro_recibo dtexto2);
+  </select>
+<!-- aqui se agrego-->
+  <resultMap id="datosRepProfacultativoEntidades" type="org.fautapo.domain.Perfiles">        
+	<result property="id_concepto"    column="id_concepto"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="nro_recibo"     column="nro_recibo"/>  	
+	<result property="programa"       column="programa"/>  	
+  </resultMap> 
+
+  <select id="getRepCajasResumenProfactulativoEntidades" resultMap="datosRepProfacultativoEntidades">
+    select * from rep_cajas_resumenprofacultativoentidad(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+      as (id_concepto dentero, programa dtexto,nro_recibo text,concepto text, cantidad bigint, total numeric, pagado numeric)
+  </select>
+  
+  <select id="getRepCajasDetalladoEntidades" resultMap="datosRepProfacultativoEntidades">
+    select * from rep_cajas_resumendetalladomatriculasentidad(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+      as (id_concepto dentero, programa dtexto,nro_recibo text,concepto text, cantidad bigint, total numeric, pagado numeric)
+  </select>
+  <resultMap id="datosRepProfacultativoCarrera" type="org.fautapo.domain.Perfiles">           
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="programa"       column="programa"/>  	
+  </resultMap> 
+
+   <select id="getRepCajasResumenProfactulativoCarrera" resultMap="datosRepProfacultativoCarrera">
+    select * from rep_cajas_resumenprofacultativocarrera(_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+      as (programa dtexto,concepto text, cantidad bigint, total numeric)
+  </select>
+  <select id="getRepCajasDetalladoCarrera" resultMap="datosRepProfacultativoCarrera">
+    select * from rep_cajas_resumendetalladomatriculascarrera(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+      as (programa dtexto,concepto text, cantidad bigint, total numeric)
+  </select>
+  <resultMap id="datosRepCajasEntidades" type="org.fautapo.domain.Perfiles">        
+	<result property="id_concepto"    column="id_concepto"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="nro_recibo"     column="nro_recibo"/>  	
+  </resultMap> 
+  
+  <select id="getRepCajasTransaccionesDiariasEntidades" resultMap="datosRepCajasEntidades">
+    select * from rep_cajas_transaccionesdiariasentidades(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+     as (id_concepto dentero, nro_recibo text,concepto text, cantidad bigint, total numeric, pagado numeric)
+  </select>
+  
+  <select id="getRepCajasResumenTesoroEntidades" resultMap="datosRepCajasEntidades">
+    select * from rep_cajas_resumenmatriculasentidades(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+     as (id_concepto dentero, nro_recibo text,concepto text, cantidad bigint, total numeric, pagado numeric)
+  </select>
+
+  <select id="getRepCajasResumenInstitucionalEntidades" resultMap="datosRepCajasEntidades">
+    select * from rep_cajas_resumeninstitucionalentidad(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+     as (id_concepto dentero, nro_recibo text,concepto text, cantidad bigint, total numeric, pagado numeric)
+  </select>
+  <select id="getRepCajasResumenEstudiantilEntidades" resultMap="datosRepCajasEntidades">
+    select * from rep_cajas_resumenestudiantilentidad(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+     as (id_concepto dentero, nro_recibo text,concepto text, cantidad bigint, total numeric, pagado numeric)
+  </select>
+  
+  <resultMap id="datosResumenTesoroCarrera" type="org.fautapo.domain.Perfiles">        
+	<result property="programa"        column="programa"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>	
+  </resultMap> 
+  
+  <select id="getRepCajasResumenTesoroCarrera" resultMap="datosResumenTesoroCarrera">
+    select * from rep_cajas_ResumenTesoroCarrera(_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+     as ( programa dtexto,concepto text, cantidad bigint, total numeric)
+  </select>
+  
+  <resultMap id="datosRepCajasEntidadesConcepto" type="org.fautapo.domain.Perfiles">        
+	<result property="id_concepto"    column="id_concepto"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+  </resultMap> 
+    
+    <select id="getRepCajasResumenInstitucionalEntidadesConcepto" resultMap="datosRepCajasEntidadesConcepto">
+    select * from rep_cajas_resumeninstitucionalentidadconcepto(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+     as (id_concepto integer, concepto dtexto, cantidad bigint, total numeric)
+  </select>
+  <select id="getRepCajasResumenEstudiantilEntidadesConcepto" resultMap="datosRepCajasEntidadesConcepto">
+    select * from rep_cajas_resumenestudiantilentidadconcepto(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+     as (id_concepto integer, concepto dtexto, cantidad bigint, total numeric)
+  </select>
+    <resultMap id="datosRepCajas" type="org.fautapo.domain.Perfiles">        
+	<result property="id_concepto"    column="id_concepto"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>  	
+  </resultMap> 
+  
+  <select id="getRepCajasTransaccionesDiarias" resultMap="datosRepCajas">
+    select * from rep_cajas_transaccionesdiarias(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+     as (id_concepto dentero, concepto text, cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+
+  <select id="getRepCajasTransaccionesDiariasGlobal" resultMap="datosRepCajas">
+    select * from rep_cajas_transaccionesdiariasglobal(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+     as (id_concepto dentero, concepto text, cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+  <!-- INICIO REPORTE PARA PROVINCIA DARLIN NRO_1-->
+   <resultMap id="datosRepCajasP" type="org.fautapo.domain.Perfiles">        
+	<result property="sede"           column="sede"/>    
+	<result property="id_concepto"    column="id_concepto"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="descuento"      column="descuento"/>
+	<result property="pagado"         column="pagado"/>
+      	
+  </resultMap> 
+  
+  <select id="getRepCajasTransaccionesDiariasGlobalProv" resultMap="datosRepCajasP">
+    select * from rep_cajas_transaccionesdiariasglobalprov(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+     as (sede dtexto, id_concepto dentero, concepto text, cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+  <!-- FIN REPORTE PARA PROVINCIA-->
+  
+   <!-- INICIO REPORTE DETALLADO GLOBAL DE CONCEPTOS POR CAJEROS-->
+   <resultMap id="datosRepCajasConcepto" type="org.fautapo.domain.Perfiles">        
+	<result property="id_usuario"           column="id_usuario"/>
+<result property="nombres"           column="nombres"/>
+
+	<result property="id_concepto"    column="id_concepto"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="descuento"      column="descuento"/>
+	<result property="pagado"         column="pagado"/>
+      	
+  </resultMap> 
+  
+  <select id="getRepCajasTransaccionesDiariasGlobalxcajero" resultMap="datosRepCajasConcepto">
+    select * from rep_cajas_transaccionesdiariasglobalxcajero(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+     as (id_usuario integer,nombres text, id_concepto dentero, concepto text, cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+  <!-- FIN REPORTE DETALLADO GLOBAL DE CONCEPTOS POR CAJEROS-->
+  <!-- INICIO REPORTE DETALLADO GLOBAL DE CONCEPTOS POR CAJEROS PROVINCIAS-->
+    <resultMap id="datosRepCajasConceptoProv" type="org.fautapo.domain.Perfiles">        
+	<result property="id_usuario"           column="id_usuario"/>
+<result property="nombres"           column="nombres"/>
+
+	<result property="id_concepto"    column="id_concepto"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="descuento"      column="descuento"/>
+	<result property="pagado"         column="pagado"/>
+	<result property="sede"         column="sede"/>
+      	
+  </resultMap> 
+  <select id="getRepCajasTransaccionesDiariasGlobalxcajeroProv" resultMap="datosRepCajasConceptoProv">
+select * from rep_cajas_transaccionesdiariasglobalxcajeroProv(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+     as (id_usuario integer,nombres text, id_concepto dentero, concepto text, cantidad bigint, total numeric, descuento numeric, pagado numeric,sede dtexto)
+  </select>
+  <!-- FIN REPORTE DETALLADO GLOBAL DE CONCEPTOS POR CAJEROS PROVINCIAS-->
+  <resultMap id="datosResumenMatriculas" type="org.fautapo.domain.Perfiles">    
+    <result property="id_concepto"    column="id_concepto"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>  	
+  </resultMap> 
+
+  <select id="getRepCajasResumenMatriculas" resultMap="datosResumenMatriculas">
+    select * from rep_cajas_resumenmatriculas(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+     as (id_concepto dentero, concepto dtexto, cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+
+  <select id="getRepCajasResumenMatriculasGlobal" resultMap="datosResumenMatriculas">
+    select * from rep_cajas_resumenmatriculasglobal(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+     as (id_concepto dentero, concepto dtexto, cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+ <!-- INICIO REPORTE PARA PROVINCIA DARLIN NRO_2-->
+   <resultMap id="datosResumenMatriculasP" type="org.fautapo.domain.Perfiles">    
+    <result property="sede"           column="sede"/>
+    <result property="id_concepto"    column="id_concepto"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>  	
+  </resultMap> 
+  <select id="getRepCajasResumenMatriculasGlobalProv" resultMap="datosResumenMatriculasP">
+    select * from rep_cajas_resumenmatriculasglobalprov(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+     as (sede dtexto,id_concepto dentero, concepto dtexto, cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+ <!-- FIN REPORTE PARA PROVINCIA-->
+  
+  <resultMap id="datosResumenInstitucional" type="org.fautapo.domain.Perfiles">        
+	<result property="id_concepto"    column="id_concepto"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>  	
+  </resultMap> 
+
+  <select id="getRepCajasResumenInstitucional" resultMap="datosResumenInstitucional">
+    select * from rep_cajas_resumeninstitucional(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+     as (id_concepto dentero, concepto dtexto, cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+
+  <select id="getRepCajasResumenInstitucionalGlobal" resultMap="datosResumenInstitucional">
+    select * from rep_cajas_resumeninstitucionalglobal(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+     as (id_concepto dentero, concepto dtexto, cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+ <!-- INICIO NRO_3  DARIN REPORTE PARA PROVINCIA-->
+  <resultMap id="datosResumenInstitucionalP" type="org.fautapo.domain.Perfiles">        
+	<result property="sede"           column="sede"/>
+	<result property="id_concepto"    column="id_concepto"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>  	
+  </resultMap> 
+ 
+ <select id="getRepCajasResumenInstitucionalGlobalProv" resultMap="datosResumenInstitucionalP">
+    select * from rep_cajas_resumeninstitucionalglobalprov(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+     as (sede dtexto, id_concepto dentero, concepto dtexto, cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select> 
+ 
+ <!-- FIN REPORTE PARA PROVINCIA-->
+    <resultMap id="datosResumenEstudiantil" type="org.fautapo.domain.Perfiles">        
+	<result property="id_concepto"    column="id_concepto"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>  	
+  </resultMap> 
+
+  <select id="getRepCajasResumenEstudiantil" resultMap="datosResumenEstudiantil">
+    select * from rep_cajas_resumenestudiantil(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+     as (id_concepto dentero, concepto dtexto, cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+
+  <select id="getRepCajasResumenEstudiantilGlobal" resultMap="datosResumenEstudiantil">
+    select * from rep_cajas_resumenestudiantilglobal(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+     as (id_concepto dentero, concepto dtexto, cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+<!-- INICIO NRO_4 REPORTE PARA PROVINCIA-->
+   <resultMap id="datosResumenEstudiantilP" type="org.fautapo.domain.Perfiles">        
+	<result property="sede"    		  column="sede"/>
+	<result property="id_concepto"    column="id_concepto"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>  	
+  </resultMap> 
+  
+  <select id="getRepCajasResumenEstudiantilGlobalProv" resultMap="datosResumenEstudiantilP">
+    select * from rep_cajas_resumenestudiantilglobalprov(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+     as (sede dtexto, id_concepto dentero, concepto dtexto, cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+   
+<!-- FIN REPORTE PARA PROVINCIA-->
+  
+  <resultMap id="datosResumenProfacultativo" type="org.fautapo.domain.Perfiles">        
+	<result property="programa"       column="programa"/>	
+	<result property="id_concepto"    column="id_concepto"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>  	
+  </resultMap> 
+
+  <select id="getRepCajasResumenProfacultativo" resultMap="datosResumenProfacultativo">
+    select * from rep_cajas_resumenprofacultativo(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+    as (programa dtexto, id_concepto dentero, concepto dtexto, cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+
+  <select id="getRepCajasResumenProfacultativoGlobal" resultMap="datosResumenProfacultativo">
+    select * from rep_cajas_resumenprofacultativoglobal(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+    as (programa dtexto, id_concepto dentero, concepto dtexto, cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+<!-- INICIO NRO_5 REPORTE PARA PROVINCIA-->
+  <resultMap id="datosResumenProfacultativoP" type="org.fautapo.domain.Perfiles">        
+	<result property="sede"           column="sede"/>
+	<result property="programa"       column="programa"/>	
+	<result property="id_concepto"    column="id_concepto"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>  	
+  </resultMap>  
+   <select id="getRepCajasResumenProfacultativoGlobalProv" resultMap="datosResumenProfacultativoP">
+    select * from rep_cajas_resumenprofacultativoglobalprov(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+    as (sede dtexto, programa dtexto, id_concepto dentero, concepto dtexto, cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+  
+<!-- FIN REPORTE PARA PROVINCIA-->
+    
+ <resultMap id="datosRepCajasDiarias" type="org.fautapo.domain.Perfiles">    
+    <result property="fecha_ini"      column="fecha_ini"/>
+	<result property="fecha_fin"      column="fecha_fin"/>	
+    <result property="perfil"		  column="perfil"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>  
+	<result property="id_transaccion" column="id_transaccion"/>  
+	<result property="nro_recibo"     column="nro_recibo"/>  
+	<result property="nombres"        column="nombres"/>
+	<result property="tipo_descuento" column="tipo_descuento"/>
+  </resultMap> 
+  
+  <select id="getRepCajasTransaccionesDetalle" resultMap="datosRepCajasDiarias">
+    select * from rep_cajas_detalletransacciones(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+    as (id_transaccion int,nro_recibo dtexto2, perfil dtexto,nombres text,fecha_ini text,fecha_fin text,tipo_descuento dtexto,cantidad dentero2
+    ,total dmoneda2,descuento dmoneda2, pagado dmoneda2)
+   </select> 
+
+    <select id="getRepCajasTransaccionesDetalleGlobal" resultMap="datosRepCajasDiarias">
+    select * from rep_cajas_detalletransaccionesglobal(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+    as (id_transaccion int,nro_recibo dtexto2, perfil dtexto,nombres text,fecha_ini text,fecha_fin text,tipo_descuento dtexto,cantidad dentero2
+    ,total dmoneda2,descuento dmoneda2, pagado dmoneda2)
+   </select> 
+   <resultMap id="datosRepCajasDiarias1" type="org.fautapo.domain.Perfiles">    
+    <result property="sede"      column="sede"/>	
+	<result property="fecha_ini"      column="fecha_ini"/>
+	<result property="fecha_fin"      column="fecha_fin"/>	
+    <result property="perfil"		  column="perfil"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>  
+	<result property="id_transaccion" column="id_transaccion"/>  
+	<result property="nro_recibo"     column="nro_recibo"/>  
+	<result property="nombres"        column="nombres"/>
+	<result property="tipo_descuento" column="tipo_descuento"/>
+  </resultMap> 
+<select id="getRepCajasTransaccionesDetalleGlobalProv" resultMap="datosRepCajasDiarias1">
+    select * from rep_cajas_detalletransaccionesglobalProv(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+    as (sede dtexto,id_transaccion int,nro_recibo dtexto2, perfil dtexto,nombres text,fecha_ini text,fecha_fin text,tipo_descuento dtexto,cantidad dentero2
+    ,total dmoneda2,descuento dmoneda2, pagado dmoneda2)
+   </select> 
+   
+    <resultMap id="datosRepCajasDiariasEntidades" type="org.fautapo.domain.Perfiles">    
+    <result property="fecha_ini"      column="fecha_ini"/>
+	<result property="fecha_fin"      column="fecha_fin"/>	
+    <result property="perfil"		  column="perfil"/>    
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>     
+	<result property="id_transaccion" column="id_transaccion"/>  
+	<result property="nro_recibo"     column="nro_recibo"/>  
+	<result property="nombres"        column="nombres"/>
+  </resultMap> 
+   
+     <select id="getRepCajasTransaccionesDetalleEntidad" resultMap="datosRepCajasDiariasEntidades">
+    select * from rep_cajas_detalletransaccionesentidades(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+      as (id_transaccion int,nro_recibo dtexto2, perfil dtexto,nombres text,fecha_ini text,fecha_fin text,
+      total dmoneda2, pagado dmoneda2)
+   </select> 
+
+   <select id="getRepCajasTransaccionesDetalleGlobalAnuladas" resultMap="datosRepCajasDiarias">
+    select * from rep_cajas_detalletransaccionesglobalanuladas(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+    as (id_transaccion int,nro_recibo dtexto2, perfil dtexto,nombres text,fecha_ini text,fecha_fin text,tipo_descuento dtexto,cantidad dentero2
+    ,total dmoneda2,descuento dmoneda2, pagado dmoneda2)
+   </select> 
+    <select id="getRepCajasTransaccionesDetalleAnuladas" resultMap="datosRepCajasDiarias">
+    select * from rep_cajas_detalletransaccionesanuladas(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+    as (id_transaccion int,nro_recibo dtexto2, perfil dtexto,nombres text,fecha_ini text,fecha_fin text,tipo_descuento dtexto,cantidad dentero2
+    ,total dmoneda2,descuento dmoneda2, pagado dmoneda2)
+   </select> 
+  <select id="getRepCajasTransaccionesDetalleGlobalAnuladasProv" resultMap="datosRepCajasDiarias">
+    select * from rep_cajas_detalletransaccionesanuladasProv(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+    as (id_transaccion int,nro_recibo dtexto2, perfil dtexto,nombres text,fecha_ini text,fecha_fin text,tipo_descuento dtexto,cantidad dentero2
+    ,total dmoneda2,descuento dmoneda2, pagado dmoneda2)
+   </select> 
+
+  <resultMap id="datosResumenDetalladoMatriculas" type="org.fautapo.domain.Perfiles">    
+    <result property="id_concepto"    column="id_concepto"/>    
+	<result property="programa"    column="programa"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>  	
+  </resultMap> 
+
+  <select id="getRepCajasResumenDetalladoMatriculas" resultMap="datosResumenDetalladoMatriculas">
+    select * from rep_cajas_resumendetalladomatriculas(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+          as (id_concepto dentero, concepto dtexto, programa dtexto ,cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+
+  <select id="getRepCajasResumenDetalladoMatriculasGlobal" resultMap="datosResumenDetalladoMatriculas">
+    select * from rep_cajas_resumendetalladomatriculasglobal(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+          as (id_concepto dentero, concepto dtexto, programa dtexto ,cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+
+  <resultMap id="datosResumenDetalladoEstudiantil" type="org.fautapo.domain.Perfiles">    
+    <result property="id_concepto"    column="id_concepto"/>    
+	<result property="programa"    column="programa"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>  	
+  </resultMap> 
+
+  <select id="getRepCajasResumenDetalladoEstudiantil" resultMap="datosResumenDetalladoEstudiantil">
+    select * from rep_cajas_resumendetalladoestudiantil(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+          as (id_concepto dentero, concepto dtexto, programa dtexto ,cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+
+  <select id="getRepCajasResumenDetalladoEstudiantilGlobal" resultMap="datosResumenDetalladoEstudiantil">
+    select * from rep_cajas_resumendetalladoestudiantilglobal(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+          as (id_concepto dentero, concepto dtexto, programa dtexto ,cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+ <resultMap id="datosResumenDetalladoEstudiantilProv" type="org.fautapo.domain.Perfiles">    
+   <result property="sede"    column="sede"/> 
+   <result property="id_concepto"    column="id_concepto"/>    
+	<result property="programa"    column="programa"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>  	
+  </resultMap> 
+
+  <select id="getRepCajasResumenDetalladoEstudiantilGlobalProv" resultMap="datosResumenDetalladoEstudiantilProv">
+    select * from rep_cajas_resumendetalladoestudiantilglobalprov(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+          as (sede dtexto, id_concepto dentero, concepto dtexto, programa dtexto ,cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+  <resultMap id="datosResumenDetalladoInstitucional" type="org.fautapo.domain.Perfiles">    
+    <result property="id_concepto"    column="id_concepto"/>    
+	<result property="programa"    column="programa"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>  	
+  </resultMap> 
+
+  <select id="getRepCajasResumenDetalladoInstitucional" resultMap="datosResumenDetalladoInstitucional">
+    select * from rep_cajas_resumendetalladoinstitucional(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+          as (id_concepto dentero, concepto dtexto, programa dtexto ,cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+  
+  <select id="getRepCajasResumenDetalladoInstitucionalGlobal" resultMap="datosResumenDetalladoInstitucional">
+    select * from rep_cajas_resumendetalladoinstitucionalglobal(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+          as (id_concepto dentero, concepto dtexto, programa dtexto ,cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+
+    <resultMap id="datosResumenDetalladoInstitucionalProv" type="org.fautapo.domain.Perfiles">    
+    <result property="sede"    column="sede"/> 
+	<result property="id_concepto"    column="id_concepto"/>    
+	<result property="programa"    column="programa"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>  	
+  </resultMap> 
+  
+  <select id="getRepCajasResumenDetalladoInstitucionalGlobalProv" resultMap="datosResumenDetalladoInstitucionalProv">
+    select * from rep_cajas_resumendetalladoinstitucionalglobalprov(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+          as (sede dtexto,id_concepto dentero, concepto dtexto, programa dtexto ,cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+  
+  <resultMap id="datosResumenDetalladoTotal1" type="org.fautapo.domain.Perfiles">    
+    <result property="id_concepto"    column="id_concepto"/>    
+	<result property="programa"    column="programa"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>  	
+  </resultMap> 
+
+  <select id="getRepCajasResumenDetallado" resultMap="datosResumenDetalladoTotal1">
+    select * from rep_cajas_resumendetalladototal(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+          as (id_concepto dentero, concepto dtexto, programa dtexto ,cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+ 
+  <select id="getRepCajasResumenDetalladoGlobal" resultMap="datosResumenDetalladoTotal">
+    select * from rep_cajas_resumendetalladototalglobal(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+          as (id_concepto dentero, concepto dtexto, programa dtexto ,cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+  
+  <resultMap id="datosResumenDetalladoTotal" type="org.fautapo.domain.Perfiles">    
+    <result property="id_concepto"    column="id_concepto"/>    
+	<result property="programa"    column="programa"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>  	
+  </resultMap> 
+ 
+  <select id="getRepCajasResumenDetalladoGlobalMatricula" resultMap="datosResumenDetalladoTotal">
+    select * from rep_cajas_resumendetalladototalglobalMatricula(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+          as (id_concepto dentero, concepto dtexto, programa dtexto ,cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+  
+    <resultMap id="datosResumenDetalladoMatriculasprov" type="org.fautapo.domain.Perfiles">    
+    <result property="sede"    column="sede"/>
+	<result property="id_concepto"    column="id_concepto"/>    
+	<result property="programa"    column="programa"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>  	
+  </resultMap> 
+
+  <select id="getRepCajasResumenDetalladoMatriculasGlobalProv" resultMap="datosResumenDetalladoMatriculasprov">
+    select * from rep_cajas_resumendetalladomatriculasglobalprov(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+          as (sede dtexto,id_concepto dentero, concepto dtexto, programa dtexto ,cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+  
+    
+
+<resultMap id="datosResumenDetalladoTotalProv" type="org.fautapo.domain.Perfiles">    
+   <result property="sede"    column="sede"/>    
+   <result property="id_concepto"    column="id_concepto"/>    
+	<result property="programa"    column="programa"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/>
+	<result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>  	
+  </resultMap> 
+
+
+  <select id="getRepCajasResumenDetalladoGlobalProv" resultMap="datosResumenDetalladoTotalProv">
+    select * from rep_cajas_resumendetalladototalglobalprov(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+          as (sede dtexto,id_concepto dentero, concepto dtexto, programa dtexto ,cantidad bigint, total numeric, descuento numeric, pagado numeric)
+  </select>
+  <resultMap id="datosResumenEntidades" type="org.fautapo.domain.Perfiles">          
+	<result property="nro_recibo"     column="nro_recibo"/>
+    <result property="programa"       column="programa"/>    
+    <result property="concepto"		  column="concepto"/>
+    <result property="cantidad"       column="cantidad"/>
+	<result property="total"          column="total"/> 
+  </resultMap> 
+  <select id="getRepCajasResumenDetalladoEntidades" resultMap="datosResumenEntidades">
+    select * from rep_cajas_resumendetalladototalentidad(#{id_usuario},_cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+             as (nro_recibo dtexto, concepto dtexto, programa dtexto ,total numeric,cantidad bigint)
+  </select>
+
+
+  <resultMap id="datosRepCajasProg" type="org.fautapo.domain.Perfiles">    
+    <result property="cantidad"  column="cantidad"/>        
+    <result property="programa"     column="programa"/>    
+    <result property="total"        column="total"/>
+    <result property="descuento"    column="descuento"/>
+    <result property="pagado"       column="pagado"/>            
+  </resultMap> 
+  
+  <select id="getRepCajasTransaccionesPorPrograma" resultMap="datosRepCajasProg">
+  select * from rep_cajas_transaccionesporprograma(#{id_usuario}, _cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+  as (programa text, cantidad bigint, total numeric,  descuento numeric, pagado numeric )
+  </select>  
+<!--
+  <resultMap id="datosRepGlobalGeneral" type="org.fautapo.domain.Perfiles">    
+    <result property="fecha_ini"      column="fecha_ini"/>
+    <result property="id_transaccion" column="id_transaccion"/>
+    <result property="codigo"         column="codigo"/>
+    <result property="nombres"        column="nombres"/>
+    <result property="total_c"        column="total_c"/>
+    <result property="cantidad"       column="cantidad"/>
+    <result property="total"          column="total"/>
+    <result property="descuento"      column="descuento"/>
+    <result property="pagado"         column="pagado"/>            
+  </resultMap> 
+  
+  <select id="getRepCajasGlobalGeneral" resultMap="datosRepGlobalGeneral">
+   select * from rep_cajas_globalgeneral(#{id_usuario}, _cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+   as (fecha_ini text, id_transaccion integer, codigo integer, nombres text, total_c dmoneda2, cantidad dentero2, total dmoneda2, descuento dmoneda2, pagado dmoneda2 )
+  </select>  -->
+ 
+<!-- hasta aqui-->
+  
+  <resultMap id="datosTransaccion2" type="org.fautapo.domain.Perfiles">
+    <result property="id_persona"     column="id_persona"/>
+    <result property="id_persona_pst" column="id_persona_pst"/>
+    <result property="id_programa"    column="id_programa"/>
+    <result property="total"          column="total"/>
+    <result property="pagado"         column="pagado"/>
+    <result property="descuento"      column="descuento"/>
+    <result property="efectivo"       column="efectivo"/>
+    <result property="fec_pago"       column="fec_pago"/>
+    <result property="gestion"        column="gestion"/>
+    <result property="periodo"        column="periodo"/>
+    <result property="nro_recibo"     column="nro_recibo"/>
+    <result property="nombres"        column="nombres"/>
+   
+ 
+  </resultMap>
+
+  <select id="getTrnBuscarTransaccionRecibo" resultMap="datosTransaccion2">
+    SELECT * FROM trn_buscar_transaccion_nro_recibo(#{nro_recibo})
+    AS (id_persona dentero, id_persona_pst dentero, id_programa dentero2, fec_pago dfec_modificacion, total dmoneda2,
+        pagado dmoneda2, descuento dmoneda2, efectivo dmoneda2, gestion dentero, periodo dentero, nro_recibo dtexto2, nombres text);
+  </select>
+
+<select id="getTrnBuscarTransaccionReciboSede" resultMap="datosTransaccion2">
+    SELECT * FROM trn_buscar_transaccion_nro_recibosede(#{nro_recibo},#{ins_sede})
+    AS (id_persona dentero, id_persona_pst dentero, id_programa dentero2, fec_pago dfec_modificacion, total dmoneda2,
+        pagado dmoneda2, descuento dmoneda2, efectivo dmoneda2, gestion dentero, periodo dentero, nro_recibo dtexto2, nombres text);
+  </select>
+  
+  <resultMap id="datosTransaccion3" type="org.fautapo.domain.Perfiles">    
+    <result property="total"          column="total"/>
+    <result property="fec_pago"       column="fec_pago"/>
+    <result property="gestion"        column="gestion"/>
+    <result property="periodo"        column="periodo"/>
+    <result property="nro_recibo"     column="nro_recibo"/>
+	<result property="id_estado"      column="id_estado"/>
+	<result property="perfil"         column="perfil"/>
+  </resultMap>
+  
+  <select id="getPstListarPerfiles" resultMap="datosTransaccion3">
+    SELECT * FROM caj_pst_listar_perfiles(#{id_estudiante})
+	AS (nro_recibo dtexto2,total dmoneda2,gestion dentero,periodo dentero,fec_pago dfec_modificacion,id_estado did_estado,perfil dtexto);
+  </select>
+  
+   <resultMap id="datosEntidad3" type="org.fautapo.domain.Perfiles">    
+    <result property="total"          column="total"/>
+    <result property="nro_recibo"     column="nro_recibo"/>
+    <result property="gestion"        column="gestion"/>
+    <result property="periodo"        column="periodo"/>
+	<result property="perfil"         column="perfil"/>
+  </resultMap>
+  
+  <select id="getPstListarPerfilesEntidad" resultMap="datosEntidad3">
+    SELECT * FROM caj_pst_listar_perfiles_entidad(#{id_estudiante})
+	AS(perfil dtexto,gestion integer,periodo integer,nro_recibo text,total dmoneda2);
+  </select>
+ 
+  <resultMap id="datosTransaccionRecibo" type="org.fautapo.domain.Perfiles">
+    <result property="id_transaccion"    column="id_transaccion"/>
+    <result property="id_perfil"         column="id_perfil"/>
+    <result property="id_tipo_descuento" column="id_tipo_descuento"/>
+    <result property="id_concepto"       column="id_concepto"/>
+    <result property="cantidad"          column="cantidad"/>
+    <result property="costo"             column="costo"/>
+    <result property="pagado"            column="pagado"/>
+    <result property="descuento"         column="descuento"/>
+    <result property="concepto"          column="concepto"/>
+    <result property="perfil"            column="perfil"/>
+
+  </resultMap>
+
+  <select id="getTrnListarTransaccionesRecibo" resultMap="datosTransaccionRecibo">
+    SELECT * FROM trn_listar_transacciones_nro_recibo(#{nro_recibo})
+    AS (id_transaccion integer, id_perfil dentero, id_tipo_descuento dentero, id_concepto dentero, cantidad dentero2, costo dmoneda2, 
+        pagado dmoneda2, descuento dmoneda2, concepto dtexto, perfil dtexto);
+  </select>
+  <select id="getTrnListarTransaccionesReciboSede" resultMap="datosTransaccionRecibo">
+    SELECT * FROM trn_listar_transacciones_nro_recibo_sede(#{nro_recibo},#{ins_sede})
+    AS (id_transaccion integer, id_perfil dentero, id_tipo_descuento dentero, id_concepto dentero, cantidad dentero2, costo dmoneda2, 
+        pagado dmoneda2, descuento dmoneda2, concepto dtexto, perfil dtexto);
+  </select>
+
+  <resultMap id="datosTrnDetalle" type="org.fautapo.domain.Perfiles">
+    <result property="id_concepto" column="id_concepto"/>
+    <result property="concepto"    column="concepto"/>
+    <result property="cantidad"    column="cantidad"/>
+    <result property="costo"       column="costo"/>
+    <result property="pagado"      column="pagado"/>
+    <result property="descuento"   column="descuento"/>
+  </resultMap>
+
+  <select id="getTrnListarTrnDetalles" resultMap="datosTrnDetalle">
+    SELECT * FROM trn_listar_trn_detalles(#{id_transaccion})
+    AS (id_concepto dentero, concepto dtexto, cantidad dentero2, costo dmoneda2, pagado dmoneda2, descuento dmoneda2);
+  </select>
+
+  <resultMap id="datosTrnDetalle2" type="org.fautapo.domain.Perfiles">
+    <result property="id_perfil"   column="id_perfil"/>
+    <result property="id_concepto" column="id_concepto"/>
+    <result property="concepto"    column="concepto"/>
+    <result property="cantidad"    column="cantidad"/>
+    <result property="costo"       column="costo"/>
+    <result property="pagado"      column="pagado"/>
+    <result property="descuento"   column="descuento"/>
+  </resultMap>
+
+  <select id="getTrnListarTrnDetalles2" resultMap="datosTrnDetalle2">
+    SELECT * FROM trn_listar_trn_detalles(#{proceso})
+    AS (id_perfil dentero, id_concepto dentero, concepto dtexto, cantidad dentero2, costo dmoneda2, pagado dmoneda2, descuento dmoneda2);
+  </select>
+
+  <!--Listar tipos-->
+  <resultMap id="tiposperfil" type="org.fautapo.domain.Perfiles">
+    <result property="id_tipo_perfil"     column="id_tipo_perfil"/> 
+    <result property="tipo_perfil"        column="tipo_perfil"/>
+  </resultMap>
+
+  <select id="getTrnListarTiposPerfiles" resultMap="tiposperfil">
+    SELECT * FROM trn_listar_tipos_perfiles();
+  </select>
+  <!--Fin Listar tipos-->
+
+  <!--Listar perfiles por procesos-->
+  <resultMap id="perfilProceso" type="org.fautapo.domain.Perfiles">
+    <result property="id_perfil_proceso"  column="id_perfil_proceso"/> 
+    <result property="id_perfil"          column="id_perfil"/> 
+    <result property="id_proceso"         column="id_proceso"/> 
+    <result property="id_tipo_perfil"     column="id_tipo_perfil"/> 
+    <result property="perfil"             column="perfil"/> 
+    <result property="proceso"            column="proceso"/> 
+    <result property="tipo_perfil"        column="tipo_perfil"/> 
+  </resultMap>
+
+  <select id="getTrnMiListarPerfilesProceso" resultMap="perfilProceso">
+    SELECT * FROM trn_mi_listar_perfiles_proceso(#{id_proceso})
+      AS(id_perfil_proceso integer, id_perfil dentero, id_proceso dentero, id_tipo_perfil dentero,
+         perfil dtexto, proceso dtexto, tipo_perfil dtexto);
+  </select>
+  
+  <resultMap id="perfilProceso2" type="org.fautapo.domain.Perfiles">
+    <result property="id_perfil_proceso"  column="id_perfil_proceso"/> 
+    <result property="id_perfil"          column="id_perfil"/> 
+    <result property="id_proceso"         column="id_proceso"/> 
+    <result property="id_tipo_perfil"     column="id_tipo_perfil"/> 
+  </resultMap>
+ 
+  <select id="getTrnBuscarPerfilProceso" resultMap="perfilProceso2">
+    SELECT * FROM trn_buscar_perfil_proceso(#{id_perfil_proceso}::integer);
+  </select>
+  <!-- FIN Listar perfiles por procesos-->
+
+  <select id="getTrnPerfilTieneDescuento" resultType="java.lang.Integer">
+    SELECT trn_perfil_tiene_descuento(#{id_perfil});
+  </select>
+
+  <!-- INICIO - Perfiles materias -->
+  <resultMap id="datosMaterias" type="org.fautapo.domain.Planes">
+    <result property="id_mtr_plan"         column="id_mtr_plan"/>
+    <result property="nivel_academico"     column="nivel_academico"/>
+    <result property="id_materia"          column="id_materia"/>
+    <result property="sigla"               column="sigla"/>
+    <result property="materia"             column="materia"/>
+    <result property="id_mencion"          column="id_mencion"/>
+    <result property="mencion"             column="mencion"/>
+    <result property="costo"               column="costo"/>
+  </resultMap>
+  
+  <select id="getTrnListarPerfilesMaterias" resultMap="datosMaterias">
+    SELECT * FROM trn_listar_perfiles_materias(#{id_programa}, #{id_plan}, #{id_perfil}, #{id_tipo_evaluacion}, #{gestion}, #{periodo})
+    AS (id_mtr_plan integer, nivel_academico dentero, id_materia integer, sigla dtexto, materia dtexto, id_mencion dentero, mencion dtexto, costo dmoneda2);
+  </select>
+
+  <resultMap id="datosPerfilMateria" type="org.fautapo.domain.Perfiles">
+    <result property="id_perfil_materia"  column="id_perfil_materia"/>
+    <result property="id_perfil"          column="id_perfil"/>
+    <result property="id_materia"         column="id_materia"/>
+    <result property="id_tipo_evaluacion" column="id_tipo_evaluacion"/>
+    <result property="gestion"            column="gestion"/>
+    <result property="periodo"            column="periodo"/>
+    <result property="costo"              column="costo"/>
+  </resultMap>
+  
+  <select id="getTrnBuscarPerfilMateria" resultMap="datosPerfilMateria">
+    SELECT * FROM trn_buscar_perfil_materia(#{id_perfil_materia});
+  </select>
+
+  <resultMap id="datosPerfil" type="org.fautapo.domain.Perfiles">
+    <result property="id_perfil"     column="id_perfil"/> 
+    <result property="perfil"        column="perfil"/>
+    <result property="codigo_perfil" column="codigo"/>
+  </resultMap>
+
+  <select id="getTrnListarPerfiles" resultMap="datosPerfil">
+    SELECT * FROM trn_listar_perfiles();
+  </select>
+
+  <select id="getTrnBuscarPerfil" resultMap="datosPerfil">
+    SELECT * FROM trn_buscar_perfil(#{id_perfil});
+  </select>
+
+  <select id="setTrnRegistrarPerfilMateria" resultType="java.lang.Integer">
+    SELECT trn_registrar_perfil_materia(#{id_perfil}, #{id_programa}, #{id_plan}, #{id_materia}, #{id_tipo_evaluacion}, #{gestion}, #{periodo}, #{costo}, #{ult_usuario}) as valor;
+  </select>
+  <!-- FIN - Perfiles materias -->
+  
+  <!--tipos descuentos-->
+  <resultMap id="tiposDescuentos" type="org.fautapo.domain.Perfiles">
+    <result property="id_tipo_descuento"      column="id_tipo_descuento"/> 
+    <result property="tipo_descuento"         column="tipo_descuento"/>
+    <result property="porcentaje_descuento"   column="porcentaje_descuento"/>
+  </resultMap>
+
+  <select id="getTrnListarTiposDescuentos" resultMap="tiposDescuentos">
+    SELECT * FROM trn_listar_tipos_descuentos();
+  </select>
+  <select id="getTrnBuscarTipoDescuento" resultMap="tiposDescuentos">
+    SELECT * FROM trn_buscar_tipo_descuento(#id_tipo_descuento#);
+  </select>
+  <!-- Fin tipos descuentos-->
+  
+  <resultMap id="cajero" type="org.fautapo.domain.Personas">
+    <result property="id_usuario" column="id_usuario"/>
+    <result property="nombres" column="nombres"/>
+    <result property="paterno" column="paterno"/>
+    <result property="materno" column="materno"/>
+  </resultMap>
+
+  <select id="getTrnListarCajeros" resultMap="cajero">
+    SELECT * FROM trn_listar_cajeros(#gestion#, #periodo#)
+      AS (id_usuario integer, nombres dtexto, paterno dtexto2, materno dtexto2);
+  </select>
+  
+  <select id="getTrnListarCajerosProv" resultMap="cajero">
+    SELECT * FROM trn_listar_cajerosProv(#gestion#, #periodo#)
+      AS (id_usuario integer, nombres dtexto, paterno dtexto2, materno dtexto2);
+  </select>
+
+  <!-- inicio JOJO -->
+  <resultMap id="transaccionNroRecibo" type="org.fautapo.domain.Perfiles">
+    <result property="id_transaccion" column="id_transaccion"/>
+    <result property="perfil" column="perfil"/>
+    <result property="nombres" column="nombres"/>
+    <result property="fec_pago" column="fec_pago"/>
+    <result property="tipo_descuento" column="tipo_descuento"/>
+    <result property="total" column="total"/>
+    <result property="descuento" column="descuento"/>
+    <result property="pagado" column="pagado"/>
+  </resultMap>
+
+  <select id="getTrnBuscarPorNroRecibo" resultMap="transaccionNroRecibo">
+    SELECT * FROM trn_buscar_nro_recibo(#nro_recibo#)
+      AS (id_transaccion integer, perfil dtexto, nombres text, fec_pago dfec_modificacion, tipo_descuento dtexto, total dmoneda2, descuento dmoneda2, pagado dmoneda2);
+  </select>
+ <select id="getTrnBuscarPorNroReciboSede" resultMap="transaccionNroRecibo">
+    SELECT * FROM trn_buscar_nro_recibosede(#nro_recibo#,#ins_sede#)
+      AS (id_transaccion integer, perfil dtexto, nombres text, fec_pago dfec_modificacion, tipo_descuento dtexto, total dmoneda2, descuento dmoneda2, pagado dmoneda2);
+  </select>
+  <select id="setTrnBorrarDetalle">
+    SELECT trn_borrar_detalle(#id_detalle#);
+  </select>
+
+  <select id="setTrnBorrarTransaccion">
+    SELECT trn_borrar_transaccion(#id_transaccion#);
+  </select>
+  <!-- inicio JOJO -->
+
+  <select id="getTrnBuscarSiguienteNroRecibo" resultType="java.lang.Integer">
+    SELECT trn_buscar_siguiente_nro_recibo(#id_sede#, #gestion#) as valor;
+  </select>
+
+  <select id="setTrnActualizarNroRecibo">
+    SELECT trn_actualizar_nro_recibo(#id_transaccion#, #nro_recibo#);
+  </select>
+
+</mapper>

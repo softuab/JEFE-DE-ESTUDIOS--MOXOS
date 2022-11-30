@@ -1,0 +1,49 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="Instituciones">
+
+  <resultMap id="buscarInstitucion" type="org.fautapo.domain.Instituciones">
+    <result property="id_institucion"               column="id_institucion" />
+    <result property="id_sede_central"              column="id_sede_central" />
+    <result property="institucion"                  column="institucion" />
+    <result property="sigla"                        column="sigla" />
+    <result property="actividad"                    column="actividad" />
+    <result property="instrumento_apertura"         column="instrumento_apertura" />
+    <result property="direccion"                    column="direccion" />
+    <result property="telefono"                     column="telefono" />
+    <result property="fax"                          column="fax" />
+    <result property="url"                          column="url" />
+    <result property="correo"                       column="correo" />
+    <result property="fec_creacion"                 column="fec_creacion" />
+    <result property="fec_inicio_actividades"       column="fec_inicio_actividades" />
+    <result property="representante_legal"          column="representante_legal" />
+    <result property="plan_estrategico"             column="plan_estrategico" />
+    <result property="estatuto_organico"            column="estatuto_organico" />
+    <result property="reglamento_investigacion"     column="reglamento_investigacion" />
+    <result property="centro_investigacion_central" column="centro_investigacion_central" />
+    <result property="logo"                         column="logo" />
+    <result property="pais"                         column="pais" />
+    <result property="departamento"                 column="departamento" />
+    <result property="provincia"                    column="provincia" />
+    <result property="localidad"                    column="localidad" />
+	
+  </resultMap>
+
+  <select id="getBuscarInstitucion" resultMap="buscarInstitucion">
+   SELECT * FROM buscar_institucion(#{id_institucion})
+   AS (id_institucion integer, id_sede_central dentero, institucion dtexto, sigla dtexto2, actividad dtexto2, instrumento_apertura dtexto2,
+       direccion dtexto2, telefono dtexto2, fax dtexto2, url dtexto2, correo dtexto2, fec_creacion dfecha2, fec_inicio_actividades dfecha2,
+       representante_legal dtexto2, plan_estrategico dtexto2, estatuto_organico dtexto2, reglamento_investigacion dtexto2, 
+       centro_investigacion_central dtexto2, logo dtexto2, pais dtexto, departamento dtexto, provincia dtexto, localidad dtexto);
+  </select>
+  
+  <select id="getBuscarInstitucionSede" resultMap="buscarInstitucion">
+   SELECT * FROM buscar_institucion_sede(#{id_institucion})
+   AS (id_institucion integer, id_sede_central dentero, institucion dtexto, sigla dtexto2, actividad dtexto2, instrumento_apertura dtexto2,
+       direccion dtexto2, telefono dtexto2, fax dtexto2, url dtexto2, correo dtexto2, fec_creacion dfecha2, fec_inicio_actividades dfecha2,
+       representante_legal dtexto2, plan_estrategico dtexto2, estatuto_organico dtexto2, reglamento_investigacion dtexto2, 
+       centro_investigacion_central dtexto2, logo dtexto2, pais dtexto, departamento dtexto, provincia dtexto, localidad dtexto);
+  </select>
+
+ 
+ </mapper>

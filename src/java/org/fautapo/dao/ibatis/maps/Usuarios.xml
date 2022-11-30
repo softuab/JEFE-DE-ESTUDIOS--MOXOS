@@ -1,0 +1,83 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="Usuarios">
+
+    <resultMap id="datosUsuario" type="org.fautapo.domain.Usuarios">
+        <result property="id_usuario"   column="id_usuario" />
+        <result property="id_persona"   column="id_persona" />
+        <result property="apodo"        column="apodo" />
+        <result property="clave"        column="clave" />
+        <result property="recordatorio" column="recordatorio" />
+        <result property="nombres"      column="usuario" />
+    </resultMap>
+
+    <select id="getBuscarUsuario" resultMap="datosUsuario">
+        SELECT * FROM tr_buscar_usuario(#{id_usuario}) 
+        AS (id_usuario int4, id_persona dentero, apodo dtexto, clave dtexto2, recordatorio dtexto2, usuario dtexto);
+    </select>
+  
+    <select id="getListarUsuarios" resultMap="datosUsuario">
+        SELECT * FROM mi_listar_usuarios(#{pagina})
+        AS (id_usuario integer, id_persona dentero, apodo dtexto, clave dtexto2, recordatorio dtexto2, usuario text);
+    </select>
+  
+    <resultMap id="listadoUsuarios" type="org.fautapo.domain.Usuarios">
+        <result property="id_usuario"            column="id_usuario" />
+        <result property="id_ubicacion_organica" column="id_ubicacion_organica" />
+        <result property="ubicacion_organica"    column="ubicacion_organica" />
+        <result property="nombres"               column="usuario" />
+    </resultMap>
+
+    <select id="getListarUsuariosUbicacionOrganica" resultMap="listadoUsuarios">
+        SELECT DISTINCT * FROM tr_listar_usuarios_ubicacion_organica(#{id_usuario})
+        AS (id_usuario int4, id_ubicacion_organica int4, ubicacion_organica dtexto, usuario dtexto)
+        ORDER BY ubicacion_organica, usuario;
+    </select>
+ 
+    <select id="getVerificarUsuario" resultType="java.lang.Integer">
+        SELECT usr_verificar_usuario(#{id_usuario}, #{clave}) AS valor;
+    </select>
+
+    <select id="setRegistrarNuevaClave" resultType="java.lang.Integer">
+        SELECT usr_registrar_nueva_clave(#{id_usuario}, #{clave}) AS valor;
+    </select>
+  
+    <select id="setRegistrarUsuario" resultType="java.lang.Integer">
+        SELECT * FROM mi_registrar_usuario(#{id_usuario},#{id_persona}, #{apodo}, #{clave}, #{recordatorio}, #{ult_usuario});
+    </select>
+  
+    <select id="setEliminarUsuario" resultType="java.lang.Integer">
+        SELECT * FROM mi_eliminar_usuario(#{id_usuario},#{ult_usuario});    
+    </select>
+  
+    <select id="getUsuario" resultType="org.fautapo.domain.Usuarios">
+        SELECT id_usuario, id_persona, id_estado, apodo, clave, ip, ubicacion, 
+        detalle_dispositivo, recordatorio, fec_registro, fec_modificacion, 
+        ult_usuario, ultima_conexion
+        FROM  _usuarios
+        where upper(apodo)=upper(#{apodo})
+    </select>
+    <select id="getIDUsuario" resultType="java.lang.Integer">
+        SELECT id_usuario
+        FROM _usuarios
+        WHERE upper(apodo) = upper(#{correo})
+    </select> 
+    <select id="getUsuarioadministrativo" resultType="org.fautapo.domain.Usuarios">
+        SELECT 
+        u.id_usuario as id_usuario, 
+        u.id_persona, 
+        cast(p.nombres || ' ' || p.paterno || ' ' || p.materno as text) as nombre_completo, 
+        p.dip, 
+        u.apodo as correo, 
+        p.celular, 
+        p.direccion
+        FROM 
+        _usuarios u INNER JOIN personas p on u.id_persona= p.id_persona
+        WHERE 
+        u.id_estado = 'A' AND 
+        upper(u.apodo) = upper(#{correo});        
+    </select>
+    <select id="setCambioPinAdministrativo" resultType="java.lang.Integer">
+        SELECT * FROM mi_dct_cambio_pin_administrativo(#{id_usuario}, #{clave},#{id_rol},#{ult_usuario});
+    </select>
+</mapper>

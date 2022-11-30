@@ -1,0 +1,26 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+ * @autor FAUTAPO
+ * @fec_registro 2005-11-01
+ * @ult_usuario FAUTAPO
+ * @fec_modificacion 2005-11-01
+-->
+
+<mapper namespace="Universidad">
+
+  <resultMap id="universidad" type="org.fautapo.domain.Universidades">
+    <result property="id_universidad" column="id_universidad"/>
+    <result property="universidad"    column="universidad"/>
+  </resultMap>
+
+  <select id="getUnvBuscarUniversidad" resultMap="universidad">
+    SELECT *
+    FROM mi_unv_buscar_universidad(#{id_universidad});
+  </select>
+  
+  <select id="getUnvListarUniversidades" resultMap="universidad">
+    SELECT * FROM mi_listar_universidades();
+  </select>
+
+</mapper>

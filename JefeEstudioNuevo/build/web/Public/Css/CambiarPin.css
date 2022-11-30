@@ -1,0 +1,70 @@
+body
+{
+    background-color: #fff;
+    padding-top: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12px;
+}
+.wrapper
+{
+    width: 840px;
+    height: 300px;
+    margin: auto;
+    background-color: #fff;
+    border-radius: 8px;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+}
+.logo
+{
+    height: 40px;
+    padding: 30px 30px 0px 30px;
+}
+.error
+{
+    color: Red;
+    display: block;
+    margin-left:20px;
+}
+.submit-button
+{
+    width: 100%;
+    background-color: #007BFF;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+a.submit-button
+{
+    text-decoration: none;
+    color: #282834;
+    font-size: 18px;
+}
+.locked
+{
+     width: 100%;
+    background-color: #CCCBCC;
+    color: #000;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.unlocked
+{
+     width: 100%;
+    background-color: #007BFF;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.unlocked:hover {
+    background-color: #246073;
+}

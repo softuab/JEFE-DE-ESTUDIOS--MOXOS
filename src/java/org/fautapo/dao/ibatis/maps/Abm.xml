@@ -1,0 +1,277 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="Abm">
+
+  <resultMap id="listadoTablas" type="org.fautapo.domain.Abm">
+    <result property="id_tabla" column="id_tabla" />
+    <result property="tabla"    column="tabla" />
+    <result property="etiqueta" column="etiqueta" />
+  </resultMap>
+
+  <select id="getListarTablas" resultMap="listadoTablas">
+    select id_tabla, tabla, etiqueta from dib_listar_tablas();
+  </select>
+
+  <select id="getBuscarTabla" resultMap="listadoTablas">
+    select id_tabla, tabla, etiqueta from dib_buscar_tabla(#{id_tabla});
+  </select>
+
+  <select id="getBuscarTabla1" resultMap="listadoTablas">
+    select id_tabla, tabla, etiqueta from dib_buscar_tabla(#{tabla});
+  </select>
+
+  <!--  INICIO JOJO  -->
+  <resultMap id="listadoCamposTabla" type="org.fautapo.domain.Abm">
+    <result property="id_campo"      column="id_campo"/>
+    <result property="id_tabla"      column="id_tabla"/>
+    <result property="id_componente" column="id_componente"/>
+    <result property="campo"         column="campo"/>
+    <result property="tipo_dato"     column="tipo_dato"/>
+    <result property="etiqueta"      column="etiqueta"/>
+    <result property="orden"         column="orden"/>
+    <result property="permiso"       column="permiso"/>
+    <result property="campo_padre"   column="campo_padre"/>
+    <result property="columnas"      column="columnas"/>
+    <result property="filas"         column="filas"/>
+    <result property="caracteres"    column="caracteres"/>
+    <result property="x"             column="x"/>
+    <result property="y"             column="y"/>
+    <result property="tag"           column="tag"/>
+  </resultMap>
+
+  <select id="getListarCamposTabla" resultMap="listadoCamposTabla">
+    SELECT c.*, t.tag
+    FROM dib_listar_campos_tabla(#{id_tabla}, #{permiso}) c
+      JOIN _dib_componentes t USING(id_componente);
+  </select>
+
+  <select id="getDibBuscarParametro" resultType="java.lang.String">
+    SELECT _parametro(#{campo}, #{codigo});
+  </select>
+  <!--  Huaica  -->
+
+  <!-- columnas = id_actividad -->
+  <select id="getListarCamposTablaActividad" resultMap="listadoCamposTabla">
+    SELECT c.*, t.tag
+    FROM tr_listar_campos_tabla(#{columnas}, #{id_tabla}, #{permiso}) c
+      JOIN _dib_componentes t USING(id_componente);
+  </select>
+  <!--  fin Huaica  -->
+
+  <!--  FIN JOJO  -->
+
+  <select id="setEjecutarConsulta" resultType="java.lang.Integer">
+    SELECT dib_ejecutar_consulta(#{sql});
+  </select>
+
+  <resultMap id="ejecutarListado" type="org.fautapo.domain.Abm">
+    <result property="valores" column="valores"/>
+  </resultMap>
+
+  <select id="getEjecutarListado" resultMap="ejecutarListado">
+    SELECT * FROM dib_ejecutar_listado(#{sql})
+      AS valores;
+  </select>
+
+  <!--  INICIO JOJO  -->
+
+  <!-- INICIO Combustible -->
+  <select id="getEnlListarCamposTabla" resultMap="listadoCamposTabla">
+    SELECT c.*, t.tag
+    FROM enl_listar_campos_tabla(#{columnas}, #{id_tabla}, #{permiso}) c
+      JOIN _dib_componentes t USING(id_componente);
+  </select>
+
+  <!-- columnas = id_enlace -->
+  <select id="getEnlEjecutarListado" resultMap="ejecutarListado">
+    SELECT * FROM enl_ejecutar_listado(#{columnas}, #{tabla}, #{condicion}, #{campo}, #{pagina})
+      AS valores;
+  </select>
+
+  <select id="getEnlListarRegistros" resultMap="ejecutarListado">
+    SELECT * FROM enl_listar_registros(#{columnas}, #{tabla}, #{permiso}, #{condicion}, #{campo}, #{pagina})
+      AS valores;
+  </select>
+    <!-- FIN Combustible -->
+
+    <!--  Huaica  -->
+
+  <!-- columnas = id_actividad -->
+  <select id="getEjecutarListado3" resultMap="ejecutarListado">
+    SELECT * FROM tr_ejecutar_listado(#{columnas}, #{tabla}, #{condicion}, #{campo}, #{pagina})
+      AS valores;
+  </select>
+
+  <select id="getListarRegistrosActividad" resultMap="ejecutarListado">
+    SELECT * FROM tr_listar_registros(#{columnas}, #{tabla}, #{permiso}, #{condicion}, #{campo}, #{pagina})
+      AS valores;
+  </select>
+
+    <!--  fin Huaica  -->
+
+  <select id="getEjecutarListado2" resultMap="ejecutarListado">
+    SELECT * FROM dib_ejecutar_listado(#{tabla}, #{condicion}, #{campo}, #{pagina})
+      AS valores;
+  </select>
+
+  <select id="getDibContadorClasico" resultType="java.lang.String">
+    SELECT dib_contador_clasico(#{tabla}, #{condicion});
+  </select>
+
+  <select id="getListarRegistros" resultMap="ejecutarListado">
+    SELECT * FROM dib_listar_registros(#{tabla}, #{permiso}, #{condicion}, #{campo}, #{pagina})
+      AS valores;
+  </select>
+
+  <select id="setInsertarDatos" resultType="java.lang.Integer">
+    SELECT dib_insertar_datos(#{tabla}, #{campo}, #{valores});
+  </select>
+
+  <resultMap id="combo" type="org.fautapo.domain.Abm">
+    <result property="id_campo"    column="id_campo"/>
+    <result property="campo"       column="campo"/>
+    <result property="campo_padre" column="campo_padre"/>
+  </resultMap>
+
+  <select id="getListarCombos" resultMap="combo">
+    SELECT split_part(s1.valor, '#~~#', 1) AS id_campo, split_part(s1.valor, '#~~#', 2) AS campo, split_part(s1.valor, '#~~#', 3) AS campo_padre
+    FROM (SELECT * FROM dib_listar_combos(#{tabla_foranea}, #{campo}, #{condicion}) AS valor) s1;
+  </select>
+
+  <resultMap id="campoTabla" type="org.fautapo.domain.Abm">
+    <result property="campo"     column="campo"/>
+    <result property="tipo_dato" column="tipo_dato"/>
+  </resultMap>
+
+  <select id="getBuscarCampoTabla" resultMap="campoTabla">
+    SELECT * FROM dib_buscar_campo_tabla(#{tabla}, #{campo_padre})
+      AS (campo dtexto, tipo_dato dtexto);
+  </select>
+
+  <resultMap id="foranea" type="org.fautapo.domain.Abm">
+    <result property="tabla_foranea"    column="tabla_foranea"/>
+    <result property="id_campo_foraneo" column="id_campo_foraneo"/>
+    <result property="campo_foraneo"    column="campo_foraneo"/>
+    <result property="condicion"        column="condicion"/>
+  </resultMap>
+
+  <select id="getBuscarForanea" resultMap="foranea">
+    SELECT *
+    FROM dib_buscar_foranea(#{id_campo});
+  </select>
+
+  <select id="getContarDependientes" resultType="java.lang.Integer">
+    SELECT dib_contar_dependientes(#{tabla}, #{condicion});
+  </select>
+  <!--  FIN JOJO  -->
+
+  <!-- dibRep -->
+  <resultMap id="listadoCamposTabla1" type="org.fautapo.domain.Abm">
+    <result property="alias"         column="alias"/>
+    <result property="id_campo"      column="id_campo"/>
+    <result property="id_tabla"      column="id_tabla"/>
+    <result property="id_componente" column="id_componente"/>
+    <result property="campo"         column="campo"/>
+    <result property="tipo_dato"     column="tipo_dato"/>
+    <result property="etiqueta"      column="etiqueta"/>
+    <result property="orden"         column="orden"/>
+    <result property="permiso"       column="permiso"/>
+    <result property="campo_padre"   column="campo_padre"/>
+    <result property="columnas"      column="columnas"/>
+    <result property="filas"         column="filas"/>
+    <result property="caracteres"    column="caracteres"/>
+    <result property="x"             column="x"/>
+    <result property="y"             column="y"/>
+    <result property="tag"           column="tag"/>
+  </resultMap>
+
+  <select id="getListarCamposCondicion" resultMap="listadoCamposTabla1">
+    SELECT *, '' AS tag
+    FROM dib_listar_condiciones_consulta(#{id_consulta})
+    AS(alias dtexto2, id_campo integer, id_tabla dentero, id_componente dentero, campo dtexto, tipo_dato dtexto, etiqueta dtexto, orden dentero2, permiso dtexto2,
+     campo_padre dtexto2, columnas dentero2, filas dentero2, caracteres dentero2, x dentero2, y dentero2);
+  </select>
+
+  <select id="getBuscarCampo" resultMap="listadoCamposTabla">
+    SELECT *, '' AS tag
+    FROM dib_buscar_campo(#{id_campo});
+  </select>
+
+  <resultMap id="listaforaneos" type="org.fautapo.domain.Abm">
+    <result property="id_foranea"       column="id_foranea"/>
+    <result property="id_tabla"         column="id_tabla"/>
+    <result property="id_campo"         column="id_campo"/>
+    <result property="tabla_foranea"    column="tabla_foranea"/>
+    <result property="id_campo_foraneo" column="id_campo_foraneo"/>
+    <result property="campo_foraneo"    column="campo_foraneo"/>
+  </resultMap>
+
+  <select id="getListarForaneosTabla" resultMap="listaforaneos">
+   SELECT id_foranea, id_tabla, id_campo,tabla_foranea, id_campo_foraneo,campo_foraneo
+   FROM dib_listar_foraneas(#{id_tabla});
+  </select>
+
+  <select id="setInsertarConsulta" resultType="java.lang.Integer">
+    SELECT dib_insertar_consulta(#{sql}, #{descripcion}, #{etiquetas}, #{id_campos}, #{cabezas}, #{sumas}, #{glosa}, #{ult_usuario});
+  </select>
+
+  <resultMap id="consultas" type="org.fautapo.domain.Abm">
+    <result property="id_consulta" column="id_consulta" />
+    <result property="consulta"    column="consulta" />
+    <result property="titulo"      column="titulo" />
+    <result property="etiquetas"   column="etiquetas" />
+    <result property="cabezas"     column="cabezas" />
+    <result property="sumas"       column="sumas" />
+    <result property="glosa"       column="glosa" />
+    <result property="descripcion" column="descripcion" />
+  </resultMap>
+
+  <select id="getBuscarConsulta" resultMap="consultas">
+    select id_consulta,consulta,titulo,etiquetas,cabezas,sumas,glosa,descripcion from dib_buscar_consulta(#{id_consulta});
+  </select>
+
+  <select id="setInsertarConsultaTotales" resultType="java.lang.Integer">
+    SELECT dib_insertar_consulta_totales(#{id_consulta}, #{sql}, #{etiquetas});
+  </select>
+
+  <resultMap id="consultas1" type="org.fautapo.domain.Abm">
+    <result property="id_consulta"  column="id_consulta_total" />
+    <result property="consulta"     column="consulta" />
+    <result property="etiquetas"    column="etiquetas" />
+  </resultMap>
+
+  <select id="getBuscarConsultaTotales" resultMap="consultas1">
+    select id_consulta_total, consulta, etiquetas from dib_buscar_consulta_totales(#{id_consulta});
+  </select>
+  <!-- fin dibRep -->
+
+  <select id="getListarConsultas" resultMap="consultas">
+    select id_consulta,consulta,titulo,etiquetas,cabezas,sumas,glosa,descripcion from dib_listar_consultas();
+  </select>
+
+  <resultMap id="campoTabla1" type="org.fautapo.domain.Abm">
+    <result property="id_campo"     column="id_campo"/>
+    <result property="id_tabla"     column="id_tabla"/>
+    <result property="campo"        column="campo"/>
+    <result property="etiqueta"     column="etiqueta"/>
+    <result property="tipo_dato"     column="tipo_dato"/>
+  </resultMap>
+
+  <select id="getBuscarCampoTabla1" resultMap="campoTabla1">
+    SELECT id_campo,id_tabla,campo,etiqueta,tipo_dato
+    FROM dib_buscar_campo(#{tabla}, #{campo});
+  </select>
+
+
+  <select id="setBorrarConsulta" resultType="java.lang.Integer">
+    SELECT dib_borrar_consulta(#{id_consulta});
+  </select>
+
+  <select id="setModificarConsulta" resultType="java.lang.Integer">
+    SELECT dib_modificar_consulta(#{id_consulta}, #{sql}, #{descripcion}, #{etiquetas}, #{id_campos}, #{cabezas}, #{sumas}, #{glosa}, #{ult_usuario});
+  </select>
+  
+  <select id="setDibInsertarRegistro" resultType="java.lang.String">
+       SELECT dib_insertar_registro(#{sql}, #{id_tabla});
+   </select>
+</mapper>

@@ -1,0 +1,276 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+ * @autor FAUTAPO
+ * @fec_registro 2006-03-18
+ * @ult_usuario FAUTAPO
+ * @fec_modificacion 2006-03-18
+-->
+
+<mapper namespace="Campos">
+
+  <!-- Administracion de campos -->
+  <resultMap id="formulario" type="org.fautapo.domain.Campos">
+    <result property="id_form"               column="id_form" />
+    <result property="id_proceso"            column="id_proceso" />
+    <result property="form"                  column="form" />
+    <result property="proceso"               column="proceso" />
+    <result property="id_ubicacion_organica" column="id_ubicacion_organica" />    
+    <result property="ubicacion_organica"    column="ubicacion_organica" />
+  </resultMap>
+ 
+  <select id="getListarFormularios" resultMap="formulario">
+    SELECT * FROM tr_listar_formularios()
+    AS (id_form integer, id_proceso dentero, form dtexto, proceso dtexto, id_ubicacion_organica dentero, ubicacion_organica dtexto);
+  </select>
+
+  <select id="getListarFormulariosAcceso" resultMap="formulario">
+    SELECT * FROM tr_listar_formularios_acceso(#{id_ubicacion_organica})
+    AS (id_form integer, id_proceso dentero, form dtexto, proceso dtexto, id_ubicacion_organica dentero, ubicacion_organica dtexto)
+    WHERE id_form is not null
+    ORDER BY ubicacion_organica;
+  </select>
+
+  <resultMap id="datosFormulario" type="org.fautapo.domain.Campos">
+    <result property="id_form"            column="id_form" />
+    <result property="id_proceso"         column="id_proceso" />
+    <result property="form"               column="form" />
+    <result property="id_estado"          column="id_estado" />
+    <result property="fec_registro"       column="fec_registro" />
+    <result property="fec_modificacion"   column="fec_modificacion" />
+    <result property="ult_usuario"        column="ult_usuario" />
+  </resultMap>
+ 
+  <select id="getBuscarFormulario" resultMap="datosFormulario">
+    SELECT * FROM tr_buscar_formulario(#{id_form});
+  </select>
+
+  <select id="getBuscarFormulario1" resultMap="datosFormulario">
+    SELECT * FROM tr_buscar_formulario1(#{id_proceso});
+  </select>
+
+  <resultMap id="campo" type="org.fautapo.domain.Campos">
+    <result property="id_campo"           column="id_campo" />
+    <result property="id_proceso"         column="id_proceso" />
+    <result property="id_form"            column="id_form" />
+    <result property="id_dominio"         column="id_dominio" />
+    <result property="id_estado"          column="id_estado" />
+    <result property="campo"              column="campo" />
+    <result property="columnas"           column="columnas" />
+    <result property="filas"              column="filas" />
+    <result property="caracteres"         column="caracteres" />
+    <result property="id_tipo_validacion" column="id_tipo_validacion" />
+    <result property="rango1"             column="rango1" />
+    <result property="rango2"             column="rango2" />    
+    <result property="nro_fila"           column="nro_fila" />
+    <result property="nro_columna"        column="nro_columna" />
+    <result property="formula"            column="formula" />
+    <result property="fec_registro"       column="fec_registro" />
+    <result property="fec_modificacion"   column="fec_modificacion" />
+    <result property="ult_usuario"        column="ult_usuario" />
+    <result property="proceso"            column="proceso" />
+    <result property="form"               column="form" />
+    <result property="dominio"            column="dominio" />
+    <result property="tipo_validacion"    column="tipo_validacion" />
+    <result property="referencia"         column="referencia" />
+    <result property="operacion"          column="operacion" />
+    <result property="obligatorio"        column="obligatorio" />
+  </resultMap>
+
+  <select id="getListarCampos" resultMap="campo">
+    SELECT * FROM tr_listar_campos(#{id_form})
+    AS (id_campo integer, id_proceso dentero, id_form dentero, id_dominio dentero, id_tipo_validacion dtexto, id_estado did_estado, campo dtexto, columnas dentero2,
+        filas dentero2, caracteres dentero2, referencia dbooleano2, operacion dbooleano2, rango1 dtexto2, rango2 dtexto2, nro_fila dentero2, nro_columna dentero2, 
+        formula dtexto2, obligatorio dbooleano2, fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, ult_usuario did_usuario, proceso dtexto, form dtexto, 
+        dominio dtexto, tipo_validacion dtexto);
+  </select>
+
+  <select id="getListarCamposProceso" resultMap="campo">
+    SELECT * FROM tr_listar_campos_proceso(#{id_proceso})
+    AS (id_campo integer, id_proceso dentero, id_form dentero, id_dominio dentero, id_tipo_validacion dtexto, id_estado did_estado, campo dtexto, columnas dentero2,
+        filas dentero2, caracteres dentero2, referencia dbooleano2, operacion dbooleano2, rango1 dtexto2, rango2 dtexto2, nro_fila dentero2, nro_columna dentero2, 
+        formula dtexto2, obligatorio dbooleano2, fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, ult_usuario did_usuario, proceso dtexto, form dtexto, 
+        dominio dtexto, tipo_validacion dtexto);
+  </select>
+
+  <resultMap id="datosCampo" type="org.fautapo.domain.Campos">
+    <result property="id_campo"           column="id_campo" />
+    <result property="id_proceso"         column="id_proceso" />
+    <result property="id_form"            column="id_form" />
+    <result property="id_dominio"         column="id_dominio" />
+    <result property="id_estado"          column="id_estado" />
+    <result property="campo"              column="campo" />
+    <result property="columnas"           column="columnas" />
+    <result property="filas"              column="filas" />
+    <result property="caracteres"         column="caracteres" />
+    <result property="id_tipo_validacion" column="id_tipo_validacion" />
+    <result property="rango1"             column="valor_min" />
+    <result property="rango2"             column="valor_max" />    
+    <result property="nro_fila"           column="nro_fila" />
+    <result property="nro_columna"        column="nro_columna" />
+    <result property="operacion"          column="operacion" />
+    <result property="referencia"         column="referencia" />
+    <result property="formula"            column="formula" />
+    <result property="obligatorio"        column="obligatorio" />
+    <result property="fec_registro"       column="fec_registro" />
+    <result property="fec_modificacion"   column="fec_modificacion" />
+    <result property="ult_usuario"        column="ult_usuario" />
+  </resultMap>
+
+  <select id="getBuscarCampoForm" resultMap="datosCampo">
+    SELECT * FROM tr_buscar_campo(#{id_campo});
+  </select>
+
+  <resultMap id="datosTiposValidaciones" type="org.fautapo.domain.Campos">
+    <result property="id_tipo_validacion" column="id_tipo_validacion" />
+    <result property="tipo_validacion"    column="tipo_validacion" />
+  </resultMap>
+ 
+  <select id="getListarTiposValidaciones" resultMap="datosTiposValidaciones">
+    SELECT * FROM tr_listar_tipos_validaciones();
+  </select>
+
+  <select id="getBuscarTipoValidacion" resultMap="datosTiposValidaciones">
+    SELECT * FROM tr_buscar_tipo_validacion(#{id_tipo_validacion});
+  </select>
+
+  <select id="setRegistrarCampo" resultType="java.lang.Integer">
+    SELECT tr_registrar_campo(#{id_campo}, #{id_proceso}, #{id_form}, #{id_dominio}, #{campo}, #{columnas}, #{filas}, #{caracteres}, #{referencia}, #{operacion}, 
+                              #{id_tipo_validacion}, #{ult_usuario}, #{rango1}, #{rango2}, #{nro_fila}, #{nro_columna}, #{formula}, #{obligatorio}) as valor;
+  </select>
+
+  <select id="setEliminarCampo" resultType="java.lang.Integer">
+    SELECT tr_eliminar_campo(#{id_campo}, #{ult_usuario}) as valor;
+  </select>
+  <!-- Fin Administracion de campos -->
+
+  <!-- Administracion de acl -->
+  <resultMap id="datosTiposPermisos" type="org.fautapo.domain.Campos">
+    <result property="id_tipo_permiso" column="id_tipo_permiso" />
+    <result property="tipo_permiso"    column="tipo_permiso" />
+  </resultMap>
+ 
+  <select id="getListarTiposPermisos" resultMap="datosTiposPermisos">
+    SELECT * FROM tr_listar_tipos_permisos();
+  </select>
+  
+  <resultMap id="listadoCamposAcl" type="org.fautapo.domain.Campos">
+    <result property="id_campo"        column="id_campo" />
+    <result property="id_tipo_permiso" column="id_tipo_permiso" />
+    <result property="campo"           column="campo" />
+    <result property="tipo_permiso"    column="tipo_permiso" />
+    <result property="habilitado"      column="habilitado" />
+  </resultMap>
+
+  <select id="getListarCamposAcl" resultMap="listadoCamposAcl">
+    SELECT * FROM tr_listar_campos_acl(#{id_form}, #{id_actividad})
+    AS (id_campo integer, id_tipo_permiso dtexto, campo dtexto, tipo_permiso dtexto, habilitado dbooleano2);
+  </select>
+
+  <select id="setRegistrarAcl" resultType="java.lang.Integer">
+    SELECT tr_registrar_acl(#{id_proceso}, #{id_form}, #{id_actividad}, #{id_campo}, #{id_tipo_permiso}, #{habilitado}, #{ult_usuario}) as valor;
+  </select>
+
+  <select id="setEliminarAcl" resultType="java.lang.Integer">
+    SELECT tr_eliminar_acl(#{id_proceso}, #{id_form}, #{id_actividad}, #{id_campo}, #{ult_usuario}) as valor;
+  </select>
+  <!-- Fin Administracion de acl -->
+  
+  <!-- Administracion de reportes -->
+  <resultMap id="camposReporte" type="org.fautapo.domain.Campos">
+    <result property="valor" column="VALOR" />
+  </resultMap>
+
+  <select id="getListarCamposReporte" resultMap="camposReporte">
+    SELECT * FROM tr_consulta_dinamica(#{cadena}, #{campos}, #{cadena_1}, #{tablita}, #{campos_suma}) as valor;
+  </select>
+
+  <select id="getListarCamposReporte2" resultMap="camposReporte">
+    SELECT * FROM tr_consulta_dinamica_gb(#{cadena}, #{campos}, #{cadena_1}, #{tablita}, #{valor}) as valor;
+  </select>
+  
+  <select id="getListarTotalesDatos" resultType="java.lang.String">
+    SELECT * 
+    FROM tr_listar_totales_agrupados(#{id_proceso}, #{id_campo}, #{campos}) AS (valor text);
+  </select>
+  <!-- Fin Administracion de reportes -->
+
+  <!-- Reporte de campos por actividad-->
+  <select id="getListarCamposActividad" resultType="java.lang.String">
+    SELECT tr_listar_campos_actividades(#{id_proceso}) as valor;
+  </select>
+  <!-- Fin Reporte de campos por actividad-->
+
+  <!-- Administracion de acl dibRap-->
+  <resultMap id="listadoCamposAcl2" type="org.fautapo.domain.Campos">
+    <result property="permiso" column="permiso" />
+    <result property="campo"   column="campo" />
+  </resultMap>
+
+  <select id="getListarCamposAcl2" resultMap="listadoCamposAcl2">
+    SELECT * FROM tr_listar_campos_acl2(#{id_proceso}, #{id_actividad}, #{tabla})
+    AS (permiso dtexto2, campo dtexto);
+  </select>
+
+  <select id="setRegistrarAcl2" resultType="java.lang.Integer">
+    SELECT tr_registrar_acl2(#{id_proceso}, #{id_actividad}, #{permiso}, #{tabla}, #{campo}, #{ult_usuario}) as valor;
+  </select>
+
+  <select id="setEliminarAcl2" resultType="java.lang.Integer">
+    SELECT tr_eliminar_acl2(#{id_proceso}, #{id_actividad}, #{tabla}, #{campo}, #{ult_usuario}) as valor;
+  </select>
+  <!-- Fin Administracion de acl dibRap -->
+
+  <!-- Administracion de formularios-->
+  <select id="setRegistrarFormulario" resultType="java.lang.Integer">
+    SELECT tr_registrar_formulario(#{id_form}, #{id_proceso}, #{form}, #{ult_usuario}) as valor;
+  </select>
+
+  <select id="setEliminarFormulario" resultType="java.lang.Integer">
+    SELECT tr_eliminar_formulario(#{id_form}, #{ult_usuario}) as valor;
+  </select>
+  <!-- Fin Administracion de formularios -->
+  
+  <!-- Administracion de CAMPOS y ACL PROCESO KARDEX-->
+  <select id="getBuscarTipoPermiso" resultMap="datosTiposPermisos">
+    SELECT * FROM  tr_buscar_tipo_permiso(#{id_tipo_permiso});
+  </select>
+  
+  <select id="setRegistrarCampoAclProcesoKardex" resultType="java.lang.Integer">
+    SELECT tr_registrar_campo_acl_kardex(#{id_campo}, #{id_proceso}, #{id_form}, #{id_dominio}, #{campo}, #{columnas}, #{filas}, #{caracteres}, #{referencia}, #{operacion}, 
+                              #{id_tipo_validacion}, #{ult_usuario}, #{rango1}, #{rango2}, #{nro_fila}, #{nro_columna}, #{formula}, #{id_tipo_permiso}, #{id_actividad}) as valor;
+  </select>
+  <!-- FIN Administracion de CAMPOS y ACL PROCESO KARDEX-->
+
+  <!-- Administracion Archivo -->
+  <resultMap id="listadoCamposReferenciaProceso" type="org.fautapo.domain.Campos">
+    <result property="id_campo" column="id_campo" />
+    <result property="campo"    column="campo" />
+  </resultMap>
+ 
+  <select id="getListarCamposReferenciaProceso" resultMap="listadoCamposReferenciaProceso">
+    SELECT id_campo, campo FROM tr_listar_campos_referencia_proceso(#{id_proceso});
+  </select>
+
+  <resultMap id="camposReporteProceso" type="org.fautapo.domain.Campos">
+    <result property="valor" column="VALOR" />
+  </resultMap>
+
+  <select id="getListarCamposReporteProceso" resultMap="camposReporteProceso">
+    SELECT * FROM tr_consulta_dinamica_proceso(#{gestion}, #{id_proceso}, #{pagina}, #{campos}, #{cadena_1}, #{tablita}, #{campos2}) as valor;
+  </select>
+  <!-- FIN- Administracion Archivo -->
+
+  <!-- INICIO - Administrar Reportes -->
+  <resultMap id="tuplasCampo" type="org.fautapo.domain.Dominios">
+    <result property="id_tupla" column="id_tupla" />
+    <result property="tupla"    column="tupla" />
+  </resultMap>
+
+  <select id="getListarTuplasCampo" resultMap="tuplasCampo">
+    SELECT * FROM tr_listar_tuplas_campo(#{id_campo})
+    AS (id_tupla integer, tupla dtexto);
+  </select>
+  <!-- FIN - Administrar Reportes -->
+
+</mapper>

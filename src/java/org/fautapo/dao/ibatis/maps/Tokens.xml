@@ -1,0 +1,32 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="Tokens">
+    <select id="setGenerarToken" resultType="java.lang.Integer">
+        SELECT * FROM mi_registrar_token_persona(#{expiry_date}, #{token}, #{id_persona},#{id_estado},#{tipo}); 
+    </select>
+    <resultMap id="idToken" type="org.fautapo.domain.Tokens">
+        <result property="id_password_reset_token"  column="id_password_reset_token" />
+        <result property="expiry_date"         column="expiry_date" />
+        <result property="token"           column="token" />
+        <result property="id_persona"         column="id_persona" />
+        <result property="id_estado"              column="id_estado" />
+    </resultMap>
+
+    <select id="getListartokendocente" resultMap="idToken">
+        SELECT 
+        tp.id_password_reset_token_persona, 
+        tp.expiry_date::timestamp , 
+        tp.token, 
+        tp.id_persona, 
+        tp.id_estado
+        FROM 
+        personas p inner join _usuarios usad  on usad.id_persona =p.id_persona 
+        inner join password_reset_token_persona tp on usad.id_usuario = tp.id_persona
+        WHERE
+        tp.id_persona = #{id_persona} AND 
+        tp.id_estado = 'A' AND 
+        tp.token=#{token} AND
+        tp.tipo=#{tipo} AND
+        p.id_estado = 'A';
+    </select>
+</mapper>

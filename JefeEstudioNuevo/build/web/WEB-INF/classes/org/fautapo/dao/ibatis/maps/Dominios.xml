@@ -1,0 +1,181 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+ * @autor FAUTAPO
+ * @fec_registro 2006-03-18
+ * @ult_usuario FAUTAPO
+ * @fec_modificacion 2006-03-20
+-->
+
+<mapper namespace="Dominios">
+
+  <!-- Administracion de dominios -->
+  <resultMap id="listadoDominios" type="org.fautapo.domain.Dominios">
+    <result property="id_dominio"            column="id_dominio" />
+    <result property="id_ubicacion_organica" column="id_ubicacion_organica" />
+    <result property="ubicacion_organica"    column="ubicacion_organica" />
+    <result property="id_dominio_padre"      column="id_dominio_padre" />
+    <result property="dominio"               column="dominio" />
+    <result property="privado"               column="privado" />    
+    <result property="id_estado"             column="id_estado" />
+    <result property="fec_registro"          column="fec_registro" />
+    <result property="fec_modificacion"      column="fec_modificacion" />
+    <result property="ult_usuario"           column="ult_usuario" />
+    <result property="dominio_padre"         column="dominio_padre" />    
+    <result property="id_tipo_dominio"       column="id_tipo_dominio" />    
+    <result property="id_form"               column="id_form" />
+    <result property="id_campo"              column="id_campo" />    
+    <result property="tipo_dominio"          column="tipo_dominio" />    
+    <result property="form"                  column="form" />
+    <result property="campo"                 column="campo" />    
+    <result property="tabla"                 column="tabla" />
+    <result property="primario"              column="primario" />
+    <result property="campos"                column="campos" />
+  </resultMap>
+
+  <select id="getListarDominios" resultMap="listadoDominios">
+    SELECT * FROM tr_listar_dominios()
+    AS (id_dominio integer, id_ubicacion_organica dentero, ubicacion_organica dtexto, id_dominio_padre dentero2, dominio dtexto, privado dbooleano2,
+        id_estado did_estado, fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, ult_usuario did_usuario, dominio_padre dtexto,
+        id_tipo_dominio dentero, id_form dentero2, id_campo dentero2, tipo_dominio dtexto, form dtexto, campo dtexto, tabla dtexto, primario dtexto2,
+	campos dtexto2);
+  </select>
+
+  <select id="getListarDominiosAcceso" resultMap="listadoDominios">
+    SELECT DISTINCT * FROM tr_listar_dominios_acceso(#{id_ubicacion_organica})
+    AS (id_dominio integer, id_ubicacion_organica dentero, ubicacion_organica dtexto, id_dominio_padre dentero2, dominio dtexto, privado dbooleano2,
+        id_estado did_estado, fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, ult_usuario did_usuario, dominio_padre dtexto,
+        id_tipo_dominio dentero, id_form dentero2, id_campo dentero2, tipo_dominio dtexto, form dtexto, campo dtexto, tabla dtexto, primario dtexto2,
+	campos dtexto2)
+    ORDER BY ubicacion_organica, dominio;
+  </select>
+
+  <resultMap id="dominio" type="org.fautapo.domain.Dominios">
+    <result property="id_dominio"            column="id_dominio" />
+    <result property="id_ubicacion_organica" column="id_ubicacion_organica" />
+    <result property="id_dominio_padre"      column="id_dominio_padre" />
+    <result property="dominio"               column="dominio" />
+    <result property="privado"               column="privado" />        
+    <result property="id_estado"             column="id_estado" />
+    <result property="id_tipo_dominio"       column="id_tipo_dominio" />
+    <result property="id_form"               column="id_form" />
+    <result property="id_campo"              column="id_campo" />
+    <result property="tabla"                 column="tabla" />
+    <result property="primario"              column="primario" />
+    <result property="campo"                 column="campos" />
+    <result property="fec_registro"          column="fec_registro" />
+    <result property="fec_modificacion"      column="fec_modificacion" />
+    <result property="ult_usuario"           column="ult_usuario" />
+  </resultMap>
+
+  <select id="getBuscarDominio" resultMap="dominio">
+    SELECT * FROM tr_buscar_dominio(#{id_dominio});
+  </select>
+
+  <resultMap id="tiposDominios" type="org.fautapo.domain.Dominios">
+    <result property="id_tipo_dominio" column="id_tipo_dominio" />
+    <result property="tipo_dominio"    column="tipo_dominio" />
+  </resultMap>
+  
+  <select id="getListarTiposDominios" resultMap="tiposDominios">
+    SELECT id_tipo_dominio, tipo_dominio
+    FROM tr_listar_tipos_dominios();
+  </select>
+    
+  <select id="getBuscarTipoDominio" resultMap="tiposDominios">
+    SELECT id_tipo_dominio, tipo_dominio
+    FROM tr_buscar_tipo_dominio(#{id_tipo_dominio});
+  </select>
+
+  <select id="setRegistrarDominio" resultType="java.lang.Integer">
+    SELECT tr_registrar_dominio(#{id_dominio}, #{id_ubicacion_organica}, #{id_dominio_padre}, #{id_tipo_dominio}, #{id_form}, #{id_campo}, #{dominio}, #{privado}, #{ult_usuario}, #{tabla}, #{primario}, #{campo}) as valor;
+  </select>
+
+  <select id="setEliminarDominio" resultType="java.lang.Integer">
+    SELECT tr_eliminar_dominio(#{id_dominio}, #{ult_usuario}) as valor;
+  </select>
+
+  <select id="getBuscarDominioOtrasTb" resultType="java.lang.Integer">
+    SELECT * FROM tr_buscar_dominio_otrastb(#{id_dominio});
+  </select>
+  <!-- Fin Administracion de dominios -->
+
+  <!-- Administracion de tuplas -->
+  <resultMap id="listadoTuplas" type="org.fautapo.domain.Dominios">
+    <result property="id_tupla"       column="id_tupla" />
+    <result property="id_dominio"     column="id_dominio" />
+    <result property="tupla"          column="tupla" />
+    <result property="obligatorio"    column="obligatorio" />
+    <result property="id_tupla_padre" column="id_tupla_padre" />
+    <result property="tupla_padre"    column="tupla_padre" />
+  </resultMap>
+
+  <select id="getListarTuplas" resultMap="listadoTuplas">
+    SELECT * from tr_listar_tuplas(#{id_dominio})
+    AS (id_tupla integer, id_dominio dentero, tupla dtexto, id_tupla_padre dentero2, tupla_padre dtexto,
+        obligatorio dbooleano2);
+  </select>
+  
+  <select id="getListarTuplasPadre" resultMap="listadoTuplas">
+    SELECT * from tr_listar_tuplas_padre(#{id_dominio})
+    AS (id_tupla integer, id_dominio dentero, tupla dtexto, id_tupla_padre dentero2, tupla_padre dtexto,
+        obligatorio dbooleano2);
+  </select>
+  
+  <resultMap id="datosTupla" type="org.fautapo.domain.Dominios">
+    <result property="id_tupla"       column="id_tupla" />
+    <result property="id_tupla_padre" column="id_tupla_padre" />
+    <result property="id_dominio"     column="id_dominio" />
+    <result property="tupla"          column="tupla" />
+    <result property="obligatorio"    column="obligatorio" />
+  </resultMap>
+
+  <select id="getBuscarTupla" resultMap="datosTupla">
+    SELECT * FROM tr_buscar_tupla(#{id_tupla});
+  </select>
+
+  <select id="setRegistrarTupla" resultType="java.lang.Integer">
+    SELECT tr_registrar_tupla(#{id_dominio}, #{id_tupla}, #{tupla}, #{id_tupla_padre}, #{obligatorio}, #{ult_usuario}) as valor;
+  </select>
+
+  <select id="setEliminarTupla" resultType="java.lang.Integer">
+    SELECT tr_eliminar_tupla(#{id_tupla}, #{ult_usuario}) as valor;  
+  </select>
+  <!-- Fin Administracion de tuplas -->
+
+  <!-- Administracion de tramites -->
+  <select id="getBuscarTieneHijos" resultType="java.lang.Integer">
+    SELECT tr_buscar_tiene_hijos(#{id_campo}) as valor;
+  </select>
+  
+  <resultMap id="listaCombos" type="org.fautapo.domain.Dominios">
+    <result property="id_tupla"       column="id_tupla" />
+    <result property="id_tupla_padre" column="id_tupla_padre" />
+    <result property="tupla"          column="tupla" />
+    <result property="obligatorio"    column="obligatorio" />
+  </resultMap>
+  
+  <select id="getListarCombos2" resultMap="listaCombos">
+    SELECT * FROM tr_listar_combos(#{id_dominio}, #{id_tupla_padre}, #{id_tipo_dominio}, #{id_dominio_padre})
+    AS(id_tupla integer, tupla dtexto2, id_tupla_padre dentero2, obligatorio dbooleano2);
+  </select>
+
+  <select id="getBuscarTuplaPadre" resultType="java.lang.Integer">
+    SELECT tr_buscar_tupla_padre(#{id_dominio}) as valor;
+  </select>
+  
+  <select id="getBuscarTupla2" resultMap="datosTupla">
+    SELECT * FROM tr_buscar_tupla(#{id_tupla}, #{id_tipo_dominio}, #{id_campo})
+    AS (id_tupla integer, id_tupla_padre dentero2, id_dominio dentero, tupla dtexto, obligatorio dbooleano2);
+  </select>
+
+  <select id="setRegistrarTempTupla" resultType="java.lang.Integer">
+    SELECT tr_registrar_temp_tupla(#{id_tramite}, #{id_tupla}, #{id_dominio}) as valor;
+  </select>
+
+  <select id="setLimpiarTempTuplas" resultType="java.lang.Integer">
+    SELECT tr_limpiar_temp_tuplas() as valor;
+  </select>
+  <!-- Fin Administracion de tramites -->
+
+</mapper>

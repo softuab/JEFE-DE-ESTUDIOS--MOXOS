@@ -1,0 +1,141 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--
+ * @autor FAUTAPO
+ * @fec_registro 2006-12-01
+ * @ult_usuario FAUTAPO
+ * @fec_modificacion 2006-12-01
+-->
+
+<mapper namespace="Dibwayka">
+
+ <resultMap id="listadoCamposProceso" type="org.fautapo.domain.Dibwayka">
+    <result property="id_dominio_padre"    column="id_dominio_padre"/>
+    <result property="id_campo"            column="id_campo"/>
+    <result property="campo"               column="campo"/>
+    <result property="id_dominio"          column="id_dominio"/>
+    <result property="id_tipo_validacion"  column="id_tipo_validacion"/>
+    <result property="id_tipo_permiso"     column="id_tipo_permiso"/>
+  </resultMap>
+
+  <select id="getListarCamposProcesoWK" resultMap="listadoCamposProceso">
+    SELECT * FROM wk_listar_campos_proceso(#{id_proceso}) AS (id_dominio_padre dentero2, id_campo integer, campo dtexto, id_dominio dentero, id_tipo_validacion dtexto, id_tipo_permiso dtexto);
+  </select>
+
+  <resultMap id="listadoCombo" type="org.fautapo.domain.Dibwayka">
+    <result property="id_campo"            column="id_campo"/>
+    <result property="id_tupla_padre"      column="id_tupla_padre"/>
+    <result property="id_tupla"            column="id_tupla"/>
+    <result property="tupla"               column="tupla"/>
+  </resultMap>
+
+  <select id="getListarComboWK" resultMap="listadoCombo">
+    SELECT * FROM wk_listar_combo(#{id_campo}) AS(id_campo integer, id_tupla_padre dentero2, id_tupla integer,tupla dtexto);
+  </select>
+
+  <resultMap id="listadoCampos5" type="org.fautapo.domain.Dibwayka">
+    <result property="id_campo"            column="id_campo"/>
+    <result property="id_tabla"            column="id_tabla"/>
+    <result property="campo"               column="campo"/>
+    <result property="tipo_dato"           column="tipo_dato"/>
+    <result property="etiqueta"            column="etiqueta"/>
+  </resultMap>
+
+ <select id="getListarCamposDibWK" resultMap="listadoCampos5">
+    SELECT * FROM wk_listar_dib_campos(#{id_tabla});
+  </select>
+
+  <resultMap id="listadoTabla" type="org.fautapo.domain.Dibwayka">
+    <result property="id_tabla"            column="id_tabla"/>
+    <result property="tabla"               column="tabla"/>
+    <result property="etiqueta"            column="etiqueta"/>
+  </resultMap>
+
+ <select id="getBuscarTablaDibWK" resultMap="listadoTabla">
+    SELECT * FROM wk_buscar_dib_tabla(#{id_tabla});
+ </select>
+
+
+  <resultMap id="listadoCampos2" type="org.fautapo.domain.Dibwayka">
+    <result property="id_campo"            column="id_campo"/>
+    <result property="id_tabla"            column="id_tabla"/>
+    <result property="campo"               column="campo"/>
+    <result property="tipo_dato"           column="tipo_dato"/>
+    <result property="etiqueta"            column="etiqueta"/>
+  </resultMap>
+
+ <select id="getBuscarCampoDibWK" resultMap="listadoCampos2">
+   SELECT * FROM wk_buscar_dib_campo(#{id_campo});
+ </select>
+
+  <select id="setCrearTablasDibWK" resultType="java.lang.Integer">
+    SELECT wk_crear_tabla(#{id_proceso},#{proceso});
+  </select>
+
+  <resultMap id="listadoTupla" type="org.fautapo.domain.Dibwayka">
+    <result property="id_tupla"            column="id_tupla"/>
+    <result property="tupla"               column="tupla"/>
+    <result property="id_tupla_padre"      column="id_tupla_padre"/>
+    <result property="id_dominio"          column="id_dominio"/>
+  </resultMap>
+
+ <select id="getBuscarTuplaDibWK" resultMap="listadoTupla">
+   SELECT * FROM wk_buscar_dib_tupla(#{id_tupla});
+ </select>
+
+ <select id="setInsertarConsultaDibWK" resultType="java.lang.Integer">
+  select wk_dib_insertar_consulta(#{sql},#{descripcion},#{etiquetas},#{id_campos}, #{cabezas}, #{sumas}, #{glosa}, #{ult_usuario});
+ </select>
+
+  <resultMap id="listadoCampos6" type="org.fautapo.domain.Dibwayka">
+    <result property="id_campo"            column="id_campo"/>
+    <result property="id_tabla"            column="id_tabla"/>
+    <result property="componente"          column="componente"/>    
+    <result property="campo"               column="campo"/>
+    <result property="tipo_dato"           column="tipo_dato"/>
+    <result property="etiqueta"            column="etiqueta"/>
+  </resultMap>
+
+  <select id="getListarCondicionesConsultaDibWK" resultMap="listadoCampos6">
+    select * from wk_dib_listar_condiciones_consulta(#{id_consulta}) as
+      (#{id_campo#{ dentero, #{id_tabla#{ dentero, #{componente#{ dtexto2, #{campo#{ dtexto, #{tipo_dato#{ dtexto, #{etiqueta#{ dtexto);
+  </select>
+
+  <resultMap id="listadoConsultas" type="org.fautapo.domain.Dibwayka">
+    <result property="id_consulta"         column="id_consulta"/>
+    <result property="consulta"            column="consulta"/>
+    <result property="etiquetas"           column="etiquetas"/>    
+    <result property="cabezas"             column="cabezas"/>
+    <result property="sumas"               column="sumas"/>
+    <result property="glosa"               column="glosa"/>    
+    <result property="descripcion"         column="descripcion"/>
+  </resultMap>
+
+  <select id="getListarConsultasDibWK" resultMap="listadoConsultas">
+    SELECT id_consulta,consulta,etiquetas,cabezas,sumas,glosa,descripcion from wk_dib_listar_consultas();
+  </select>
+
+  <select id="getBuscarConsultaDibWK" resultMap="listadoConsultas">
+    SELECT id_consulta,consulta,etiquetas,cabezas,sumas,glosa,descripcion from wk_dib_consultas where id_consulta=#{id_consulta#{;
+  </select>
+
+
+  <select id="setBorrarConsultaDibWK" resultType="java.lang.Integer">
+    SELECT wk_dib_borrar_consulta(#{_id_consulta});
+  </select>
+
+  <select id="setModificarConsultaDibWK" resultType="java.lang.Integer">
+    SELECT wk_dib_modificar_consulta(#{id_consulta}, #{consulta}, #{descripcion}, #{etiquetas}, #{variables}, #{cabezas}, #{sumas}, #{glosa}, #{ult_usuario}); 
+  </select>
+  
+
+  <resultMap id="listadoCondicion" type="org.fautapo.domain.Dibwayka">
+    <result property="id_consulta"         column="id_consulta"/>
+    <result property="id_campo"            column="id_campo"/>    
+    <result property="orden"               column="orden"/>    
+  </resultMap>
+
+  <select id="getConsultaCondicionDibWK" resultMap="listadoCondicion">
+    select id_consulta,id_campo,orden from wk_dib_campos_condicion;
+  </select>
+  
+</mapper>

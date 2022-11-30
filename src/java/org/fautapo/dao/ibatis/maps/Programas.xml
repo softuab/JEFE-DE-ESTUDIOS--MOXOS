@@ -1,0 +1,291 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<!--
+ * @autor FAUTAPO
+ * @fec_registro 2007-01-04
+ * @ult_usuario FAUTAPO
+ * @fec_modificacion 2005-11-01
+-->
+
+<mapper namespace="Programas">
+
+    <resultMap id="programa" type="org.fautapo.domain.Programas">
+        <result property="id_programa"          column="id_programa"/>
+        <result property="id_sede"              column="id_sede"/>
+        <result property="id_facultad"          column="id_facultad"/>
+        <result property="id_campus"            column="id_campus"/>
+        <result property="id_area_conocimiento" column="id_area_conocimiento"/>
+        <result property="id_tipo_ensenyanza"   column="id_tipo_ensenyanza"/>
+        <result property="id_periodo"           column="id_periodo"/>
+        <result property="programa"             column="programa"/>
+        <result property="resolucion_hcu"       column="resolucion_hcu"/>
+        <result property="fec_inicio"           column="fec_inicio"/>
+        <result property="mision"               column="mision"/>
+        <result property="objetivos"            column="objetivos"/>
+        <result property="duracion"             column="duracion"/>
+        <result property="turno"                column="turno"/>
+        <result property="nro_estudiante"       column="nro_estudiante"/>
+        <result property="nota_aprobacion"      column="nota_aprobacion"/>
+        <result property="nota_admision"        column="nota_admision"/>
+    </resultMap>
+
+    <select id="getPrgBuscarPrograma" resultMap="programa">
+        SELECT *
+        FROM mi_prg_buscar_programa(#{id_programa});
+    </select>
+
+    <select id="getFclListarProgramas" resultMap="programa">
+        SELECT *
+        FROM mi_fcl_listar_programas(#{id_facultad});
+    </select>
+
+    <select id="getUnvListarProgramas" resultMap="programa">
+        SELECT *
+        FROM mi_unv_listar_programas(#{id_universidad});
+    </select>
+  
+    <select id="getUnvListarProgramasPost" resultMap="programa">
+        SELECT *
+        FROM mi_unv_listar_programaspost(#{id_universidad});
+    </select>
+
+    <!--EDGAR-->
+    <select id="getPrgBuscarProgramaEstudiante" resultMap="programa">
+        SELECT *
+        FROM mi_prg_programa_estudiante(#{id_estudiante});
+    </select> 
+    <!--FIN EDGAR-->
+   
+    <!-- EST_PROGRAMACIONES --> 
+    <resultMap id="periodo" type="org.fautapo.domain.Programas">
+        <result property="id_periodo"        column="id_periodo"/>
+    </resultMap>
+
+    <select id="getPrdBuscarPrgPeriodo" resultMap="periodo">
+        SELECT * FROM mi_prd_buscar_prg_periodo(#{id_programa})AS (id_periodo integer);
+    </select>
+  
+    <resultMap id="prgDetalle" type="org.fautapo.domain.Programas">
+        <result property="id_detalle"                column="id_detalle"/>
+        <result property="id_programa"               column="id_programa"/>
+        <result property="id_plan"                   column="id_plan"/>
+        <result property="id_tipo_grado"             column="id_tipo_grado"/>
+        <result property="id_tipo_programacion"      column="id_tipo_programacion"/>
+        <result property="id_estado"                 column="id_estado"/>
+        <result property="gestion"                   column="gestion"/>
+        <result property="periodo"                   column="periodo"/>
+        <result property="max_niveles"               column="max_niveles"/>
+        <result property="fec_inicio"                column="fec_inicio"/>
+        <result property="fec_final"                 column="fec_final"/>
+        <result property="max_materias_teoricas"     column="max_materias_teoricas"/>
+        <result property="max_materias_laboratorios" column="max_materias_laboratorios"/>
+        <result property="costo_materia_teorica"     column="costo_materia_teorica"/>
+        <result property="costo_materia_laboratorio" column="costo_materia_laboratorio"/>
+        <result property="tipo_programacion"         column="tipo_programacion"/>
+    </resultMap>
+
+    <select id="getPrgBuscarDetalles" resultMap="prgDetalle">
+        SELECT DISTINCT * 
+        FROM mi_prg_buscar_detalles_fecha(#{id_programa}, #{id_plan}, #{id_tipo_grado}, #{id_tipo_programacion}, #{gestion}, #{periodo}, #{id_tipo_evaluacion})
+        AS (id_detalle integer, id_programa dentero, id_plan dtexto, id_tipo_grado dentero, id_tipo_programacion dentero, id_estado did_estado,
+        gestion dentero, periodo dentero, max_niveles dentero, fec_inicio dfec_modificacion, fec_final dfecha, max_materias_teoricas dentero, 
+        max_materias_laboratorios dentero2, costo_materia_teorica numeric, costo_materia_laboratorio numeric, fec_registro dfec_modificacion, 
+        fec_modificacion dfec_modificacion, id_rol integer, ult_usuario did_usuario, tipo_programacion dtexto);
+    </select>
+
+    <resultMap id="materiaahorro" type="org.fautapo.domain.Programas">
+        <result property="modelo_ahorro"      column="modelo_ahorro"/>
+    </resultMap>
+
+    <select id="getMdlBuscarMateriaAhorro" resultMap="materiaahorro">
+        SELECT modelo_ahorro FROM mi_mdl_buscar_materia_ahorro(#{id_modelo_ahorro});
+    </select>
+    
+    <resultMap id="programacionMateria" type="org.fautapo.domain.Programas">
+        <result property="modelo_ahorro"      column="modelo_ahorro"/>
+    </resultMap>
+    
+    <insert id="setEstProgramacionMateria" >
+        SELECT  * FROM mi_est_programacion_materia(#{id_estudiante}, #{id_materia}, #{id_grupo}, #{id_modelo_ahorro}, #{gestion}, #{periodo}, #{id_tipo_evaluacion}, #{id_rol}, #{ult_usuario},#{id_desconcentrado});
+    </insert>
+    <!--Programaciones postulantes-->
+    <select id="setPstProgramacionMateria" resultType="java.lang.Integer">
+        SELECT  * FROM mi_pst_programacion_materia(#{id_postulante}, #{id_materia}, #{id_grupo}, #{id_modelo_ahorro}, #{gestion}, #{periodo}, #{id_rol}, #{ult_usuario});
+    </select>
+
+    <resultMap id="tiposprograma" type="org.fautapo.domain.Programas">
+        <result property="id_tipo_programacion"      column="id_tipo_programacion"/>
+        <result property="id_estado"                 column="id_estado"/>
+        <result property="tipo_programacion"         column="tipo_programacion"/>
+    </resultMap>
+
+    <select id="getTpsListarProgramaciones" resultMap="tiposprograma">
+        SELECT id_tipo_programacion, id_estado, tipo_programacion FROM mi_tps_listar_programaciones();
+    </select>
+  
+    <select id="getTpsBuscarProgramacion" resultMap="tiposprograma">
+        SELECT id_tipo_programacion, id_estado, tipo_programacion FROM mi_tps_buscar_programacion(#{id_tipo_programacion});
+    </select>
+    <!--FIN EST_PROGRAMACIONES-->
+  
+    <!-- ADMINISTRAR HORARIOS  -->
+    <resultMap id="programasAcceso" type="org.fautapo.domain.Programas">
+        <result property="id_programa"     column="ID_PROGRAMA"/>
+        <result property="programa"        column="PROGRAMA"/>
+    </resultMap>  
+  
+    <select id="getListarProgramasAcceso" resultMap="programasAcceso">
+        SELECT * FROM mi_listar_programas_acceso(#{id_nivel_acceso}, #{id_usuario}, #{id_rol})
+        AS (id_programa integer, programa dtexto);
+    </select>  
+
+    <resultMap id="planes" type="org.fautapo.domain.Planes">
+        <result property="id_plan"  column="ID_PLAN" />
+    </resultMap>
+
+    <select id="getMtrListarPlanesPrograma" resultMap="planes">
+        SELECT * FROM mi_mtr_listar_planes_programa(#{id_programa}) as id_plan;
+    </select>
+    <!-- FIN ADMINISTRAR HORARIOS  -->
+  
+    <!--PROGRAMACION COMO ESTUDIANTE-->
+    <resultMap id="inscripcioncomoestudiante" type="org.fautapo.domain.Programas">
+        <result property="max_niveles"              column="max_niveles"/>
+    </resultMap>
+    <select id="getBuscarNivelMaximoPlanesEst" resultType="java.lang.Integer">
+        SELECT * FROM  mi_mtr_buscar_nivel_maximo_planes_est(#{id_estudiante}) AS max_niveles ;
+    </select>
+  
+    <resultMap id="choquematerias" type="org.fautapo.domain.Programas">
+        <result property="sigla"             column="sigla"/>
+        <result property="materia"           column="materia"/>
+        <result property="grupo"             column="grupo"/>
+        <result property="id_modelo_ahorro"  column="id_modelo_ahorro"/>
+        <result property="modelo_ahorro"     column="modelo_ahorro"/>
+    </resultMap>
+
+    <select id="getZchListarChoqueMaterias" resultMap="choquematerias">
+        SELECT *
+        FROM mi_zch_listar_choque_materias(#{id_estudiante},#{materias},#{gestion})
+        AS (sigla dtexto, materia dtexto, grupo dtexto, id_modelo_ahorro integer, modelo_ahorro dtexto);  
+    </select>
+  
+    <resultMap id="choqueperiodos" type="org.fautapo.domain.Programas">
+        <result property="sigla"      column="sigla"/>
+        <result property="materia"    column="materia"/>
+        <result property="grupo"      column="grupo"/>
+    </resultMap>
+  
+    <select id="getZchListarChoquePeriodos" resultMap="choqueperiodos">
+        SELECT *
+        FROM mi_zch_listar_choque_periodos(#{id_estudiante},#{materias},#{gestion})
+        AS (sigla dtexto, materia dtexto, paralelo dtexto);
+    </select>
+  
+    <resultMap id="materiasprogramadas" type="org.fautapo.domain.Programas">
+        <result property="sigla"      column="sigla"/>
+        <result property="materia"    column="materia"/>
+    </resultMap>
+
+    <select id="setEstListarProgramarMaterias" resultMap="materiasprogramadas">
+        SELECT *
+        FROM mi_est_listar_programar_materias(#{id_estudiante}, #{materias}, #{gestion}, #{periodo}, #{id_tipo_evaluacion}, #{id_rol}, #{ult_usuario})
+        AS (sigla dtexto, materia dtexto);
+    </select> 
+    <!--FIN  PROGRAMACON COMO ESTUDIANTE-->
+  
+    <!--RETIRO Y ADICION DE MATERIAS COMO AUTORIDAD-->
+    <resultMap id="listarprogramaciones" type="org.fautapo.domain.Programas">
+        <result property="id_programacion"    column="id_programacion"/>
+        <result property="id_programa"        column="id_programa"/>
+        <result property="id_materia"         column="id_materia"/>
+        <result property="materia"            column="materia"/>
+        <result property="sigla"              column="sigla"/>
+        <result property="id_modelo_ahorro"   column="id_modelo_ahorro"/>
+        <result property="modelo_ahorro"      column="modelo_ahorro"/>
+        <result property="id_grupo"           column="id_grupo"/>
+        <result property="nivel_academico"    column="nivel_academico"/>
+        <result property="id_estado"          column="id_estado"/>
+        <result property="fec_registro"       column="fec_registro"/>
+        <result property="ult_usuario"        column="ult_usuario"/>
+        <result property="grupo"              column="grupo"/>
+        <result property="tipo_evaluacion"    column="tipo_evaluacion"/>
+        <result property="nombres"            column="nombres"/>
+    
+    </resultMap>
+
+    <select id="getEstListarProgramacionesEstudiante" resultMap="listarprogramaciones">
+        SELECT * 
+        FROM mi_est_listar_programaciones_estudiante(#{id_estudiante}, #{gestion}, #{periodo}, #{id_tipo_evaluacion})
+        AS (id_programacion integer,id_programa dentero, id_materia dentero, materia dtexto, sigla dtexto,id_modelo_ahorro dentero2, modelo_ahorro dtexto, id_grupo dentero, nivel_academico dentero,
+        id_estado did_estado, fec_registro dfec_modificacion, ult_usuario did_usuario, grupo dtexto, tipo_evaluacion dtexto, nombres text);	    
+    </select>
+   
+    <resultMap id="cambiargrupoprogramacion" type="org.fautapo.domain.Programas">
+        <result property="sigla"              column="sigla"/>
+        <result property="materia"            column="materia"/>
+    </resultMap>
+
+    <select id="setEstPrgRegistrarListarCambiarGrupos" resultMap="cambiargrupoprogramacion">
+        SELECT * FROM mi_est_prg_registrar_listar_cambiar_grupos( #{id_estudiante}, #{materias}, #{gestion}, #{periodo}, #{id_tipo_evaluacion}, #{id_rol}, #{ult_usuario}) AS (sigla dtexto, materia dtexto);
+    </select>
+  
+    <select id="setEstPrgRetirarProgramacionesMaterias" resultMap="cambiargrupoprogramacion">
+        SELECT *
+        FROM mi_est_prg_retirar_programaciones_materias(#{id_estudiante}, #{materias}, #{gestion}, #{periodo}, #{id_tipo_evaluacion}, #{id_rol}, #{ult_usuario})
+        AS (sigla dtexto, materia dtexto);
+    </select>
+  
+    <!--FIN RETIRO ADICION DE MATERIAS COMO AUTORIDAD-->
+  
+    <!--MI SEGUNDA PARTE-->
+    <resultMap id="listarAdmisiones" type="org.fautapo.domain.Programas">
+        <result property="id_tipo_admision"        column="id_tipo_admision"/>
+        <result property="tipo_admision"           column="tipo_admision"/>
+    </resultMap>
+
+    <select id="getListarTiposAdmisiones" resultMap="listarAdmisiones">
+        SELECT * FROM mi_listar_tipos_admisiones();
+    </select>
+  
+    <select id="getListarTiposAdmisionesPost" resultMap="listarAdmisiones">
+        SELECT * FROM mi_listar_tipos_admisionespost();
+    </select>
+
+    <resultMap id="listarAdmisionesPrograma" type="org.fautapo.domain.Programas">
+        <result property="id_programa"      column="id_programa"/>
+        <result property="id_tipo_admision" column="id_tipo_admision"/>
+        <result property="tipo_admision"    column="tipo_admision"/>
+    </resultMap>
+
+    <select id="getListarTiposAdmisionesPrograma" resultMap="listarAdmisionesPrograma">
+        SELECT * FROM mi_listar_tipos_admisiones_programa(#{gestion}, #{periodo})
+        AS (id_programa dentero, id_tipo_admision integer, tipo_admision dtexto);
+    </select>
+  
+    <select id="getListarTiposAdmisionesProgramaLiberacion" resultMap="listarAdmisionesPrograma">
+        SELECT * FROM mi_listar_tipos_admisiones_programaLiberacion(#{gestion}, #{periodo})
+        AS (id_programa dentero, id_tipo_admision integer, tipo_admision dtexto);
+    </select>
+  
+    <!-- Listar los grados de los programas-->
+    <resultMap id="lgradosProg" type="org.fautapo.domain.Programas">
+        <result property="id_tipo_grado" column="id_tipo_grado"/>
+        <result property="tipo_grado"    column="tipo_grado"/>
+        <result property="plan"          column="plan"/>
+    </resultMap>
+  
+    <select id="getListarGradosProgramas" resultMap="lgradosProg">
+        SELECT * FROM listar_grados_programas(#{id_programa}) AS (id_tipo_grado integer, tipo_grado dtexto, plan dtexto);
+    </select>
+  
+    <!-- Listar los grados de los programas-->
+  
+    <!-- FIN MI SEGUNDA PARTE-->
+
+    <resultMap id="notaminimaporprograma" type="org.fautapo.domain.Programas"> 
+        <result property="nota_minima"   column="nota_minima"/>
+    </resultMap>  
+    <select id="getEstListarNotaMinimaporPrograma" resultMap="notaminimaporprograma">  
+        select * from get_listar_nota_minima_por_programa(#{id_programa},#{id_tipo_evaluacion},#{gestion},#{periodo}) as (nota_minima dentero)
+    </select> 
+</mapper>

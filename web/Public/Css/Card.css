@@ -1,0 +1,10 @@
+.Card-Informacion {
+  width: 100%;
+  max-width: 330px;
+  padding: 15px;
+  margin: auto;
+}
+.Card-Informacion .card-text { 
+  font-size: 12px;
+  text-align:  left;
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="Horarios">
+
+  <resultMap id="dia" type="org.fautapo.domain.Horarios">
+    <result property="id_dia"      column="id_dia" />
+    <result property="dia"         column="dia" />
+  </resultMap>
+
+  <select id="getListarDias" resultMap="dia">
+    SELECT id_dia, dia
+    FROM mi_listar_dias();
+  </select>
+
+  <resultMap id="horario" type="org.fautapo.domain.Horarios">
+    <result property="hora"    column="hora" />
+    <result property="id_hora" column="id_hora" />
+    <result property="id_dia"  column="id_dia" />
+    <result property="id_aula" column="id_aula" />
+    <result property="aula"    column="aula" />
+  </resultMap>
+
+  <select id="getListarHorario" resultMap="horario">
+    SELECT *
+    FROM mi_listar_horario(#{id_programa}, #{id_materia}, #{id_grupo}, #{gestion}, #{periodo}, #{id_modelo_ahorro}, #{id_tipo_evaluacion})
+      AS (hora varchar, id_hora integer, id_dia integer, id_aula integer, aula dtexto);
+  </select>
+
+  <resultMap id="aula" type="org.fautapo.domain.Horarios">
+    <result property="id_aula"        column="id_aula" />
+    <result property="aula"           column="aula" />
+    <result property="id_tipo_aula"   column="id_tipo_aula" />
+    <result property="id_programa"    column="id_programa" />
+    <result property="id_facultad"    column="id_facultad" />
+  </resultMap>
+
+  <select id="getListarAulasDisponibles" resultMap="aula">
+    SELECT *
+    FROM mi_listar_aulas_disponibles(#{id_programa}, #{gestion}, #{periodo}, #{id_dia}, #{id_hora}, #{id_tipo_evaluacion});
+  </select>
+
+  
+  <select id="setHrsLimpiarHorarioMateria">
+    SELECT mi_hrs_limpiar_horario_materia(#{id_programa}, #{id_plan}, #{id_materia}, #{id_grupo}, #{id_modelo_ahorro}, #{gestion}, #{periodo});
+  </select>
+
+  <select id="setHrsRegistrarHorarioAula" resultType="java.lang.Integer">
+    SELECT mi_hrs_registrar_horario_aula(#{id_programa}, #{id_plan}, #{id_materia}, #{id_grupo}, #{id_dia}, #{id_hora}, #{id_aula},
+                                         #{id_modelo_ahorro}, #{id_tipo_grado}, #{id_tipo_evaluacion}, #{gestion}, #{periodo}, #{id_rol}, #{ult_usuario});
+  </select>
+
+
+</mapper>

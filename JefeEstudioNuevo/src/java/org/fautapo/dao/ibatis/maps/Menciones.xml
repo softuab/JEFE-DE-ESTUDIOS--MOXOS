@@ -1,0 +1,184 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="Menciones">
+    
+    <resultMap id="listview" type="org.fautapo.domain.Menciones"> 
+        <result property="id_estudiante" column="id_estudiante" />
+        <result property="nombres" column="nombres" />
+        <result property="programa" column="programa" /> 
+        <result property="id_plan" column="id_plan" />
+        <result property="mencion" column="mencion" />
+        <result property="id_mencion" column="id_mencion" />
+        <result property="id_programa" column="id_programa" />
+    </resultMap>
+    <select id="GetListarMencionesProgramas" resultMap="listview">
+        SELECT 
+        m.id_mencion,
+        em.id_estudiante, 
+        p.paterno||' '||  p.materno||' '|| p.nombres as nombres,
+        fp.programa, 
+        em.id_plan, 
+        m.mencion,em.id_programa
+        FROM 
+        public.estudiantes e inner join public.est_menciones em on  e.id_estudiante = em.id_estudiante 
+        inner join public.fcl_programas fp on  fp.id_programa = em.id_programa
+        inner join public.menciones m on   m.id_mencion = em.id_mencion
+        inner join public.personas p on  p.id_persona = e.id_persona
+        WHERE
+        <choose>
+            <when test="condicion == 'todo'">
+                fp.id_programa= #{id_programa} and em.id_estado='A'
+            </when>
+            <when test="condicion == 'incluye'">
+                <if test="filtro == 'R.U.'">
+                    fp.id_programa= #{id_programa} and em.id_estudiante::text like '%'||#{buscar}||'%'  and em.id_estado='A'
+                </if>
+                <if test="filtro == 'programa'">
+                    fp.id_programa= #{id_programa} and fp.programa like '%'|| #{buscar} ||'%'  and em.id_estado='A'
+                </if>
+                <if test="filtro == 'plan'">
+                    fp.id_programa= #{id_programa} and em.id_plan like '%'||#{buscar}||'%'  and em.id_estado='A'
+                </if>
+                <if test="filtro == 'mencion'">
+                    fp.id_programa= #{id_programa} and m.mencion like '%'||#{buscar}||'%'  and em.id_estado='A'
+                </if>
+                <if test="filtro == 'nombres'">
+                    fp.id_programa= #{id_programa} and p.paterno||' '||  p.materno||' '|| p.nombres like '%'||#{buscar} ||'%'  and em.id_estado='A'
+                </if>
+            </when>
+            <when test="condicion == 'igual'">
+                <if test="filtro == 'R.U.'">
+                    fp.id_programa= #{id_programa} and em.id_estudiante=#{buscar}  and em.id_estado='A'
+                </if>
+                <if test="filtro == 'programa'">
+                    fp.id_programa= #{id_programa} and fp.programa=#{buscar} and em.id_estado='A'
+                </if>
+                <if test="filtro == 'plan'">
+                    fp.id_programa= #{id_programa} and em.id_plan=#{buscar}  and em.id_estado='A'
+                </if>
+                <if test="filtro == 'mencion'">
+                    fp.id_programa= #{id_programa} and m.mencion=#{buscar} and em.id_estado='A'
+                </if>
+                <if test="filtro == 'nombres'">
+                    fp.id_programa= #{id_programa} and p.paterno||' '||  p.materno||' '|| p.nombres=#{buscar}  and em.id_estado='A'
+                </if>
+            </when>
+            <when test="condicion == 'mayor'">
+                <if test="filtro = 'R.U.'">
+                     <![CDATA[ fp.id_programa= #{id_programa} and em.id_estudiante > #{buscar}  and em.id_estado='A'  ]]>
+                </if>
+                <if test="filtro == 'programa'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and fp.programa  > #{buscar} and em.id_estado='A'   ]]>
+                </if>
+                <if test="filtro == 'plan'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and em.id_plan > #{buscar}  and em.id_estado='A'  ]]>
+                </if>
+                <if test="filtro == 'mencion'">
+                    <![CDATA[ fp.id_programa= #{id_programa} and m.mencion > #{buscar}   and em.id_estado='A' ]]>
+                </if>
+                <if test="filtro == 'nombres'">
+                    <![CDATA[ fp.id_programa= #{id_programa} and p.paterno||' '||  p.materno||' '|| p.nombres > #{buscar}  and em.id_estado='A'  ]]>
+                </if>
+            </when>
+            <when test="condicion == 'menor'">
+                <if test="filtro == 'R.U.'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and em.id_estudiante < #{buscar}  and em.id_estado='A'  ]]>
+                </if>
+                <if test="filtro == 'programa'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and fp.programa < #{buscar}  and em.id_estado='A'  ]]>
+                </if>
+                <if test="filtro == 'plan'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and em.id_plan < #{buscar}  and em.id_estado='A'  ]]>
+                </if>
+                <if test="filtro == 'mencion'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and m.mencion < #{buscar}   and em.id_estado='A' ]]>
+                </if>
+                <if test="filtro == 'nombres'">
+                    <![CDATA[ fp.id_programa= #{id_programa} and  p.paterno||' '||  p.materno||' '|| p.nombres < #{buscar}   and em.id_estado='A' ]]>
+                </if>
+            </when>
+            <when test="condicion == 'mayorigual'">
+                <if test="filtro == 'R.U.'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and em.id_estudiante >= #{buscar}  and em.id_estado='A'  ]]>
+                </if>
+                <if test="filtro == 'programa'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and fp.programa >= #{buscar}   and em.id_estado='A' ]]>
+                </if>
+                <if test="filtro == 'plan'">
+                    <![CDATA[   fp.id_programa= #{id_programa} and em.id_plan  >= #{buscar}  and em.id_estado='A'  ]]>
+                </if>
+                <if test="filtro == 'mencion'">
+                    <![CDATA[   fp.id_programa= #{id_programa} and m.mencion >= #{buscar}  and em.id_estado='A'  ]]>
+                </if>
+                <if test="filtro == 'nombres'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and p.paterno||' '||  p.materno||' '|| p.nombres >= #{buscar}  and em.id_estado='A'  ]]>
+                </if>
+            </when>
+            <when test="condicion == 'menorigual'">
+                <if test="filtro == 'R.U.'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and em.id_estudiante <= #{buscar}   and em.id_estado='A' ]]>
+                </if>
+                <if test="filtro == 'programa'">
+                    <![CDATA[   fp.id_programa= #{id_programa} and fp.programa <= #{buscar}   and em.id_estado='A' ]]>
+                </if>
+                <if test="filtro == 'plan'">
+                    <![CDATA[  fp.id_programa= #{id_programa} and em.id_plan <= #{buscar}  and em.id_estado='A'  ]]>
+                </if>
+                <if test="filtro == 'mencion'">
+                    <![CDATA[ fp.id_programa= #{id_programa} and  m.mencion <= #{buscar}   and em.id_estado='A' ]]>
+                </if>
+                <if test="filtro == 'nombres'">
+                    <![CDATA[ fp.id_programa= #{id_programa} and p.paterno||' '||  p.materno||' '|| p.nombres <= #{buscar}  and em.id_estado='A'  ]]>
+                </if>
+            </when>
+        </choose>
+        LIMIT #{limit}
+    </select>
+    <resultMap id="listaEstudiantes" type="org.fautapo.domain.Estudiantes"> 
+        <result property="id_estudiante" column="id_estudiante" />
+        <result property="nombre_completo" column="nombre_completo" />
+    </resultMap>
+    <select id="GetListarMencionesEstudiantes" resultMap="listaEstudiantes">
+        SELECT 
+        e.id_estudiante, 
+        p.paterno|| ' ' ||
+        p.materno|| ' ' ||p.nombres as nombre_completo
+        FROM 
+        public.estudiantes e inner join public.personas p on  p.id_persona = e.id_persona
+        WHERE  e.id_estado='A' and e.id_programa=#{id_programa} and upper(p.paterno|| ' ' ||
+        p.materno|| ' ' ||p.nombres || ' ' ||e.id_estudiante::text) like '%'||upper(#{buscar})||'%' and e.id_estudiante  not in(select id_estudiante from est_menciones where id_estado='A');
+    </select>
+    <select id="GetProgramaMencion" resultType="java.lang.String">
+        SELECT  programa
+        FROM fcl_programas
+        where  id_estado='A' and id_programa=#{id_programa};
+    </select>
+    <select id="GetProgramaPlanesMencion" resultType="java.lang.String">
+        SELECT 
+        distinct mp.id_plan
+        FROM 
+        public.fcl_programas fp inner join public.mtr_planes mp on fp.id_programa = mp.id_programa
+        WHERE  mp.id_estado='A' and  fp.id_programa =#{id_programa};
+    </select>
+    <resultMap id="listaMenciones" type="org.fautapo.domain.Menciones"> 
+        <result property="id_mencion" column="id_mencion" />
+        <result property="mencion" column="mencion" />
+    </resultMap>
+    <select id="GetListarMencion" resultMap="listaMenciones">
+        SELECT id_mencion, mencion
+        FROM menciones
+        where id_programa=#{id_programa} and id_plan=#{id_plan} and id_estado='A';
+    </select>
+    <insert id="RegistrarNuevaMencion">
+        INSERT INTO est_menciones(id_estudiante, id_programa, id_plan, id_mencion, id_estado, id_rol, ult_usuario)
+        VALUES (#{id_estudiante}, #{id_programa}, #{id_plan}, #{id_mencion}, 'A', #{id_rol}, #{ult_usuario});
+    </insert>
+    <update id="EditarMencion">
+        UPDATE est_menciones
+        SET  id_plan=#{id_plan}, id_mencion=#{id_mencion}
+        WHERE id_estudiante=#{id_estudiante} and  id_programa=#{id_programa}and id_estado='A';
+    </update>
+    <update id="EliminarMencion">
+        DELETE FROM est_menciones
+        WHERE id_estudiante=#{id_estudiante} and  id_programa=#{id_programa} and id_plan= #{id_plan} and id_mencion= #{id_mencion};
+    </update>
+</mapper>

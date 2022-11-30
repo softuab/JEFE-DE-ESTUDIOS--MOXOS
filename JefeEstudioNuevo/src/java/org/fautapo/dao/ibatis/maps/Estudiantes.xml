@@ -1,0 +1,1730 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="Estudiantes">
+ 
+    <resultMap id="buscarEstudiante" type="org.fautapo.domain.Estudiantes">
+        <result property="id_estudiante"     column="id_estudiante"/>
+        <result property="id_persona"        column="id_persona"/>
+        <result property="id_programa"       column="id_programa"/>
+        <result property="id_plan"           column="id_plan"/>
+        <result property="id_tipo_grado"     column="id_tipo_grado"/>
+        <result property="id_tipo_admision"  column="id_tipo_admision"/>
+        <result property="id_estado"         column="id_estado"/>
+        <result property="fec_inscripcion"   column="fec_inscripcion"/>
+        <result property="fec_egreso"        column="fec_egreso"/>
+    </resultMap>
+
+    <select id="getEstBuscarEstudiante" resultMap="buscarEstudiante">
+        SELECT id_estudiante,id_persona,id_programa,id_plan, id_tipo_grado,id_tipo_admision,id_estado,fec_inscripcion, fec_egreso
+        FROM mi_est_buscar_estudiante(#{id_estudiante});
+    </select>
+
+    <select id="getEstBuscarEstudiantePrograma" resultMap="buscarEstudiante">
+        SELECT id_estudiante, id_persona, id_programa, id_plan, id_tipo_grado,id_tipo_admision,id_estado,fec_inscripcion, fec_egreso
+        FROM mi_est_buscar_estudiante_programa(#{id_estudiante}, #{id_programa});
+    </select>
+  
+    <select id="getEstBuscarEstudianteAccesos" resultMap="buscarEstudiante">
+        SELECT id_estudiante, id_persona, id_programa, id_plan, id_tipo_grado,id_tipo_admision,id_estado,fec_inscripcion, fec_egreso
+        FROM mi_est_buscar_estudiante_accesos(#{id_estudiante}, #{id_universidad}, #{id_facultad}, #{id_programa});
+    </select>
+
+    <resultMap id="listarEstudiantes" type="org.fautapo.domain.Estudiantes">
+        <result property="id_estudiante"      column="id_estudiante"/>
+        <result property="id_persona"         column="id_persona"/>
+        <result property="id_programa"        column="id_programa"/>
+        <result property="id_plan"            column="id_plan"/>
+        <result property="nombre_completo"    column="nombre_completo"/>
+        <result property="paterno"            column="paterno"/>
+        <result property="materno"            column="materno"/>
+        <result property="nombres"            column="nombres"/>
+        <result property="dip"                column="dip"/>
+        <result property="programa"           column="programa"/>
+    </resultMap>    
+    <!-- EST_PROGRAMADOS POR MATERIA-->
+    <resultMap id="listarEstudiantesprogramados" type="org.fautapo.domain.Estudiantes">
+        <result property="id_estudiante"      column="id_estudiante"/>
+        <result property="nombre_completo"    column="nombre_completo"/>
+    </resultMap>
+    <select id="getEstListarEstudiantesPorMateria" resultMap="listarEstudiantesprogramados">
+        select * from get_listar_estudiantes_habilitado_materia(#{id_grupo},#{id_materia},#{gestion},#{periodo},#{id_tipo_evaluacion}) 
+        as (id_estudiante integer,nombre_completo text)
+    </select>
+    <!-- EST_PROGRAMACIONES-->
+
+
+    <select id="getEstListarEstudiantesNombres" resultMap="listarEstudiantes">
+        SELECT 
+        e.id_estudiante, 
+        e.id_persona, 
+        e.id_programa, 
+        e.id_plan, 
+        (paterno || '  ' || materno || '  ' || nombres)::varchar AS nombre_completo,
+        p.paterno, 
+        p.materno, 
+        p.nombres, 
+        p.dip,
+        fp.programa
+        FROM 
+        public.personas p inner join   public.estudiantes e on p.id_persona = e.id_persona
+        inner join  public.fcl_programas fp on fp.id_programa = e.id_programa
+        WHERE 
+        (UPPER(p.nombres) LIKE UPPER(#{nombres})
+        OR UPPER(p.paterno) LIKE UPPER(#{nombres})
+        OR UPPER(p.materno) LIKE UPPER(#{nombres}))
+        AND p.id_estado ='A' and  e.id_programa= #{id_programa}
+        AND e.id_estado !='X';
+    </select>
+
+    <select id="getEstListarEstudiantesDip" resultMap="listarEstudiantes">
+        SELECT * FROM mi_est_listar_estudiantes_dip(#{dip}, #{id_programa})
+        AS (id_estudiante integer, id_persona integer, id_programa dentero, id_plan dtexto,nombre_completo varchar, paterno dtexto2, materno dtexto2, nombres dtexto, dip dtexto2, programa dtexto);
+    </select> 
+
+    <resultMap id="listarNombresEstudianteProg" type="org.fautapo.domain.Estudiantes">
+        <result property="id_estudiante"      column="id_estudiante"/>
+        <result property="id_persona"         column="id_persona"/>
+        <result property="id_programa"        column="id_programa"/>
+        <result property="id_plan"            column="id_plan"/>
+        <result property="id_tipo_estudiante" column="id_tipo_estudiante"/>
+        <result property="nombre_completo"    column="nombre_completo"/>
+        <result property="paterno"            column="paterno"/>
+        <result property="materno"            column="materno"/>
+        <result property="nombres"            column="nombres"/>
+        <result property="dip"                column="dip"/>
+        <result property="programa"           column="programa"/>
+        <result property="tipo_estudiante"    column="tipo_estudiante"/>
+    </resultMap>
+
+    <select id="getEstListarEstudiantesNombresAccesos" resultMap="listarNombresEstudianteProg">
+        SELECT * FROM mi_est_listar_estudiantes_nombres_accesos(#{nombres}, #{id_universidad}, #{id_facultad}, #{id_programa})
+        AS (id_estudiante integer, id_persona integer, id_programa dentero, id_plan dtexto,nombre_completo text, paterno dtexto2, 
+        materno dtexto2, nombres dtexto, dip dtexto2, programa dtexto, id_tipo_estudiante dentero, tipo_estudiante dtexto);
+    </select>
+
+    <select id="getEstListarEstudiantesDipAccesos" resultMap="listarNombresEstudianteProg">
+        SELECT * FROM mi_est_listar_estudiantes_dip_accesos(#{dip}, #{id_universidad}, #{id_facultad}, #{id_programa})
+        AS (id_estudiante integer, id_persona integer, id_programa dentero, id_plan dtexto, nombre_completo text, paterno dtexto2, 
+        materno dtexto2, nombres dtexto, dip dtexto2, programa dtexto, id_tipo_estudiante dentero, tipo_estudiante dtexto);
+    </select> 
+  
+    <resultMap id="listarNombresEstudiante" type="org.fautapo.domain.Estudiantes">
+        <result property="id_estudiante"     column="id_estudiante"/>
+        <result property="id_persona"        column="id_persona"/>
+        <result property="id_programa"       column="id_programa"/>
+        <result property="id_plan"           column="id_plan"/>
+        <result property="nombre_completo"   column="nombre_completo"/>
+        <result property="paterno"           column="paterno"/>
+        <result property="materno"           column="materno"/>
+        <result property="nombres"           column="nombres"/>
+        <result property="dip"               column="dip"/>
+        <result property="programa"          column="programa"/>
+        <result property="tipo_estudiante"   column="tipo_estudiante"/>
+        <result property="tipo_admision"     column="tipo_admision"/>
+        <result property="id_estado"         column="id_estado"/>
+        <result property="fec_inscripcion"   column="fec_inscripcion"/>
+    </resultMap>
+
+    <select id="getEstListarEstudiantesNombres2" resultMap="listarNombresEstudiante">
+        SELECT * FROM mi_est_listar_estudiantes_nombres(#{nombres})
+        AS (id_estudiante integer, id_estado did_estado, fec_inscripcion dfecha, id_persona integer, nombre_completo text, paterno dtexto2, materno dtexto2, nombres dtexto, dip dtexto2, 
+        id_plan dtexto, id_programa integer, programa dtexto, tipo_estudiante dtexto, tipo_admision dtexto);	
+    </select>
+  
+    <select id="getEstListarEstudiantesDip2" resultMap="listarNombresEstudiante">
+        SELECT * FROM mi_est_listar_estudiantes_dip(#{dip})
+        AS (id_estudiante integer, id_estado did_estado, fec_inscripcion dfecha,  id_persona integer, nombre_completo text, paterno dtexto2, materno dtexto2, nombres dtexto, dip dtexto2, 
+        id_plan dtexto, id_programa integer, programa dtexto, tipo_estudiante dtexto, tipo_admision dtexto);    
+    </select>
+  
+    <resultMap id="datosProgramacion" type="org.fautapo.domain.Notas">
+        <result property="id_programacion"    column="id_programacion"/>
+        <result property="nivel_academico"    column="nivel_academico"/>
+        <result property="id_materia"         column="id_materia"/>
+        <result property="sigla"              column="sigla"/>    
+        <result property="materia"            column="materia"/>
+        <result property="id_grupo"           column="id_grupo"/>
+        <result property="grupo"              column="grupo"/>
+        <result property="fec_modificacion"   column="fec_modificacion"/>
+        <result property="id_tipo_evaluacion" column="id_tipo_evaluacion"/>
+        <result property="tipo_evaluacion"    column="tipo_evaluacion"/>
+        <result property="id_docente"         column="id_docente"/>
+        <result property="id_asignacion"      column="id_asignacion"/>
+        <result property="nombres"            column="nombres"/>
+    </resultMap>
+   
+    <select id="getEstListarProgramacion" resultMap="datosProgramacion">
+        SELECT * FROM mi_est_listar_programacion(#{id_estudiante}, #{gestion}, #{periodo})
+        AS (id_programacion integer, nivel_academico dentero, id_materia dentero, sigla dtexto, materia dtexto, id_grupo dentero, grupo dtexto, 
+        fec_modificacion dfec_modificacion, id_tipo_evaluacion dentero, tipo_evaluacion dtexto, id_docente integer, id_asignacion integer, nombres text);	
+    </select>
+  
+  
+    <resultMap id="datosProgramacioncv" type="org.fautapo.domain.Notas">
+        <result property="id_programacion"    column="id_programacion"/>
+        <result property="nivel_academico"    column="nivel_academico"/>
+        <result property="id_materia"         column="id_materia"/>
+        <result property="sigla"              column="sigla"/>    
+        <result property="materia"            column="materia"/>
+        <result property="id_grupo"           column="id_grupo"/>
+        <result property="grupo"              column="grupo"/>
+        <result property="fec_modificacion"   column="fec_modificacion"/>
+        <result property="id_tipo_evaluacion" column="id_tipo_evaluacion"/>
+        <result property="tipo_evaluacion"    column="tipo_evaluacion"/>
+        <result property="id_docente"         column="id_docente"/>
+        <result property="id_asignacion"      column="id_asignacion"/>
+        <result property="nombres"            column="nombres"/>
+    </resultMap>
+   
+    <select id="getEstListarProgramacioncv" resultMap="datosProgramacioncv">
+        SELECT * FROM mi_est_listar_programacion_cursoverano(#{id_estudiante}, #{gestion}, #{periodo})
+        AS (id_programacion integer, nivel_academico dentero, id_materia dentero, sigla dtexto, materia dtexto, id_grupo dentero, grupo dtexto, 
+        fec_modificacion dfec_modificacion, id_tipo_evaluacion dentero, tipo_evaluacion dtexto, id_docente integer, id_asignacion integer, nombres text);	
+    </select>
+
+    <!--FIN EST_PROGRAMACIONES-->
+  
+    <!--EST_PROGRAMACIONES COMO ESTUDIANTE-->
+    <resultMap id="comprobarestudiante" type="org.fautapo.domain.Estudiantes">
+        <result property="id_estudiante"   column="id_estudiante"/>
+        <result property="nombre_completo" column="nombre_completo"/>
+        <result property="rol"             column="rol"/>
+        <!--  <result property="gestion"         column="gestion"/>
+        <result property="periodo"         column="periodo"/> -->
+    </resultMap>
+
+    <select id="getComprobarEstudiante" resultMap="comprobarestudiante">
+        SELECT * FROM mi_est_comprobar_estudiante(#{id_estudiante}, #{clave}) 
+        AS (id_estudiante integer, nombre_completo dtexto,id_rol integer, rol dtexto);
+    </select>
+    <!--Fin-->
+
+    <!-- CAMBIO PIN ESTUDIANTE -->   
+    <resultMap id="buscarMatricula" type="org.fautapo.domain.Estudiantes">
+        <result property="id_matricula" column="id_matricula"/>
+        <result property="fec_registro" column="fec_registro"/>
+        <result property="gestion"      column="gestion"/>
+        <result property="periodo"      column="periodo"/>
+        <result property="id_estado"    column="id_estado"/>
+        <result property="estado"       column="estado"/>
+        <result property="clave"        column="clave"/>
+    </resultMap>
+   
+    <select id="getMtrBuscarMatricula" resultMap="buscarMatricula">
+        SELECT * FROM mi_mtr_buscar_matricula(#{id_estudiante}, #{gestion}, #{periodo}) 
+        AS (id_matricula int4, fec_registro dfec_modificacion, gestion dentero, periodo dentero, id_estado did_estado, estado text, clave dtexto2);
+    </select>
+    <!-- MI MATRICULACION -->
+    <select id="getMtrListarMatriculasEstudiante" resultMap="buscarMatricula">
+        SELECT * FROM mi_mtr_listar_matriculas_estudiante(#{id_estudiante})
+        AS (id_matricula int4, fec_registro dfec_modificacion, gestion dentero, periodo dentero, id_estado did_estado, estado text, clave dtexto2);
+    </select>
+    <!--  FIN MI MATRICULACION -->
+    <!--Buscar estudiante nuevo -->
+    <resultMap id="buscarMatriculaNuevo" type="org.fautapo.domain.Estudiantes">
+        <result property="gestion"      column="gestion"/>
+        <result property="periodo"      column="periodo"/>
+    </resultMap>
+   
+    <select id="getMtrBuscarMatriculaNuevo" resultMap="buscarMatriculaNuevo">
+        SELECT * FROM mi_mtr_buscar_matricula_nuevo(#{id_estudiante}, #{gestion}, #{periodo}) 
+        AS (gestion int, periodo int);
+    </select>
+    <!-- FIN BUSCAR NUEVO -->
+  
+
+
+    <resultMap id="buscarEstudianteTipoGrado" type="org.fautapo.domain.Estudiantes">
+        <result property="id_estudiante"      column="id_estudiante"/>
+        <result property="id_programa"        column="id_programa"/>
+        <result property="id_plan"            column="id_plan"/>    
+        <result property="id_persona"         column="id_persona"/>
+        <result property="id_tipo_grado"      column="id_tipo_grado"/>
+        <result property="id_tipo_estudiante" column="id_tipo_estudiante"/>
+        <result property="tipo_grado"         column="tipo_grado"/>
+    </resultMap>
+   
+    <select id="getEstBuscarEstudianteTipoGrado" resultMap="buscarEstudianteTipoGrado">
+        SELECT * FROM mi_est_buscar_estudiante_tipo_grado(#{id_estudiante})
+        AS (id_estudiante int4, id_programa dentero, id_plan dtexto, id_persona dentero, id_tipo_grado dentero, id_tipo_estudiante dentero,
+        tipo_grado dtexto);
+    </select>
+
+    <select id="setMtrModificarPinEstudiante" resultType="java.lang.Integer">
+        SELECT * FROM mi_mtr_modificar_pin_estudiante(#{id_estudiante}, #{clave}, #{gestion}, #{periodo}, #{id_rol}, #{ult_usuario});
+    </select>
+  
+    <!-- FIN CAMBIO PIN ESTUDIANTE-->   
+
+    <!-- REGISTRAR ESTUDIANTE-->   
+    <select id="setRegistrarEstudiante" resultType="java.lang.Integer">
+        SELECT * FROM  mi_registrar_estudiante(#{id_persona}, #{id_programa}, #{id_plan}, #{id_tipo_admision}, #{id_tipo_estudiante}, #{id_tipo_grado}, #{id_tipo_graduacion}, #{fec_inscripcion}, #{ult_usuario});
+    </select>
+  
+    <select id="setModificarEstudiante" resultType="java.lang.Integer">
+        SELECT * FROM  mi_modificar_estudiante(#{id_estudiante}, #{id_persona}, #{id_programa}, #{id_plan}, #{id_tipo_admision}, #{id_tipo_estudiante}, #{id_tipo_grado}, #{id_tipo_graduacion}, #{fec_inscripcion}, #{ult_usuario});
+    </select>
+  
+    <resultMap id="buscarEstudiantePrs" type="org.fautapo.domain.Estudiantes">
+        <result property="id_estudiante"             column="id_estudiante"/>
+        <result property="id_persona"                column="id_persona"/>
+        <result property="id_programa"               column="id_programa"/>
+        <result property="programa"                  column="programa"/>
+        <result property="id_plan"                   column="id_plan"/>
+        <result property="id_tipo_grado"             column="id_tipo_grado"/>
+        <result property="tipo_grado"                column="tipo_grado"/>
+        <result property="id_tipo_admision"          column="id_tipo_admision"/>
+        <result property="tipo_admision"             column="tipo_admision"/>    
+        <result property="id_tipo_estudiante"        column="id_tipo_estudiante"/>
+        <result property="tipo_estudiante"           column="tipo_estudiante"/>    
+        <result property="id_tipo_graduacion"        column="id_tipo_graduacion"/>
+        <result property="tipo_graduacion"           column="tipo_graduacion"/>    
+        <result property="fec_inscripcion"           column="fec_inscripcion"/>
+        <result property="fec_egreso"                column="fec_egreso"/>
+        <result property="id_estado"                 column="id_estado"/>
+        <result property="nombres"                   column="nombres"/>
+        <result property="paterno"                   column="paterno"/>
+        <result property="materno"                   column="materno"/>
+        <result property="dip"                       column="dip"/>
+        <result property="fec_nacimiento"            column="fec_nacimiento"/>
+        <result property="direccion"                 column="direccion"/>
+        <result property="pais"                      column="pais"/>
+        <result property="departamento"              column="departamento"/>
+        <result property="provincia"                 column="provincia"/>
+        <result property="localidad"                 column="localidad"/>
+        <result property="tipo_sexo"                 column="tipo_sexo"/>
+        <result property="tipo_estado_civil"         column="tipo_estado_civil"/>
+        <result property="tipo_empresa_telefonica"   column="tipo_empresa_telefonica"/>
+        <result property="observacion"               column="observacion"/>
+        <result property="facultad"                  column="facultad"/>
+        <result property="estado"                    column="estado"/>
+        <result property="sede_desconcentrada"                    column="sede_desconcentrada"/>
+    </resultMap>
+
+    <select id="getEstBuscarEstudiantePrs" resultMap="buscarEstudiantePrs">
+        SELECT * FROM mi_buscar_estudiante_persona(#{id_estudiante})
+        AS (id_estudiante integer, id_persona dentero, id_programa dentero, programa dtexto, id_plan dtexto,
+        id_tipo_admision dentero, tipo_admision dtexto, id_tipo_estudiante dentero, tipo_estudiante dtexto,
+        id_tipo_grado dentero, tipo_grado dtexto, id_tipo_graduacion dentero, tipo_graduacion dtexto, fec_inscripcion dfecha, fec_egreso dfecha2, id_estado did_estado,
+        nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, fec_nacimiento dfecha2, direccion dtexto2,
+        pais dtexto, departamento dtexto, provincia dtexto, localidad dtexto,
+        tipo_sexo dtexto, tipo_estado_civil dtexto, tipo_empresa_telefonica dtexto, observacion dtexto2, facultad dtexto, estado text,sede_desconcentrada text);	  
+    </select>
+  
+    <select id="getEstBuscarEstudiantePrsSede" resultMap="buscarEstudiantePrs">
+        SELECT * FROM mi_buscar_estudiante_persona_sede(#{id_estudiante},#{ins_sede})
+        AS (id_estudiante integer, id_persona dentero, id_programa dentero, programa dtexto, id_plan dtexto,
+        id_tipo_admision dentero, tipo_admision dtexto, id_tipo_estudiante dentero, tipo_estudiante dtexto,
+        id_tipo_grado dentero, tipo_grado dtexto, id_tipo_graduacion dentero, tipo_graduacion dtexto, fec_inscripcion dfecha, fec_egreso dfecha2, id_estado did_estado,
+        nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, fec_nacimiento dfecha2, direccion dtexto2,
+        pais dtexto, departamento dtexto, provincia dtexto, localidad dtexto,
+        tipo_sexo dtexto, tipo_estado_civil dtexto, tipo_empresa_telefonica dtexto, observacion dtexto2, facultad dtexto, estado text, sede_desconcentrada text);	  
+    </select>
+    <select id="getEstBuscarEstudiantePrsPos" resultMap="buscarEstudiantePrs">
+        SELECT * FROM mi_buscar_estudiante_persona_pos(#{id_estudiante})
+        AS (id_estudiante integer, id_persona dentero, id_programa dentero, programa dtexto, id_plan dtexto,
+        id_tipo_admision dentero, tipo_admision dtexto, id_tipo_estudiante dentero, tipo_estudiante dtexto,
+        id_tipo_grado dentero, tipo_grado dtexto, id_tipo_graduacion dentero, tipo_graduacion dtexto, fec_inscripcion dfecha, fec_egreso dfecha2, id_estado did_estado,
+        nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, fec_nacimiento dfecha2, direccion dtexto2,
+        pais dtexto, departamento dtexto, provincia dtexto, localidad dtexto,
+        tipo_sexo dtexto, tipo_estado_civil dtexto, tipo_empresa_telefonica dtexto, observacion dtexto2, facultad dtexto, estado text, sede_desconcentrada text);	  
+    </select>
+
+    <select id="getEstBuscarEstudiantePrsPre" resultMap="buscarEstudiantePrs">
+        SELECT * FROM mi_buscar_estudiante_persona_pre(#{id_estudiante})
+        AS (id_estudiante integer, id_persona dentero, id_programa dentero, programa dtexto, id_plan dtexto,
+        id_tipo_admision dentero, tipo_admision dtexto, id_tipo_estudiante dentero, tipo_estudiante dtexto,
+        id_tipo_grado dentero, tipo_grado dtexto, id_tipo_graduacion dentero, tipo_graduacion dtexto, fec_inscripcion dfecha, fec_egreso dfecha2, id_estado did_estado,
+        nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, fec_nacimiento dfecha2, direccion dtexto2,
+        pais dtexto, departamento dtexto, provincia dtexto, localidad dtexto,
+        tipo_sexo dtexto, tipo_estado_civil dtexto, tipo_empresa_telefonica dtexto, observacion dtexto2, facultad dtexto, estado text, sede_desconcentrada text);	  
+    </select>
+    <!-- CONSULTA DE ESTUDIANTE SEGUN SU SEDE SI EL USUARIO PERTENECE A LA SEDE DE LA CARRERA DEL ESTUDIANTE ACCEDE-->
+    <select id="getEstBuscarEstudiantePrsPreSede" resultMap="buscarEstudiantePrs">
+        SELECT * FROM mi_buscar_estudiante_persona_pre_sede(#{id_estudiante},#{ins_sede})
+        AS (id_estudiante integer, id_persona dentero, id_programa dentero, programa dtexto, id_plan dtexto,
+        id_tipo_admision dentero, tipo_admision dtexto, id_tipo_estudiante dentero, tipo_estudiante dtexto,
+        id_tipo_grado dentero, tipo_grado dtexto, id_tipo_graduacion dentero, tipo_graduacion dtexto, fec_inscripcion dfecha, fec_egreso dfecha2, id_estado did_estado,
+        nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, fec_nacimiento dfecha2, direccion dtexto2,
+        pais dtexto, departamento dtexto, provincia dtexto, localidad dtexto,
+        tipo_sexo dtexto, tipo_estado_civil dtexto, tipo_empresa_telefonica dtexto, observacion dtexto2, facultad dtexto, estado text, sede_desconcentrada text);	  
+    </select>
+    <!-- FIN DE CONSULTA DE ESTUDIANTE POR SEDE-->
+
+    <resultMap id="buscarMatriculaEst" type="org.fautapo.domain.Estudiantes">
+        <result property="id_matricula"       column="id_matricula"/>
+        <result property="gestion"            column="gestion"/>
+        <result property="periodo"            column="periodo"/>
+        <result property="clave"              column="clave"/>
+        <result property="fec_registro"       column="fec_registro_matricula"/>
+        <result property="id_estudiante"      column="id_estudiante"/>
+        <result property="id_persona"         column="id_persona"/>
+        <result property="id_programa"        column="id_programa"/>
+        <result property="programa"           column="programa"/>
+        <result property="id_plan"            column="id_plan"/>
+        <result property="id_tipo_grado"      column="id_tipo_grado"/>
+        <result property="tipo_grado"         column="tipo_grado"/>
+        <result property="id_tipo_admision"   column="id_tipo_admision"/>
+        <result property="tipo_admision"      column="tipo_admision"/>    
+        <result property="id_tipo_estudiante" column="id_tipo_estudiante"/>
+        <result property="tipo_estudiante"    column="tipo_estudiante"/>    
+        <result property="id_tipo_graduacion" column="id_tipo_graduacion"/>
+        <result property="tipo_graduacion"    column="tipo_graduacion"/>    
+        <result property="fec_inscripcion"    column="fec_inscripcion"/>
+        <result property="fec_egreso"         column="fec_egreso"/>
+        <result property="id_estado"          column="id_estado"/>
+        <result property="nombres"            column="nombres"/>
+        <result property="paterno"            column="paterno"/>
+        <result property="materno"            column="materno"/>
+        <result property="dip"                column="dip"/>
+        <result property="fec_nacimiento"     column="fec_nacimiento"/>
+        <result property="direccion"          column="direccion"/>
+        <result property="facultad"          column="facultad"/>
+    </resultMap>
+  
+    <select id="getBuscarMatriculaEstPrs" resultMap="buscarMatriculaEst">
+        SELECT * FROM mi_buscar_matricula_estudiante_persona(#{id_matricula})
+        AS (id_matricula integer, gestion dentero, periodo dentero, clave dtexto2, fec_registro_matricula dfec_modificacion, 
+        id_estudiante integer, id_persona dentero, id_programa dentero, programa dtexto, id_plan dtexto,
+        id_tipo_admision dentero, tipo_admision dtexto, id_tipo_estudiante dentero, tipo_estudiante dtexto,
+        id_tipo_grado dentero, tipo_grado dtexto, id_tipo_graduacion dentero, tipo_graduacion dtexto, fec_inscripcion dfecha, fec_egreso dfecha2, id_estado did_estado,
+        nombres dtexto, paterno dtexto2, materno dtexto2, dip dtexto2, fec_nacimiento dfecha2, direccion dtexto2, facultad dtexto);
+    </select>
+
+    <select id="setRegistrarMatriculaEstudiante" resultType="java.lang.Integer">
+        SELECT * FROM mi_registrar_matricula_estudiante(#{id_estudiante}, #{gestion}, #{periodo}, #{id_tipo_descuento},#{id_tipo_clasificacion},#{transaccion}, #{id_rol}, #{ult_usuario});
+    </select>
+    <!-- FIN  REGISTRAR ESTUDIANTE-->      
+  
+    <!-- INICIO - VER FICHA ACADEMICA -->    
+    <resultMap id="datosEstudiante" type="org.fautapo.domain.Estudiantes">
+        <result property="id_persona"    column="id_persona"/>
+        <result property="nombres"       column="nombres"/>
+        <result property="paterno"       column="paterno"/>
+        <result property="materno"       column="materno"/>
+        <result property="nombre_completo" column="nombre_completo"/>
+        <result property="dip"           column="dip"/>
+        <result property="id_programa"   column="id_programa"/>
+        <result property="programa"      column="programa"/>
+        <result property="id_facultad"   column="id_facultad"/>
+        <result property="facultad"      column="facultad"/>
+        <result property="id_plan"       column="id_plan"/>
+        <result property="nacionalidad"  column="nacionalidad"/>
+        <result property="direccion"     column="direccion"/>
+        <result property="id_estudiante" column="id_estudiante"/>
+        <result property="id_estado"     column="id_estado"/>
+        <result property="tipo_estudiante" column="tipo_estudiante"/>
+        <result property="tipo_grado"      column="tipo_grado"/>
+        <result property="tipo_grado"      column="tipo_grado"/>
+    </resultMap>
+
+    <select id="getEstBuscarEstudianteNombres" resultMap="datosEstudiante">
+        SELECT * FROM mi_est_buscar_estudiante_nombres(#{id_estudiante})
+        AS (id_persona integer, paterno dtexto2, materno dtexto2, nombres dtexto, nombre_completo text, dip dtexto2, id_programa dentero, programa dtexto,
+        id_facultad integer, facultad dtexto, id_plan dtexto, nacionalidad dtexto2, direccion dtexto2, id_estudiante integer, 
+        id_estado did_estado, tipo_estudiante dtexto, tipo_grado dtexto);
+    </select>
+    <!-- Consultar documentacion completa por sede-->
+    <select id="getEstBuscarEstudianteNombresSede" resultMap="datosEstudiante">
+        SELECT * FROM mi_est_buscar_estudiante_nombres_sede(#{id_estudiante},#{ins_sede})
+        AS (id_persona integer, paterno dtexto2, materno dtexto2, nombres dtexto, nombre_completo text, dip dtexto2, id_programa dentero, programa dtexto,
+        id_facultad integer, facultad dtexto, id_plan dtexto, nacionalidad dtexto2, direccion dtexto2, id_estudiante integer, 
+        id_estado did_estado, tipo_estudiante dtexto, tipo_grado dtexto);
+    </select>
+  
+    <resultMap id="datosFichaAcademica" type="org.fautapo.domain.Notas">
+        <result property="gestion"         column="gestion"/>
+        <result property="periodo"         column="periodo"/>
+        <result property="id_plan"         column="id_plan"/>
+        <result property="nivel_academico" column="nivel_academico"/>
+        <result property="id_materia"      column="id_materia"/>
+        <result property="sigla"           column="sigla"/>    
+        <result property="materia"         column="materia"/>
+        <result property="nota"            column="nota"/>
+        <result property="id_estado"       column="id_estado"/>
+        <result property="estado"          column="estado"/>
+        <result property="observacion"       column="observacion"/> 
+        <result property="tipo_evaluacion"          column="tipo_evaluacion"/>
+    
+        <!--  <result property="nro_resolucion"  column="nro_resolucion"/>  -->
+    
+    </resultMap>
+   
+    <select id="getEstListarFichaAcademica" resultMap="datosFichaAcademica">
+        SELECT * FROM mi_est_listar_ficha_academica(#{id_estudiante})
+        AS (gestion integer, periodo integer, id_plan dtexto, nivel_academico dentero, id_materia dentero, sigla dtexto, materia dtexto, 
+        nota integer, id_estado text,  observacion text,tipo_evaluacion text, estado dtexto);	
+    </select>
+
+    <resultMap id="datosFichaAcademicaModificar" type="org.fautapo.domain.Notas">
+        <result property="gestion"         column="gestion"/>
+        <result property="periodo"         column="periodo"/>
+        <result property="id_plan"         column="id_plan"/>
+        <result property="nivel_academico" column="nivel_academico"/>
+        <result property="id_materia"      column="id_materia"/>
+        <result property="sigla"           column="sigla"/>    
+        <result property="materia"         column="materia"/>
+        <result property="nota"            column="nota"/>
+        <result property="id_estado"       column="id_estado"/>
+        <result property="estado"          column="estado"/>
+        <result property="observacion"     column="observacion"/> 
+        <result property="tipo_evaluacion" column="tipo_evaluacion"/>
+        <result property="id_nota"          column="id_nota"/>  
+    </resultMap>
+   
+    <select id="getEstListarFichaAcademicaModificar" resultMap="datosFichaAcademicaModificar">
+        SELECT * FROM mi_est_listar_ficha_academica_modificar(#{id_estudiante})
+        AS (id_nota integer,gestion integer, periodo integer, id_plan dtexto, nivel_academico dentero, id_materia dentero, sigla dtexto, materia dtexto, 
+        nota integer, id_estado text,  observacion text,tipo_evaluacion text, estado dtexto);	
+    </select>
+  
+    <resultMap id="datosFichaAcademicaConvalidada" type="org.fautapo.domain.Notas">
+        <result property="gestion"         column="gestion"/>
+        <result property="periodo"         column="periodo"/>
+        <result property="nivel_academico" column="nivel_academico"/>
+        <result property="id_materia"      column="id_materia"/>
+        <result property="sigla"           column="sigla"/>
+        <result property="materia"         column="materia"/>
+        <result property="hrs_periodo"     column="hrs_periodo"/>
+        <result property="id_nota"         column="id_nota"/>
+        <result property="nota"            column="nota"/>
+    </resultMap>
+
+    <select id="getEstListarFichaAcademicaConvalidada" resultMap="datosFichaAcademicaConvalidada">
+        SELECT * FROM mi_listar_materias_aprobadas_nota(#{id_estudiante})
+        AS (nivel_academico dentero, id_materia dentero, sigla dtexto, materia dtexto, hrs_periodo dentero2, gestion integer, periodo integer, 
+        id_nota integer, nota integer);
+    </select>
+
+    <select id="getEstListarFichaAcademicaAprobadas" resultMap="datosFichaAcademica">
+        SELECT * FROM mi_listar_materias_aprobadas(#{id_estudiante})
+        AS (nivel_academico dentero, id_plan dtexto, id_mencion dentero, mencion dtexto, id_materia integer, sigla dtexto, materia dtexto, nota integer,
+        gestion integer, periodo integer, id_estado text, nro_resolucion text, estado dtexto);
+    </select>
+
+
+    <!--      CONVALIDADAS                           -->
+
+    <resultMap id="datosFichaAcademicaConvalidada2" type="org.fautapo.domain.Notas">
+        <result property="gestion"         column="gestion"/>
+        <result property="periodo"         column="periodo"/>
+        <result property="nivel_academico" column="nivel_academico"/>
+        <result property="id_materia"      column="id_materia"/>
+        <result property="sigla"           column="sigla"/>
+        <result property="materia"         column="materia"/>
+        <result property="hrs_periodo"     column="hrs_periodo"/>
+        <result property="id_nota"         column="id_nota"/>
+        <result property="nota"            column="nota"/>
+        <result property="tipo_evaluacion" column="tipo_evaluacion"/>
+    
+    </resultMap>
+
+    <select id="getEstListarFichaAcademicaConvalidada2" resultMap="datosFichaAcademicaConvalidada2">
+        SELECT * FROM mi_listar_materias_aprobadas_nota2(#{id_estudiante})
+        AS (nivel_academico dentero, id_materia dentero, sigla dtexto, materia dtexto, hrs_periodo dentero2, gestion integer, periodo integer, 
+        id_nota integer, nota integer,tipo_evaluacion dtexto);
+    </select>
+
+
+    <!-- FIN - VER FICHA ACADEMICA -->
+
+    <!-- INICIO - CAMBIO DE PLAN -->
+    <select id="setEstRegistrarCambioPlan" resultType="java.lang.Integer">
+        SELECT mi_registrar_cambio_plan(#{id_estudiante}, #{id_plan}, #{id_rol}, #{ult_usuario});
+    </select>
+    <!-- FIN - CAMBIO DE PLAN -->
+
+    <!-- INICIO - MATERIAS NO APROBADAS -->
+    <resultMap id="datosMateriasNoAprobadas" type="org.fautapo.domain.Notas">
+        <result property="nivel_academico" column="nivel_academico"/>
+        <result property="id_mencion"      column="id_mencion"/>
+        <result property="mencion"         column="mencion"/>
+        <result property="id_materia"      column="id_materia"/>
+        <result property="sigla"           column="sigla"/>
+        <result property="materia"         column="materia"/>
+    </resultMap>
+   
+    <select id="getEstListarMateriasNoAprobadas" resultMap="datosMateriasNoAprobadas">
+        SELECT * FROM mi_listar_materias_no_aprobadas(#{id_estudiante})
+        AS (nivel_academico dentero, id_mencion dentero, mencion dtexto, id_materia dentero, sigla dtexto, materia dtexto);
+    </select>
+    <!-- FIN - MATERIAS NO APROBADAS -->
+
+    <!-- CAMBIO DE ESTADOS-->
+    <select id="setRegistrarCambiarEstadoEstudiante" resultType="java.lang.Integer">
+        SELECT * FROM mi_est_cambiar_estado_estudiante(#{id_estudiante}, #{id_estado}, #{ult_usuario#{ );
+    </select>
+  
+    <select id="setRegistrarCambiarEstadoMatricula" resultType="java.lang.Integer">
+        SELECT * FROM mi_est_cambiar_estado_matricula(#{id_estudiante}, #{id_estado}, #{gestion}, #{periodo}, #{ult_usuario});
+    </select>
+    <!-- FIN  CAMBIO DE ESTADOS-->
+  
+    <!--Adjunto Estudiante -->
+    <select id="setRegistrarEstAdjuntos" resultType="java.lang.Integer">
+        SELECT * FROM mi_registrar_est_adjunto(#{id_estudiante}, #{id_estado}, #{nombre_archivo}, #{adjunto}, #{id_rol}, #{ult_usuario});
+    </select>
+  
+    <resultMap id="listarAdjuntosEst" type="org.fautapo.domain.Estudiantes">
+        <result property="id_est_adjunto"  column="id_est_adjunto" />
+        <result property="id_estudiante"   column="id_estudiante" />
+        <result property="id_estado"       column="id_estado" />
+        <result property="nombre_archivo"  column="nombre_archivo" />
+        <result property="adjunto"         column="adjunto" />
+    </resultMap>
+
+    <select id="getListarAdjuntosEstudiante" resultMap="listarAdjuntosEst">
+        SELECT * FROM mi_listar_adjuntos_estudiante(#{id_estudiante}, #{id_estado});
+    </select>
+  
+    <select id="setEliminarEstAdjunto" resultType="java.lang.Integer">
+        SELECT * FROM mi_eliminar_est_adjunto(#{id_est_adjunto}, #{ult_usuario})
+    </select>
+    <!--Fin Adjunto Estudiante -->
+  
+    <!-- Inicio ESTADISTICAS -->  
+    <!--reporte nro estudiantes matriculados -->
+    <resultMap id="listarNroEstMat" type="org.fautapo.domain.Estudiantes">
+        <result property="cantidad"    column="cantidad" />
+        <result property="id_programa" column="id_programa" />
+        <result property="programa"    column="programa" />
+        <result property="facultad"    column="facultad" />
+    </resultMap>
+
+    <select id="getListarNroEstudiantesMatriculados" resultMap="listarNroEstMat">
+        SELECT * FROM nro_estudiantes_matriculados(#{gestion}, #{periodo}) 
+        AS (cantidad bigint,id_programa integer, programa dtexto,facultad dtexto); 
+      
+        
+    </select>
+    
+    <resultMap id="listarNroEstMatPorPrograma" type="org.fautapo.domain.Estudiantes">
+        <result property="cantidad"    column="cantidad" />
+        <result property="id_programa" column="id_programa" />
+        <result property="programa"    column="programa" />
+        <result property="facultad"    column="facultad" />
+    </resultMap>
+    <select id="getListarNroEstudiantesMatriculadosporPrograma" resultMap="listarNroEstMatPorPrograma">
+        SELECT * FROM nro_estudiantes_matriculadosporPrograma(#{gestion}, #{periodo},#{id_programa}) 
+        AS (cantidad bigint,id_programa integer, programa dtexto,facultad dtexto);
+    </select>
+    <!--Fin reporte nro estudiantes matriculados-->
+  
+    <!--reporte nro estudiantes matriculados sexos nacionalidades-->
+    <resultMap id="listarNroEstMatSexoNac" type="org.fautapo.domain.Estudiantes">
+        <result property="id_programa"  column="id_programa" />
+        <result property="programa"     column="programa" />
+        <result property="tipo_sexo"    column="tipo_sexo" />
+        <result property="nacionalidad" column="nacionalidad" />
+        <result property="cantidad"     column="cantidad" />
+    </resultMap>
+
+    <select id="getListarNroEstMatriculadosSexosNacionalidades" resultMap="listarNroEstMatSexoNac">
+        SELECT * FROM nro_est_matriculados_sexo_nacionalidad(#{gestion}, #{periodo})
+        AS (id_programa integer, programa dtexto, tipo_sexo dtexto, nacionalidad dtexto2, cantidad bigint);
+    </select>
+    
+ 
+    
+    
+    
+    
+    <!--Fin reporte nro estudiantes matriculados sexos nacionalidades-->
+  
+    <!--reporte nro estudiantes matriculados por tipo estudiante-->
+    <resultMap id="listarNroEstMatTest" type="org.fautapo.domain.Estudiantes">
+        <result property="id_programa"     column="id_programa" />
+        <result property="programa"        column="programa" />
+        <result property="facultad"        column="facultad" />
+        <result property="cantidad"        column="cantidad" />
+        <result property="aprobados"       column="aprobados" />	
+    </resultMap>
+
+    <select id="getListarNroEstMatriculadosTipoEstudiante" resultMap="listarNroEstMatTest">
+        SELECT * FROM nro_est_matriculados_nuevos_antiguosporPrograma(#{gestion}, #{periodo},#{id_programa}) 
+        AS (facultad dtexto,id_programa integer, programa dtexto, cantidad integer,aprobados integer); 
+    </select>
+
+    <!--Fin reporte nro estudiantes matriculados por tipo estudiante-->
+  
+    <!--reporte nro estudiantes matriculados por tipo admision-->
+    <resultMap id="listarNroEstMatTadm" type="org.fautapo.domain.Estudiantes">
+        <result property="id_programa"   column="id_programa" />
+        <result property="programa"      column="programa" />
+        <result property="tipo_admision" column="tipo_admision" />
+        <result property="cantidad"      column="cantidad" />
+    </resultMap>
+
+    <select id="getListarNroEstMatriculadosTipoAdmision" resultMap="listarNroEstMatTadm">
+        SELECT * FROM nro_est_matriculados_tipo_admision(#{gestion}, #{periodo})
+        AS (id_programa integer, programa dtexto, tipo_admision dtexto, cantidad bigint);
+    </select>
+    <!--Fin reporte nro estudiantes matriculados por tipo admision-->
+  
+    <!--reporte nro estudiantes matriculados por sexos tipo estudiante-->
+    <resultMap id="listarNroEstMatSexos" type="org.fautapo.domain.Estudiantes">
+        <result property="id_programa"     column="id_programa" />
+        <result property="programa"        column="programa" />
+        <result property="facultad"        column="facultad" />    
+        <result property="cantidad"        column="cantidad" />
+        <result property="aprobados"       column="aprobados" />
+        <result property="reprobados"      column="reprobados" />
+        <result property="abandonos"       column="abandonos" />
+    </resultMap>
+
+    <select id="getListarNroEstMatriculadosSexos" resultMap="listarNroEstMatSexos">
+        SELECT * FROM nro_est_matriculados_sexosporprograma(#{gestion}, #{periodo},#{id_programa})
+        AS (facultad dtexto,id_programa integer, programa dtexto, cantidad integer, aprobados integer, reprobados integer,abandonos integer);
+    </select>
+    <!--Fin reporte nro estudiantes matriculados por sexos y tipo estudiante-->
+    <!-- <select id="getListarNroEstMatriculadosSexos" resultMap="listarNroEstMatSexos">
+        SELECT * FROM nro_est_matriculados_sexosporprograma(#{gestion}, #{periodo},#{id_programa})
+        AS (facultad dtexto,id_programa integer, programa dtexto, cantidad integer, aprobados integer, reprobados integer,abandonos integer);
+    </select> -->
+  
+  
+    <!--reporte nro estudiantes matriculados por nacionalidad y tipo estudiante-->
+    <resultMap id="listarNroEstMatNac" type="org.fautapo.domain.Estudiantes">
+        <result property="id_programa"     column="id_programa" />
+        <result property="programa"        column="programa" />
+        <result property="nacionalidad"    column="nacionalidad" />
+        <result property="tipo_estudiante" column="tipo_estudiante" />
+        <result property="cantidad"        column="cantidad" />
+    </resultMap>
+
+    <select id="getListarNroEstMatriculadosNacionalidad" resultMap="listarNroEstMatNac">
+        SELECT * FROM nro_est_matriculados_nacionalidad(#{gestion}, #{periodo}) 
+        AS (id_programa integer, programa dtexto, nacionalidad dtexto2, tipo_estudiante dtexto, cantidad bigint);
+    </select>
+    <!--Fin reporte nro estudiantes matriculados por nacionalidad  y tipo estudiante-->
+  
+    <!--reporte nro estudiantes programados por materia-->
+    <resultMap id="listarNroEstProgMat" type="org.fautapo.domain.Planes">
+        <result property="nivel_academico" column="nivel_academico" />
+        <result property="id_materia"      column="id_materia" />
+        <result property="sigla"           column="sigla" />
+        <result property="materia"         column="materia" />
+        <result property="id_grupo"        column="id_grupo" />
+        <result property="grupo"           column="grupo" />
+        <result property="id_tipo_sexo"    column="id_tipo_sexo" />
+        <result property="numero"          column="cantidad" />
+        <result property="aprobados"       column="aprobados" />
+        <result property="reprobados"      column="reprobados" />
+        <result property="abandonos"       column="abandonos" />
+    </resultMap>
+
+    <select id="getListarNroEstProgramadosMaterias" resultMap="listarNroEstProgMat">
+        SELECT * FROM nro_est_programados_materias(#{id_programa}, #{id_plan}, #{id_tipo_evaluacion}, #{gestion}, #{periodo})
+        AS (nivel_academico dentero, id_materia integer, sigla dtexto, materia dtexto, id_grupo dentero, grupo dtexto, id_tipo_sexo dentero,
+        cantidad integer, aprobados integer, reprobados integer, abandonos integer);
+    </select>
+    <!--Fin reporte nro estudiantes programados por materia-->
+  
+    <!--reporte nro estudiantes matriculados sexos nacionalidades-->
+    <resultMap id="listarNroEstPrgSexoNac" type="org.fautapo.domain.Estudiantes">
+        <result property="nivel_academico" column="nivel_academico" />
+        <result property="id_materia"      column="id_materia" />
+        <result property="sigla"           column="sigla" />
+        <result property="materia"         column="materia" />
+        <result property="id_grupo"        column="id_grupo" />
+        <result property="grupo"           column="grupo" />
+        <result property="tipo_sexo"       column="tipo_sexo" />
+        <result property="nacionalidad"    column="nacionalidad" />
+        <result property="numero"          column="cantidad" />
+    </resultMap>
+
+    <select id="getListarNroEstProgramadosSexosNacionalidades" resultMap="listarNroEstPrgSexoNac">
+        SELECT * FROM nro_est_programados_sexo_nacionalidad(#{id_programa}, #{id_plan}, #{id_tipo_evaluacion}, #{gestion}, #{periodo})
+        AS (nivel_academico dentero, id_materia integer, sigla dtexto, materia dtexto, id_grupo integer, grupo dtexto, 
+        tipo_sexo dtexto, nacionalidad dtexto2, cantidad integer);
+    </select>
+    <!--Fin reporte nro estudiantes matriculados sexos nacionalidades-->  
+
+    <!--reporte nro postulantes programados por materia-->
+    <resultMap id="listarNroPostProgMat" type="org.fautapo.domain.Estudiantes">
+        <result property="id_materia"   column="id_materia" />
+        <result property="materia"      column="materia" />
+        <result property="departamento" column="departamento" />
+        <result property="cantidad"     column="cantidad" />
+    </resultMap>
+
+    <select id="getListarNroPostProgramadosMaterias" resultMap="listarNroPostProgMat">
+        SELECT * FROM nro_post_programados_materias(#{plan},#{id_tipo_grado},#{id_programa},#{gestion},#{periodo}) AS (id_materia integer, materia dtexto, departamento dtexto, cantidad bigint);
+    </select>
+    <!--Fin reporte nro postulantes programados por materia-->
+  
+    <!--reporte nro estudiantes programados aprobados, reprobados, abandono por materia-->
+    <resultMap id="listarNroEstProgApReAbMat" type="org.fautapo.domain.Estudiantes">
+        <result property="id_materia"   column="id_materia" />
+        <result property="materia"      column="materia" />
+        <result property="departamento" column="departamento" />
+        <result property="notaa"        column="notaa" />
+        <result property="notar"        column="notar" />    
+        <result property="notaab"       column="notaab" />    
+    </resultMap>
+
+    <select id="getListarNroEstProgAprReprAbaMaterias" resultMap="listarNroEstProgApReAbMat">
+        SELECT * FROM nro_est_prog_aprob_rep_aban_materias(#{plan}, #{id_tipo_grado}, #{id_programa}, #{gestion}, #{periodo}) 
+        AS (id_materia integer, materia dtexto, departamento dtexto, notaa bigint, notar bigint, notaab bigint);
+    </select>
+    <!--Fin reporte nro estudiantes programados aprobados, reprobados, abandono por materia-->
+
+    <!--reporte nro aprobados preu - psa -->
+    <resultMap id="listarNroEstAproPreU" type="org.fautapo.domain.Estudiantes">
+        <result property="id_materia"   column="id_materia" />
+        <result property="materia"   column="materia" />
+        <result property="departamento"   column="departamento" />
+        <result property="cantidad"   column="cantidad" />    
+    </resultMap>
+
+    <select id="getListarNroEstAproPreU" resultMap="listarNroEstAproPreU">
+        SELECT * FROM nro_est_aprob_preu(#{plan}, #{id_tipo_grado},#{id_programa},#{gestion},#{periodo},#{id_tipo_admision}) AS (id_materia integer, materia dtexto, departamento dtexto, cantidad bigint);
+    </select>
+    <!--Fin reporte nro aprobados preu - psa -->
+
+    <!--reporte nro aprobados admision especial-->
+    <select id="getListarNroEstAproAdmiEsp" resultMap="listarNroEstAproPreU">
+        SELECT * FROM nro_est_aprob_preu_adm_especial(#{plan},#{id_tipo_grado},#{id_programa},#{gestion},#{periodo}) AS (id_materia integer, materia dtexto, departamento dtexto, cantidad bigint);
+    </select>
+    <!--Fin reporte nro aprobados admision especial-->
+
+    <!--reporte nro aprobados preu sexo nacionalidad -->
+    <resultMap id="listarNroEstPreUSexosNac" type="org.fautapo.domain.Estudiantes">
+        <result property="id_materia"   column="id_materia" />
+        <result property="materia"   column="materia" />
+        <result property="departamento"   column="departamento" />
+        <result property="tipo_sexo"   column="tipo_sexo" />
+        <result property="nacionalidad"   column="nacionalidad" />    
+        <result property="cantidad"   column="cantidad" />    
+    </resultMap>
+
+    <select id="getListarNroEstAproPreUSexosNacionalidad" resultMap="listarNroEstPreUSexosNac">
+        SELECT * FROM nro_aprob_preu_sexo_nacionalidad(#{plan},#{id_tipo_grado},#{id_programa},#{gestion},#{periodo},#{id_tipo_admision}) AS (id_materia integer, materia dtexto, departamento dtexto, tipo_sexo dtexto,nacionalidad dtexto2, cantidad bigint);
+    </select>
+    <!--Fin reporte nro aprobados preu sexo nacionalidad -->
+  
+    <!--reporte nro aprobados admision especial sexo nacionalidad -->
+    <select id="getListarNroEstAproAdEspSexosNacionalidad" resultMap="listarNroEstPreUSexosNac">
+        SELECT * FROM nro_aprob_admi_esp_sexo_nacionalidad(#{plan},#{id_tipo_grado},#{id_programa},#{gestion},#{periodo}) AS (id_materia integer, materia dtexto, departamento dtexto, tipo_sexo dtexto,nacionalidad dtexto2, cantidad bigint);
+    </select>
+    <!--Fin estadistica nro aprobados admision especial sexo nacionalidad -->
+    <!-- Fin ESTADISTICAS -->
+  
+    <!-- INICIO REPORTES ED-->
+    <!--INICIO - Listar datos programacion estudiante -->
+    <resultMap id="datosEstProgramacion" type="org.fautapo.domain.Notas">
+        <result property="nivel_academico"  column="nivel_academico"/>
+        <result property="id_materia"       column="id_materia"/>
+        <result property="sigla"            column="sigla"/>    
+        <result property="materia"          column="materia"/>
+        <result property="id_grupo"         column="id_grupo"/>
+        <result property="grupo"            column="grupo"/>
+        <result property="fec_modificacion" column="fec_modificacion"/>
+        <result property="id_docente"       column="id_docente"/>
+        <result property="nombres"          column="nombres"/>
+        <result property="id_modelo_ahorro" column="id_modelo_ahorro"/>
+    </resultMap>
+   
+    <select id="getEstListarDetalleProgramacion" resultMap="datosEstProgramacion">
+        SELECT * FROM mi_est_listar_detalle_programacion(#{id_estudiante}, #{gestion}, #{periodo})
+        AS (nivel_academico dentero, id_materia dentero, sigla dtexto, materia dtexto, id_grupo dentero, grupo dtexto, 
+        fec_modificacion dfec_modificacion, id_docente integer, nombres text, id_modelo_ahorro integer);     
+    </select>
+    <!--FIN - Listar datos programacion estudiante -->
+  
+    <!--INICIO - Listar estudiantes por grupos -->
+    <resultMap id="estudiantesGrupos" type="org.fautapo.domain.Estudiantes">
+        <result property="id_grupo"         column="id_grupo"/>
+        <result property="grupo"            column="grupo"/>
+        <result property="id_estudiante"    column="id_estudiante"/>
+        <result property="nombres"          column="nombres"/>
+        <result property="fec_modificacion" column="fec_modificacion"/>
+    </resultMap>
+   
+    <select id="getEstListarEstudiantesPorGrupos" resultMap="estudiantesGrupos">
+        SELECT * FROM mi_est_listar_estudiantes_grupos(#{id_programa}, #{id_plan}, #{id_materia}, #{id_modelo_ahorro}, #{id_grupo}, #{id_tipo_evaluacion}, #{gestion}, #{periodo})
+        AS (id_grupo dentero, grupo dtexto, id_estudiante integer, nombres text, fec_modificacion dfec_modificacion);
+    </select>
+    <!--FIN - Listar estudiantes por grupos -->
+    <!--FIN  REPORTES ED-->
+ 
+    <!--Bloquear todos estudiantes-->
+    <select id="setBloquearEstudiantesTodos" resultType="java.lang.Integer">
+        SELECT * FROM mi_bloquear_estudiantes_todos(#{ult_usuario});
+    </select>
+    <!--Fin Bloquear todos estudiantes-->
+ 
+    <!--Modificar tipo_estudiante-->
+    <select id="setModificarTipoEstudiante" resultType="java.lang.Integer">
+        SELECT * FROM mi_modificar_est_tipo_estudiante(#{id_estudiante}, #{id_tipo_estudiante}, #{ult_usuario})
+    </select>
+    <!--Fin Modificar tipo_estudiante-->
+
+    <!--  inicio - JOJO  -->
+    <resultMap id="compromiso" type="org.fautapo.domain.Personas">
+        <result property="id_compromiso"   column="id_compromiso" />  
+        <result property="tipo_documento"  column="tipo_documento" />  
+        <result property="fec_vencimiento" column="fec_vencimiento" />  
+        <result property="observacion"     column="observacion" />  
+    </resultMap>
+    <select id="getMiEstListarCompromisos" resultMap="compromiso">
+        SELECT * FROM mi_est_listar_compromisos(#{id_estudiante})
+        AS (id_compromiso integer, tipo_documento dtexto, fec_vencimiento text,observacion dtexto2);
+    </select>
+
+    <select id="getMiEstListarCompromisosCant" resultType="java.lang.Integer">
+        SELECT * FROM mi_nro_compromisos_buscar(#{id_estudiante},#{gestion},#{periodo});
+    </select>
+ 
+    <!--  fin - JOJO  -->
+  
+    <!-- Registrar est_programacion_estudiante tipo_programacion -->
+    <select id="setRegistrarEstProgramacionTipo" resultType="java.lang.Integer">
+        SELECT * FROM mi_registrar_programacion_estudiante(#{id_estudiante}, #{id_materia}, #{id_grupo}, #{id_tipo_evaluacion}, #{gestion}, #{periodo}, #{id_rol}, #{ult_usuario});
+    </select>
+    <!-- Fin Registrar est_programacion_estudiante tipo_programacion -->
+  
+  
+    <select id="getMiPrsBuscarEstudiante" resultMap="buscarEstudiante">
+        SELECT * FROM mi_prs_buscar_estudiante(#{id_persona}, #{id_programa});
+    </select>
+
+    <!-- inicio JOJO -->
+    <resultMap id="verano" type="org.fautapo.domain.Perfiles">
+        <result property="id_perfil_materia"  column="id_perfil_materia" />
+        <result property="id_perfil"          column="id_perfil" />
+        <result property="id_tipo_evaluacion" column="id_tipo_evaluacion" />
+        <result property="tipo_evaluacion"    column="tipo_evaluacion" />
+        <result property="id_materia"         column="id_materia" />
+        <result property="materia"            column="materia" />
+        <result property="costo"              column="costo" />
+        <result property="numero"             column="programado" />
+    </resultMap>
+
+    <select id="getTrnListarMateriasVerano" resultMap="verano">
+        SELECT * FROM mi_trn_listar_materias_verano(#{id_perfil}, #{id_programa}, #{id_plan}, #{gestion}, #{periodo}, #{id_estudiante})
+        AS (id_perfil_materia integer, id_perfil dentero, id_tipo_evaluacion dentero, tipo_evaluacion dtexto, 
+        id_materia integer, materia dtexto, costo dmoneda2, programado integer);
+    </select>
+    <!-- fin JOJO -->
+
+    <resultMap id="programasEstudiante" type="org.fautapo.domain.Estudiantes">
+        <result property="id_programa"       column="id_programa"/>
+        <result property="programa"          column="programa"/>
+        <result property="fec_inscripcion"   column="fec_inscripcion"/>
+        <result property="fec_egreso"        column="fec_egreso"/>
+        <result property="id_plan"           column="id_plan"/>
+        <result property="id_estado"         column="id_estado"/>
+        <result property="id_tipo_admision"  column="id_tipo_admision"/>
+        <result property="tipo_admision"     column="tipo_admision"/>
+        <result property="paterno"           column="paterno"/>
+        <result property="materno"           column="materno"/>
+        <result property="nombres"           column="nombres"/>
+        <result property="tipo_estudiante"   column="tipo_estudiante"/>
+        <result property="id_estudiante"     column="id_estudiante"/>
+        <result property="id_persona"        column="id_persona"/>
+    </resultMap>
+
+    <select id="getEstListarProgramasEstudiante" resultMap="programasEstudiante">
+        SELECT * FROM mi_est_listar_programas_estudiante(#{id_persona})
+        AS (id_programa integer, programa dtexto, id_estudiante integer, id_persona dentero, fec_inscripcion dfecha, fec_egreso dfecha2, id_plan dtexto, id_estado did_estado, id_tipo_admision dentero, tipo_admision dtexto,
+        paterno dtexto, materno dtexto2, nombres dtexto, tipo_estudiante dtexto);
+    </select>
+
+    <resultMap id="matriculadosPorPrograma" type="org.fautapo.domain.Estudiantes">
+        <result property="id_matricula"  column="id_matricula"/>
+        <result property="id_estudiante" column="id_estudiante"/>
+        <result property="id_persona"    column="id_persona"/>
+        <result property="nombres"       column="nombres"/>
+        <result property="fec_registro"  column="fec_registro"/>
+        <result property="estado"        column="estado"/>
+        <result property="id_plan"        column="id_plan"/>
+    </resultMap>
+
+    <select id="getEstListarMatriculadosPorPrograma" resultMap="matriculadosPorPrograma">
+        SELECT * FROM mi_listar_estudiantes_matriculados_programa(#{id_programa}, #{id_plan}, #{gestion}, #{periodo})
+        AS (id_matricula integer, id_estudiante dentero, id_persona dentero, nombres text, fec_registro dfec_modificacion, estado did_estado,id_plan dtexto);
+    </select>
+  
+    <resultMap id="matriculadosPorProgramaTipoAdmision" type="org.fautapo.domain.Estudiantes">
+        <result property="facultad"       column="facultad"/>
+        <result property="gestion"        column="gestion"/>
+        <result property="periodo"        column="periodo"/>
+        <result property="programa"       column="programa"/>
+        <result property="cantidad"       column="cantidad"/>        
+    </resultMap>
+
+    <select id="getEstListarMatriculadosPorProgramaTipoAdmision" resultMap="matriculadosPorProgramaTipoAdmision">
+        SELECT * FROM mi_listar_estudiantes_matriculados_tipo_admision_fecha(#{id_tipo_estudiante}, #{gestion}, #{periodo}, _cadena_fecha(#{fecha_ini}), _cadena_fecha(#{fecha_fin}))
+        AS (facultad dtexto,programa dtexto, gestion dentero,periodo dentero,cantidad bigint);
+    </select>
+  
+    <!--Buscar est_programacion-->
+    <resultMap id="buscarProgramacion" type="org.fautapo.domain.Estudiantes">
+        <result property="id_estudiante"       column="id_estudiante"/>
+        <result property="id_materia"          column="id_materia"/>
+        <result property="sigla"               column="sigla"/>
+        <result property="materia"             column="materia"/>
+        <result property="id_grupo"            column="id_grupo"/>
+        <result property="grupo"               column="grupo"/>
+        <result property="id_modelo_ahorro"    column="id_modelo_ahorro"/>
+        <result property="id_tipo_evaluacion"  column="id_tipo_evaluacion"/>
+        <result property="tipo_evaluacion"     column="tipo_evaluacion"/>
+        <result property="gestion"             column="gestion"/>
+        <result property="periodo"             column="periodo"/>
+        <result property="fec_registro"        column="fec_registro"/>
+        <result property="fec_modificacion"     column="fec_modificacion"/>
+    </resultMap>
+
+    <select id="getMiBuscarEstProgramacion" resultMap="buscarProgramacion">
+        SELECT * FROM mi_buscar_programacion(#{id_programacion}) 
+        AS(id_estudiante dentero, id_materia dentero, sigla dtexto, materia dtexto, id_grupo dentero, grupo dtexto,
+        id_modelo_ahorro dentero2, id_tipo_evaluacion dentero, tipo_evaluacion dtexto,
+        gestion dentero, periodo dentero,
+        fec_registro dfec_modificacion, fec_modificacion dfec_modificacion);
+    </select>
+
+    <resultMap id="matriculadosPorProgramaTipoEstudiante" type="org.fautapo.domain.Estudiantes">
+        <!--<result property="id_matricula"  column="id_matricula"/>-->
+        <result property="id_estudiante" column="id_estudiante"/>
+        <result property="nombres"       column="nombres"/>
+        <!--<result property="fec_registro"  column="fec_registro"/>
+        <result property="estado"        column="estado"/>-->
+        <result property="observacion"   column="observacion"/>
+    </resultMap>
+
+    <select id="getEstListarMatriculadosPorProgramaTipoEstudiante" resultMap="matriculadosPorProgramaTipoEstudiante">
+        <!--  SELECT * FROM mi_listar_estudiantes_matriculados_programa_tipo_estudiante(#{id_programa}, #{gestion}, #{periodo})
+        AS (id_estudiante dentero, nombres text, observacion dtexto); -->
+        SELECT id_estudiante,(paterno ||' '|| materno ||' '|| nombres)::text as nombres, tipo_admision 
+        FROM est_nuevos
+        WHERE gestion=#{gestion}
+        AND periodo=#{periodo}
+        AND id_programa=#{id_programa}
+        ORDER BY paterno, materno, nombres
+    </select>
+
+    <!--Buscar Tipo Admision-->
+    <resultMap id="buscarTipoAdmision" type="org.fautapo.domain.Estudiantes">
+        <result property="id_tipo_admision"   column="id_tipo_admision"/>
+        <result property="tipo_admision"      column="tipo_admision"/>
+    </resultMap>
+
+    <select id="getBuscarTipoAdmision" resultMap="buscarTipoAdmision">
+        SELECT * FROM mi_buscar_tipo_admision(#{id_tipo_admision});
+    </select>
+    <!--Fin Buscar Tipo Admision-->
+
+    <!-- est_clasificaciones -->
+    <resultMap id="listadoEstClasificacion" type="org.fautapo.domain.Estudiantes">
+        <result property="id_est_clasificacion"              column="id_est_clasificacion" />  
+        <result property="id_estudiante"                     column="id_estudiante" />  
+        <result property="id_tipo_clasificacion"             column="id_tipo_clasificacion" />  
+        <result property="tipo_clasificacion"                column="tipo_clasificacion" />  
+        <result property="id_tipo_clasificacion_inicial"     column="id_tipo_clasificacion_inicial" />  
+        <result property="tipo_clasificacion_inicial"        column="tipo_clasificacion_inicial" />  
+    </resultMap>
+ 
+    <select id="getBuscarTipoClasificacionEstudiante" resultMap="listadoEstClasificacion">
+        SELECT * FROM mi_buscar_tipo_clasificacion_estudiante(#{id_estudiante})
+        AS (id_est_clasificacion integer, id_estudiante dentero,id_tipo_clasificacion dentero, tipo_clasificacion dtexto, id_tipo_clasificacion_inicial dentero, tipo_clasificacion_inicial dtexto);
+    </select>
+  
+    <select id="setRegistrarEstClasificacion" resultType="java.lang.Integer">
+        SELECT * FROM mi_registrar_est_clasificaciones(#{id_estudiante}, #{id_tipo_clasificacion}, #{ult_usuario});
+    </select>
+    <!--  FIN est_clasificaciones -->
+
+    <!--Est_regularizaciones -->
+    <resultMap id="buscarRegularizacion" type="org.fautapo.domain.Estudiantes">
+        <result property="id_regularizacion"         column="id_regularizacion" />  
+        <result property="id_estudiante"             column="id_estudiante" />  
+        <result property="id_tipo_regularizacion"    column="id_tipo_regularizacion" />  
+        <result property="tipo_regularizacion"       column="tipo_regularizacion" />  
+        <result property="gestion"                   column="gestion" />  
+        <result property="periodo"                   column="periodo" />  
+        <result property="observacion"               column="observacion" />
+        <result property="regularizado"              column="regularizado" />  
+        <result property="nombres"                   column="nombres" />  
+        <result property="paterno"                   column="paterno" />  
+        <result property="materno"                   column="materno" />  
+    </resultMap>
+    <select id="getMiBuscarUltimoEstRegularizacion" resultMap="buscarRegularizacion">
+        SELECT * FROM mi_buscar_ult_est_regularizacion(#{id_estudiante})
+        AS(id_regularizacion integer, id_estudiante dentero, id_tipo_regularizacion dentero, tipo_regularizacion dtexto, gestion dentero, periodo dentero, observacion dtexto2,
+        regularizado dbooleano2, nombres dtexto, paterno dtexto2, materno dtexto2);
+    </select>
+  
+    <select id="getMiBuscarEstRegularizacion" resultMap="buscarRegularizacion">
+        SELECT * FROM mi_buscar_regularizacion_estudiante(#{id_regularizacion})
+        AS(id_regularizacion integer, id_estudiante dentero, id_tipo_regularizacion dentero, tipo_regularizacion dtexto, gestion dentero, periodo dentero, observacion dtexto2,
+        regularizado dbooleano2, nombres dtexto, paterno dtexto2, materno dtexto2);
+    </select>
+  
+    <resultMap id="regularizacion" type="org.fautapo.domain.Estudiantes">
+        <result property="id_regularizacion"         column="id_regularizacion" />  
+        <result property="id_estudiante"             column="id_estudiante" />  
+        <result property="id_tipo_regularizacion"    column="id_tipo_regularizacion" />  
+        <result property="tipo_regularizacion"       column="tipo_regularizacion" />  
+        <result property="gestion"                   column="gestion" />  
+        <result property="periodo"                   column="periodo" />  
+        <result property="observacion"               column="observacion" />
+        <result property="regularizado"              column="regularizado" />  
+    </resultMap>
+
+    <select id="getMiListarRegularizacionesEstudiante" resultMap="regularizacion">
+        SELECT * FROM mi_listar_regularizaciones_estudiante(#{id_estudiante})
+        AS(id_regularizacion integer, id_estudiante dentero, id_tipo_regularizacion dentero, tipo_regularizacion dtexto, gestion dentero, periodo dentero, observacion dtexto2, regularizado dbooleano2);
+    </select>
+  
+    <select id="setRegistrarEstRegularizacionBloqueoEst" resultType="java.lang.Integer">
+        SELECT * FROM mi_registrar_est_regularizacion(#{id_estudiante}, #{id_tipo_regularizacion}, #{gestion}, #{periodo}, #{observacion}, #{ult_usuario});
+    </select>
+  
+    <select id="setModificarRegularizar" resultType="java.lang.Integer">
+        SELECT * FROM mi_modificar_est_regularizacion(#{id_regularizacion}, #{regularizado}, #{observacion});
+    </select>
+  
+    <resultMap id="listaRegularizaciones" type="org.fautapo.domain.Estudiantes">
+        <result property="id_tipo_regularizacion"    column="id_tipo_regularizacion" />  
+        <result property="tipo_regularizacion"       column="tipo_regularizacion" />  
+    </resultMap>
+  
+    <select id="getMiListarTiposRegularizaciones" resultMap="listaRegularizaciones">
+        SELECT * FROM mi_listar_tipos_regularizaciones();
+    </select>
+    <!--Fin Est_regularizaciones -->
+   
+    <resultMap id="datosMencion" type="org.fautapo.domain.Menciones">
+        <result property="id_mencion"    column="id_mencion" />
+        <result property="mencion"       column="mencion" />
+    </resultMap>
+
+    <select id="getEstBuscarMencion" resultMap="datosMencion">
+        SELECT id_mencion, mencion
+        FROM mi_est_buscar_mencion_estudiante(#{id_estudiante});
+    </select>
+  
+  
+    <!--Inicio Est Deudas-->
+    <resultMap id="listarEstDeudas" type="org.fautapo.domain.Estudiantes">
+        <result property="id_est_deuda"      column="id_est_deuda" />  
+        <result property="id_estudiante"     column="id_estudiante" />  
+        <result property="id_tipo_deuda"     column="id_tipo_deuda" />  
+        <result property="tipo_deuda"        column="tipo_deuda" />  
+        <result property="gestion"           column="gestion" />  
+        <result property="periodo"           column="periodo" />  
+        <result property="observacion"       column="observacion" />  
+        <result property="cancelado"         column="cancelado" />  
+    </resultMap>
+ 
+    <select id="getListarDeudasEstudiante" resultMap="listarEstDeudas">
+        SELECT * FROM mi_listar_est_deudas(#{id_estudiante})
+        AS(id_est_deuda integer, id_estudiante dentero, id_tipo_deuda dentero, tipo_deuda dtexto, gestion dentero, periodo dentero, observacion dtexto2, cancelado dbooleano2);
+    </select>
+  
+    <select id="getMiBuscarEstDeuda" resultMap="listarEstDeudas">
+        SELECT * FROM mi_buscar_est_deuda(#{id_est_deuda})
+        AS(id_est_deuda integer, id_estudiante dentero, id_tipo_deuda dentero, tipo_deuda dtexto, gestion dentero, periodo dentero, observacion dtexto2, cancelado dbooleano2);
+    </select>
+  
+    <resultMap id="buscaUltEstDeuda" type="org.fautapo.domain.Estudiantes">
+        <result property="id_est_deuda"      column="id_est_deuda" />  
+        <result property="id_estudiante"     column="id_estudiante" />  
+        <result property="id_tipo_deuda"     column="id_tipo_deuda" />  
+        <result property="tipo_deuda"        column="tipo_deuda" />  
+        <result property="gestion"           column="gestion" />  
+        <result property="periodo"           column="periodo" />  
+        <result property="observacion"       column="observacion" />  
+        <result property="cancelado"         column="cancelado" />  
+        <result property="nombres"           column="nombres" />  
+        <result property="materno"           column="materno" />  
+        <result property="paterno"           column="paterno" />  
+    
+    </resultMap>
+ 
+    <select id="getBuscarUltimaEstDeuda" resultMap="buscaUltEstDeuda">
+        SELECT * FROM mi_buscar_ultimo_est_deuda(#{id_estudiante})
+        AS(id_est_deuda integer, id_estudiante dentero, id_tipo_deuda dentero, tipo_deuda dtexto, gestion dentero, periodo dentero, observacion dtexto2,
+        cancelado dbooleano2, nombres dtexto, materno dtexto2, paterno dtexto2);
+    </select>
+  
+    <select id="setRegistrarEstDeuda" resultType="java.lang.Integer">
+        SELECT * FROM mi_registrar_est_deudas(#{id_estudiante}, #{id_tipo_deuda}, #{gestion}, #{periodo}, #{observacion}, #{ult_usuario});
+    </select>
+  
+    <select id="setModificarEstDeuda" resultType="java.lang.Integer">
+        SELECT * FROM mi_modificar_est_deudas(#{id_est_deuda}, #{observacion}, #{ult_usuario});
+    </select>
+  
+    <resultMap id="listaTiposDeudas" type="org.fautapo.domain.Estudiantes">
+        <result property="id_tipo_deuda"     column="id_tipo_deuda" />  
+        <result property="tipo_deuda"        column="tipo_deuda" />  
+    </resultMap>
+  
+    <select id="getMiListarTiposDeudas" resultMap="listaTiposDeudas">
+        SELECT * FROM mi_listar_tipos_deudas();
+    </select>
+    <!-- Fin Est Deudas-->
+  
+    <!-- Inicio Cambio PIN Etudiante General -->
+    <select id="setMtrModificarApodoClaveEstudiante" resultType="java.lang.Integer">
+        SELECT * FROM mi_mtr_modificar_apodo_clave_estudiante(#{id_estudiante}, #{gestion}, #{periodo}, #{apodo}, #{clave}, #{id_rol}, #{ult_usuario});    
+    </select>
+  
+    <select id="setRegistrarApodoClaveMatricula" resultType="java.lang.Integer">
+        SELECT * FROM mi_mtr_registrar_apodo_clave_matricula(#{id_matricula}, #{apodo}, #{clave}, #{id_rol}, #{ult_usuario});    
+    </select>
+    <!-- Fin Cambio PIN Etudiante General -->
+  
+
+    <!--INICIO - METODOS ADICIONADOS POR LA UAP -->
+
+    <!-- INICIO - Listar Estudiantes Por Tipo Descuento-->  
+    <resultMap id="EstTipoDescuento" type="org.fautapo.domain.Estudiantes">
+        <result property="id_estudiante"          column="id_estudiante"/>
+        <result property="id_tipo_descuento"      column="id_tipo_descuento"/>
+        <result property="id_programa"            column="id_programa"/>
+        <result property="fec_registro"           column="fec_registro"/>
+        <result property="dip"                    column="dip"/>
+        <result property="paterno"                column="paterno"/>
+        <result property="materno"                column="materno"/>
+        <result property="nombres"                column="nombres"/>
+        <result property="programa"               column="programa"/>
+        <result property="id_estado"              column="id_estado"/>    
+    </resultMap>
+
+    <select id="getEstListarPorProgramaTipoDescuento" resultMap="EstTipoDescuento">
+        SELECT * FROM mi_listar_est_descuentos(#{id_programa},#{id_tipo_descuento}, #{gestion},#{periodo})
+        AS (id_estudiante integer, id_tipo_descuento dentero2, id_programa integer, paterno dtexto2, materno dtexto2, nombres dtexto, dip dtexto2, programa dtexto, id_estado did_estado, 
+        fec_registro dfec_modificacion);
+    </select>
+    <!-- FIN - Listar Estudiantes Por Tipo Descuento-->  
+  
+    <!-- ESTUDIANTES CON PRORROGA-->
+    <resultMap id="listarEstProrroga" type="org.fautapo.domain.Estudiantes">
+        <result property="id_estudiante"      column="id_estudiante"/>
+        <result property="nombre_completo"    column="nombre_completo"/>
+        <result property="programa"           column="programa"/>
+        <result property="tipo_documento"     column="tipo_documento"/>
+        <result property="tipo_compromiso"    column="tipo_compromiso"/>
+        <result property="observacion"        column="observacion"/>
+        <result property="fec_vencimiento"    column="fec_vencimiento"/>
+    </resultMap>
+
+    <select id="getListarEstConProrroga" resultMap="listarEstProrroga">
+        SELECT * FROM mi_buscar_est_prorroga(#{id_programa}) 
+        AS (id_estudiante integer, nombre_completo text, programa dtexto, tipo_documento dtexto, tipo_compromiso dtexto, observacion dtexto2, fec_vencimiento dfecha2);
+    </select>
+
+    <!-- INICIO ESTUDIANTES CON RENDIMIENTO ACADEMICO-->
+    <resultMap id="rendimiento_academico"   type="org.fautapo.domain.Estudiantes">
+        <result property="id_estudiante"      column="id_estudiante" />
+        <result property="nombre_completo"    column="nombre_completo" />
+        <result property="promedio"           column="promedio" />
+        <result property="cant_materias" 	  column="cant_materias" />
+    </resultMap>
+    <select id="getRendimientoAcademico" resultMap="rendimiento_academico">
+        select id_estudiante, nombre_completo, promedio, cant_materias
+        from est_rendimiento_academico(#{id_programa}, #{gestion}, #{periodo}) as (id_estudiante dentero, nombre_completo dtexto, promedio dreal, cant_materias dentero);
+    </select>    
+    <!-- FIN ESTUDIANTES CON RENDIMIENTO ACADEMICO-->  
+
+    <resultMap id="designacionBecaTrabajo"    type="org.fautapo.domain.Estudiantes">
+        <result property="id_perfil"            column="id_perfil" />
+        <result property="ubicacion_organica"   column="ubicacion_organica" />
+        <result property="cargo"                column="cargo" />
+        <result property="tipo_turno"           column="tipo_turno" />
+        <result property="modalidad_beca"       column="modalidad_beca" />
+        <result property="fecha_i"              column="fecha_i" />
+        <result property="fecha_f"              column="fecha_f" />
+        <result property="carga_horaria"        column="carga_horaria" />
+    </resultMap>
+    <select id="getDesignacionBecaTrabajo" resultMap="designacionBecaTrabajo">
+        select id_perfil, cargo, ubicacion_organica, carga_horaria, tipo_turno,modalidad_beca,fecha_i,fecha_f from get_designaciones(#{id_estudiante},#{gestion},#{periodo})
+        as (id_perfil dentero, cargo dtexto, ubicacion_organica dtexto, carga_horaria dtexto, tipo_turno dtexto, modalidad_beca dtexto, fecha_i dfecha, fecha_f dfecha);  
+    </select>  
+
+    <!-- INICIO LISTADO DE BECARIOS-->
+
+    <resultMap id="estBecasTrabajo" type="org.fautapo.domain.Estudiantes">  
+        <result property="id_estudiante"      column="id_estudiante" />
+        <result property="paterno"            column="paterno" />
+        <result property="materno"            column="materno" />
+        <result property="nombres"            column="nombres" />
+        <result property="cargo"              column="cargo" />
+        <result property="modalidad_beca"     column="modalidad_beca" />
+        <result property="tipo_turno"         column="tipo_turno" />
+        <result property="ubicacion_organica" column="ubicacion_organica" />    
+        <result property="carga_horaria"      column="carga_horaria" />
+        <result property="fecha_i"            column="fecha_i" />
+        <result property="fecha_f"            column="fecha_f" />    
+	
+    </resultMap>  
+
+    <select id="getListarEstBecasTrabajo" resultMap="estBecasTrabajo">
+  
+        select id_estudiante, paterno, materno, nombres, cargo, modalidad_beca, tipo_turno,ubicacion_organica,carga_horaria,fecha_i,fecha_f
+        FROM listar_becarios(#{gestion},#{periodo})
+        as (id_estudiante dentero, paterno dtexto2, materno dtexto2, nombres dtexto2, cargo dtexto2, 
+        modalidad_beca dtexto2,tipo_turno dtexto2,ubicacion_organica dtexto2,carga_horaria dtexto2,fecha_i dfecha,fecha_f dfecha );  
+    </select>      
+
+    <select id="getListarEstBecasTrabajoFuncional" resultMap="estBecasTrabajo">
+        select id_estudiante, paterno, materno, nombres, cargo, modalidad_beca, tipo_turno, ubicacion_organica, carga_horaria, fecha_i, fecha_f 
+        FROM listar_becarios_funcional(#{gestion},#{periodo},#{id_ubicacion_organica}) 
+        as (id_estudiante dentero, paterno dtexto2, materno dtexto2, nombres dtexto, cargo dtexto, modalidad_beca dtexto, 
+        tipo_turno dtexto, ubicacion_organica dtexto, carga_horaria dtexto,fecha_i dfecha, fecha_f dfecha);  
+    </select>        
+
+    <!-- FIN LISTADO DE BECARIOS-->
+
+    <!-- INICIO LISTADO DE ESTUDIANTES POR NIVEL ACADEMICO-->
+    <resultMap id="listarEstNiveles" type="org.fautapo.domain.Estudiantes">
+        <result property="id_estudiante"      column="id_estudiante"/>
+        <result property="nombres"            column="nombres"/>
+        <result property="nivel_academico"    column="nivel_academico"/>
+        <result property="dip"                column="dip"/>
+    </resultMap>
+  
+    <select id="getListarNiveles" resultMap="listarEstNiveles">
+        select  id_estudiante, nombres, dip, nivel_academico 
+        from est_niveles_academicos(#{id_programa},#{gestion},#{periodo},#{id_plan}) 
+        as (id_estudiante dentero , nombres text,dip dtexto2,nivel_academico dentero);
+    </select>
+    <!-- FIN LISTADO DE ESTUDIANTES POR NIVEL ACADEMICO-->
+
+    <!-- INICIO DE CLAVES DE ESTUDIANTES POR PROGRAMA-->
+    <resultMap id="listarClavesEst" type="org.fautapo.domain.Estudiantes">
+        <result property="id_estudiante"      column="id_estudiante"/>
+        <result property="nombres"            column="nombres"/>
+        <result property="clave"              column="clave"/>
+        <result property="id_matricula"       column="id_matricula"/>
+        <result property="fec_registro"       column="fec_registro"/>
+    </resultMap>
+  
+    <select id="getListarClavesEstPorPrograma" resultMap="listarClavesEst">
+        SELECT * FROM mi_listar_estudiantes_claves_por_programa(#{id_programa}, #{gestion},#{periodo})
+        AS (id_estudiante dentero, nombres text, id_matricula integer, clave dtexto2, fec_registro dfec_modificacion, estado did_estado);
+    </select>
+    <!-- FIN LISTADO DE CLAVES DE ESTUDIANTES POR PROGRAMA-->
+
+    <!-- INICIO CURSOS DE PRE INGLES-->
+    <resultMap id="listarCursosIngles" type="org.fautapo.domain.Estudiantes">
+        <result property="nombres"        column="nombres"/>
+        <result property="programa"       column="programa"/>
+        <result property="gestion"       column="gestion"/>
+        <result property="periodo"       column="periodo"/>
+        <result property="observacion"       column="observacion"/>
+        <result property="tipo_deuda"       column="tipo_deuda"/>
+    </resultMap>
+  
+    <select id="getListarCursoPreIngles" resultMap="listarCursosIngles">
+        SELECT * FROM mi_listar_cursoPreIngles()
+        AS (nombres text, programa dtexto,gestion dentero,periodo dentero,observacion dtexto2, tipo_Deuda dtexto); 
+    </select>
+    <!-- FIN LISTADO DE CURSOS PRE INGLES-->
+
+    <!--admision auxiliares de docencia-->
+    <select id="getEstBuscarEstudianteNombresMatriculados" resultMap="datosEstudiante">
+        SELECT * FROM mi_est_buscar_estudiante_nombres_matriculados(#{id_estudiante},#{gestion},#{periodo})
+        AS (id_persona integer, paterno dtexto2, materno dtexto2, nombres dtexto, nombre_completo text, dip dtexto2, id_programa dentero, programa dtexto,
+        id_facultad integer, facultad dtexto, id_plan dtexto, nacionalidad dtexto2, direccion dtexto2, id_estudiante integer, 
+        id_estado did_estado, tipo_estudiante dtexto, tipo_grado dtexto);
+    </select>  
+  
+    <select id="getEstBuscarEstudianteAdmitidoAuxiliar" resultMap="datosEstudiante">
+        SELECT * FROM mi_est_buscar_estudiante_admitido_auxiliar(#{id_estudiante})
+        AS (id_persona integer, paterno dtexto2, materno dtexto2, nombres dtexto, nombre_completo text, dip dtexto2, id_programa dentero, programa dtexto,
+        id_facultad integer, facultad dtexto, id_plan dtexto, nacionalidad dtexto2, direccion dtexto2, id_estudiante integer, 
+        id_estado did_estado, tipo_estudiante dtexto, tipo_grado dtexto);
+    </select>    
+    
+    <select id="setRegistrarAdmisionEstudianteAuxiliar" resultType="java.lang.Integer">
+        SELECT * FROM  mi_registrar_admision_auxiliar(#{id_estudiante}, #{id_rol}, #{ult_usuario});
+    </select>    
+
+    <select id="setEliminarAdmisionEstudianteAuxiliar" resultType="java.lang.Integer">
+        SELECT * FROM  mi_eliminar_admision_auxiliar(#{id_estudiante});
+    </select>    
+
+    <resultMap id="estEstudianteAuxiliar" type="org.fautapo.domain.Estudiantes">  
+        <result property="id_estudiante"      column="id_estudiante" />
+        <result property="paterno"            column="paterno" />
+        <result property="materno"            column="materno" />
+        <result property="nombres"            column="nombres" />
+        <result property="fecha_i"            column="fecha_i" />
+        <result property="fecha_f"            column="fecha_f" />    
+        <result property="sigla"              column="sigla" />    
+        <result property="materia"            column="materia" />    
+        <result property="programa"           column="programa" />    
+        <result property="facultad"           column="facultad" />    
+        <result property="id_perfil"          column="id_perfil" />    
+        <result property="carga_horaria"      column="carga_horaria" />    
+    </resultMap>
+
+    <select id="getBuscarEstudianteAuxiliar" resultMap="estEstudianteAuxiliar">  
+        SELECT * from mi_buscar_estudiante_auxiliar(#{id_estudiante},#{gestion},#{periodo}) as 
+        (id_perfil dentero,id_estudiante dentero,paterno dtexto2, materno dtexto2, nombres dtexto,  sigla dtexto, materia dtexto, programa dtexto, facultad dtexto, carga_horaria dtexto, tipo_asignacion dtexto, tipo_docente dtexto, fecha_i dfecha, fecha_f dfecha);    
+    </select>    
+
+    <resultMap id="estEstudianteAuxiliarTodas" type="org.fautapo.domain.Estudiantes">  
+        <result property="id_estudiante"      column="id_estudiante" />
+        <result property="paterno"            column="paterno" />
+        <result property="materno"            column="materno" />
+        <result property="nombres"            column="nombres" />
+        <result property="fecha_i"            column="fecha_i" />
+        <result property="fecha_f"            column="fecha_f" />    
+        <result property="sigla"              column="sigla" />    
+        <result property="materia"            column="materia" />    
+        <result property="programa"           column="programa" />    
+        <result property="facultad"           column="facultad" />    
+        <result property="id_perfil"          column="id_perfil" />    
+        <result property="carga_horaria"      column="carga_horaria" />    
+        <result property="gestion"            column="gestion" />    
+        <result property="periodo"            column="periodo" />    
+    </resultMap>
+
+    <select id="getBuscarEstudianteAuxiliarTodas" resultMap="estEstudianteAuxiliarTodas">  
+        SELECT * from mi_buscar_estudiante_auxiliar_todas(#{id_estudiante}) as 
+        (id_perfil dentero,id_estudiante dentero,paterno dtexto2, materno dtexto2, nombres dtexto,  sigla dtexto, materia dtexto, programa dtexto, facultad dtexto, carga_horaria dtexto, tipo_asignacion dtexto, tipo_docente dtexto, fecha_i dfecha, fecha_f dfecha,gestion dentero,periodo dentero);    
+    </select>    
+
+    <!-- REPORTES DE ESTUDIANTES DOCENCIA POR PROGRAMA -->
+    <resultMap id="auxiliaresPorPrograma" type="org.fautapo.domain.Estudiantes">  
+        <result property="id_estudiante"      column="id_estudiante" />
+        <result property="paterno"            column="paterno" />
+        <result property="materno"            column="materno" />
+        <result property="nombres"            column="nombres" />
+        <result property="id_programa"        column="id_programa" />    
+        <result property="id_plan"            column="id_plan" />    
+    </resultMap>  
+  
+    <select id="getListarEstudiantesAuxiliaresPorPrograma" resultMap="auxiliaresPorPrograma">
+        SELECT * from listar_auxiliares_por_programas(#{id_programa},#{gestion},#{periodo}) as(id_estudiante dentero,paterno dtexto2, materno dtexto2, nombres dtexto, id_programa dentero,id_plan dentero);  
+    </select>  
+  
+    <select id="getBuscarEstudiantesAuxiliaresPorPrograma" resultMap="estEstudianteAuxiliar">
+        SELECT * from buscar_auxiliares_por_programas(#{id_programa},#{id_estudiante},#{gestion},#{periodo}) as(id_perfil dentero,id_estudiante dentero,paterno dtexto2, materno dtexto2, nombres dtexto,  sigla dtexto, materia dtexto, programa dtexto, facultad dtexto, carga_horaria dtexto, tipo_asignacion dtexto, tipo_docente dtexto, fecha_i dfecha, fecha_f dfecha);    
+    </select>    
+
+    <!--TARJETAS MANGETICAS -->
+    <resultMap id="buscarEstudiantePersona" type="org.fautapo.domain.Estudiantes">  
+        <result property="id_estudiante"            column="id_estudiante" />
+        <result property="id_persona"            column="id_persona" />
+        <result property="paterno"            column="paterno" />
+        <result property="materno"            column="materno" />
+        <result property="nombres"            column="nombres" />
+        <result property="programa"            column="programa" />    
+        <result property="facultad"            column="facultad" />    
+        <result property="id_programa"            column="id_programa" />    
+        <result property="id_facultad"            column="id_facultad" />    
+    </resultMap>    
+
+    <select id="getBuscarEstudiantePersona" resultMap="buscarEstudiantePersona">
+        SELECT * from buscar_estudiante_persona(#{id_persona}) as(id_estudiante dentero, id_persona dentero, paterno dtexto2, materno dtexto2, nombres dtexto, programa dtexto, facultad dtexto, id_programa dentero, id_facultad dentero);
+    </select>      
+ 
+    <resultMap id="listarCursosVarios" type="org.fautapo.domain.Estudiantes">
+        <result property="nombres"        column="nombres"/>
+        <result property="programa"       column="programa"/>
+    </resultMap>
+ 
+    <select id="getListarCursoPsicoEst" resultMap="listarCursosVarios">
+        SELECT * FROM mi_listar_cursoPsicoEst()
+        AS (nombres text, programa dtexto);
+    </select>
+
+    <select id="getListarCursoSemioEst" resultMap="listarCursosVarios">
+        SELECT * FROM mi_listar_cursoSemioEst()
+        AS (nombres text, programa dtexto);
+    </select> 
+    <!--FIN - METODOS ADICIONADOS POR LA UAP -->
+
+ 
+  
+
+    <!--INICIO - FECHA DE INGRESO A LA UAB -->
+
+    <resultMap id="listarIngresoUAB" type="org.fautapo.domain.Estudiantes">  
+        <result property="fec_ingreso"      column="fec_ingreso" />
+        <result property="id_persona"       column="id_persona" />
+        <result property="nombres"          column="nombres" />
+    </resultMap>  
+  
+    <select id="getListarIngresoUAB" resultMap="listarIngresoUAB">
+        SELECT * from mi_fecha_minima_ing_UAB(#{id_persona}) as(fec_ingreso date, id_persona integer, nombres text);  
+    </select>  
+ 
+    <!--FIN - FECHA DE INGRESO A LA UAB -->
+
+    <!--INICIO - FECHA DE INGRESO A LA UAB -->
+
+    <resultMap id="listarCursosVarios2" type="org.fautapo.domain.Estudiantes">
+        <result property="nombres"        column="nombres"/>
+    </resultMap>
+ 
+    <select id="getlistarMiembrosT" resultMap="listarCursosVarios2">
+        SELECT * from mi_listar_miembro_tribunal() as(nombres dtexto2);
+    </select>
+  
+    <!--FIN - FECHA DE INGRESO A LA UAB -->
+
+    <!-- TABLAS NOTAS CODE-->
+
+    <resultMap id="registrarCerGen" type="org.fautapo.domain.Estudiantes">
+        <result property="id_concepto"    				column="id_concepto"/>
+        <result property="id_sede"       	  			column="id_sede"/>
+        <result property="nro_certificado"    			column="nro_certificado"/>
+        <result property="gestion_certificado"          column="gestion_certificado"/>
+        <result property="nro_transaccion"            	column="nro_transaccion"/>
+        <result property="facultad"              		column="facultad"/>
+        <result property="carrera"       				column="carrera"/>
+        <result property="nivel"      					column="nivel"/>
+        <result property="id_plan"         				column="id_plan"/>
+        <result property="periodo_academico"			column="periodo_academico"/>
+        <result property="ru"        					column="ru"/>
+        <result property="ci"          					column="ci"/>
+        <result property="estudiante"            		column="estudiante"/>
+        <result property="reimpresiones"                column="reimpresiones"/> 
+        <result property="ult_usuario"                  column="ult_usuario"/>
+    </resultMap>
+  
+    <select id="setRegistrarCerGen" resultType="java.lang.Integer">
+        SELECT * FROM cert_registrar_certificado_generado(#{id_concepto},#{id_sede},#{nro_certificado},#{gestion_certificado},#{nro_transaccion},#{facultad},#{carrera},#{nivel},#{id_plan},#{periodo_academico},#{ru},#{ci},#{estudiante},#{reimpresiones},#{ult_usuario});
+    </select>
+  
+    <!-- <resultMap id="maxCert" type="org.fautapo.domain.Estudiantes">
+          <result property="nro_certificado"    			column="nro_certificado"/>
+    </resultMap>-->
+    <select id="getBuscarMaxCertSede" resultType="java.lang.Integer">
+        SELECT * FROM cert_buscar_maximo_nro_certificado_sede(#{id_sede},#{gestion_certificado},#{id_concepto});
+    </select>
+  
+    <resultMap id="registrarCerGenNotas" type="org.fautapo.domain.Estudiantes">
+        <result property="id_certificados_generados"	column="id_certificados_generados"/>
+        <result property="nro_certificado2"				column="nro_certificado2"/>
+        <result property="sigla"          				column="sigla"/>
+        <result property="nivel2"      					column="nivel2"/>
+        <result property="asignatura"          			column="asignatura"/>
+        <result property="numeral"          			column="numeral"/>
+        <result property="literal"          			column="literal"/>
+        <result property="tipo_evaluacion"          	column="tipo_evaluacion"/>
+        <result property="periodogestion"          	    column="periodogestion"/>
+        <result property="id_estado"          			column="id_estado"/>
+        <result property="ult_usuario"                  column="ult_usuario"/>
+        <result property="observacion"                  column="observacion"/>
+    </resultMap>
+    <select id="setRegistrarCerGenNotas" resultType="java.lang.Integer">
+        SELECT * FROM cert_registrar_notas_certificado_generado(#{id_certificados_generados},#{nro_certificado2},#{sigla},#{nivel2}, #{asignatura}, #{numeral}, #{literal},#{tipo_evaluacion},#{periodogestion}, #{id_estado}, #{ult_usuario},#{observacion});
+    </select>
+   
+    <!--CODE-->
+    <resultMap id="listarCertificadosGen" type="org.fautapo.domain.Estudiantes">  
+        <result property="id_certificados_generados"       	  	column="id_certificados_generados"/>
+        <result property="id_concepto"    						column="id_concepto"/>
+        <result property="id_sede"    						    column="id_sede"/>
+        <result property="nro_certificado"       	  			column="nro_certificado"/>
+        <result property="gestion_certificado"    				column="gestion_certificado"/>
+        <result property="nrocertificado_gestion"       	  	column="nrocertificado_gestion"/>
+        <result property="nro_transaccion"    					column="nro_transaccion"/>
+        <result property="facultad"       	  					column="facultad"/>
+        <result property="carrera"    							column="carrera"/>
+        <result property="nivel"       	  						column="nivel"/>
+        <result property="planes"    						    column="planes"/>
+        <result property="periodo_academico"       	  			column="periodo_academico"/>
+        <result property="ru"    								column="ru"/>
+        <result property="ci"       	  						column="ci"/>
+        <result property="estudiante"    						column="estudiante"/>
+        <result property="obs"    						        column="obs"/>
+        <result property="reimpresiones"    					column="reimpresiones"/>
+    </resultMap>    
+
+    <select id="getListarCertGen" resultMap="listarCertificadosGen">
+        SELECT * FROM cert_listar_certificados_generados(#{nrocertificado_gestion},#{id_sede},#{id_concepto})
+        AS (
+        id_certificados_generados integer,
+        id_concepto dentero,
+        id_sede dentero,
+        nro_certificado dentero,
+        gestion_certificado dentero,
+        nrocertificado_gestion dtexto2,
+        nro_transaccion dtexto2,
+        facultad dtexto2,
+        carrera dtexto2,
+        nivel dtexto2,
+        planes dtexto2,
+        periodo_academico dtexto2 ,
+        ru dentero,
+        ci dentero,
+        estudiante dtexto2,
+        obs dtexto2,
+        reimpresiones dentero);
+    </select> 
+    <!--CODE-->
+    <resultMap id="listarCertificadosGenAnulados" type="org.fautapo.domain.Estudiantes">  
+	
+        <result property="nrocertificado_gestion"       	  	column="nrocertificado_gestion"/>
+        <result property="facultad"       	  					column="facultad"/>
+        <result property="carrera"    							column="carrera"/>
+        <result property="estudiante"    						column="estudiante"/>
+        <result property="nivel"       	  						column="nivel"/>
+        <result property="planes"    						    column="planes"/>
+        <result property="periodo_academico"       	  			column="periodo_academico"/>
+        <result property="ru"    								column="ru"/>
+        <result property="ci"       	  						column="ci"/>
+        <result property="obs"    						        column="obs"/>
+        <result property="id_sede"    						    column="id_sede"/>
+        <result property="fec_registro"    						column="fec_registro"/>
+        <result property="fec_inicio"    					    column="fec_inicio"/>
+        <result property="fec_fin"    					        column="fec_fin"/>
+        <result property="fec_modificacion"    				    column="fec_modificacion"/>
+        <result property="id_concepto"    						column="id_concepto"/>
+    </resultMap>    
+
+    <select id="getListarCertGenAnulados" resultMap="listarCertificadosGenAnulados">
+        SELECT * FROM cert_listar_certificados_generados_anulados(#{id_sede},#{fec_inicio},#{fec_fin},#{id_concepto})
+        AS (
+        nrocertificado_gestion dtexto2,
+        facultad dtexto2,
+        carrera dtexto2,
+        nivel dtexto2,
+        planes dtexto2,
+        periodo_academico  dtexto2 ,
+        ru dentero,
+        ci dentero,
+        estudiante dtexto2,
+        obs dtexto2,
+        id_sede dentero,
+        fec_registro dfec_modificacion,
+        fec_inicio text,
+        fec_fin text,
+        fec_modificacion dfec_modificacion,
+        id_concepto integer);
+    </select> 
+ 
+    <select id="getListarCertGenEmitidos" resultMap="listarCertificadosGenAnulados">
+        SELECT * FROM cert_listar_certificados_generados_emitidos(#{id_sede},#{fec_inicio},#{fec_fin},#{id_concepto})
+        AS (
+        nrocertificado_gestion dtexto2,
+        facultad dtexto2,
+        carrera dtexto2,
+        nivel dtexto2,
+        planes dtexto2,
+        periodo_academico  dtexto2 ,
+        ru dentero,
+        ci dentero,
+        estudiante dtexto2,
+        obs dtexto2,
+        id_sede dentero,
+        fec_registro dfec_modificacion,
+        fec_inicio text,
+        fec_fin text,
+        fec_modificacion dfec_modificacion,
+        id_concepto integer);
+    </select> 
+    <!-- --> 
+    <resultMap id="ListarNotasCertificados" type="org.fautapo.domain.Estudiantes">  
+        <result property="id_notas_certificados"    			column="id_notas_certificados"/>
+        <result property="id_certificados_generados"       	  	column="id_certificados_generados"/>
+        <result property="nro_certificado2"       	  			column="nro_certificado2"/>
+        <result property="sigla"    						    column="sigla"/>
+        <result property="nivel"       	  						column="nivel"/>
+        <result property="asignatura"    						column="asignatura"/>
+        <result property="numeral"       		  				column="numeral"/>
+        <result property="literal"    							column="literal"/>
+        <result property="tipo_evaluacion"       	  			column="tipo_evaluacion"/>
+        <result property="periodogestion"          	            column="periodogestion"/>
+        <result property="observacion"    						column="observacion"/>
+        <result property="id_estado"       	  					column="id_estado"/>
+        <result property="fec_registro"    						column="fec_registro"/>
+        <result property="fec_modificacion"       	  			column="fec_modificacion"/>
+        <result property="ult_usuario"    						column="ult_usuario"/>
+	
+    </resultMap>    
+
+    <select id="getListarNotasCertificados" resultMap="ListarNotasCertificados">
+        SELECT * FROM cert_listar_notas_certificados(#{id_certificados_generados})
+        AS (
+ 
+        id_notas_certificados integer,
+        id_certificados_generados dentero,
+        nro_certificado2 dtexto2,
+        sigla dtexto2,
+        nivel dtexto2,
+        asignatura dtexto2,
+        numeral float ,
+        literal dtexto2,
+        tipo_evaluacion dtexto2,
+        periodogestion dtexto2,
+        observacion dtexto2,
+        id_estado did_estado ,
+        fec_registro dfec_modificacion,
+        fec_modificacion dfec_modificacion,
+        ult_usuario did_usuario);
+	
+ 
+    </select>  
+  
+    <select id="setEliminarCertificadoNotas">
+        SELECT cert_eliminar_certificado_generado(#{id_certificados_generados},#{obs},#{ult_usuario});
+    </select>
+  
+    <!--  
+    <resultMap id="ListarTiposSedesCertificados" type="org.fautapo.domain.Estudiantes">
+      <result property="id_sede"       	  			column="id_sede"/>
+          <result property="sede"    						column="sede"/>
+    </resultMap>
+    <select id="getListarTiposSedesCertificados" resultType="ListarTiposSedesCertificados">
+     SELECT * FROM mi_listar_sedes_certificados()AS (id_sede integer, sede dtexto);
+    </select>-->
+    <resultMap id="listarCertificadosGen3" type="org.fautapo.domain.Estudiantes">  
+        <result property="nro_transaccion"    					column="nro_transaccion"/>
+    </resultMap>  
+    <select id="getbuscarnrotransacciones" resultType="java.lang.Integer">
+        SELECT * FROM buscar_nro_transaccionCODE(#{nro_transaccion});
+    </select>
+  
+    <resultMap id="listarCertificadosGen2" type="org.fautapo.domain.Estudiantes">  
+        <result property="nro_certificado2"    					column="nro_certificado2"/>
+        <result property="id_estado"       	  					column="id_estado"/>
+    </resultMap>  
+    <select id="getbuscarnrocertificado" resultType="java.lang.Integer">
+        SELECT * FROM buscar_nro_certificadocode(#{nro_certificado2},#{id_estado},#{id_concepto},#{id_sede});
+    </select>
+    <!--***********
+    cert_buscar_nro_certificado_gestioncode
+    **************-->
+  
+    <resultMap id="cert_buscar_nro_certificado_gestioncode" type="org.fautapo.domain.Estudiantes">  
+        <result property="nrocertificado_gestion"    					column="nrocertificado_gestion"/>
+        <result property="id_sede"    									column="id_sede"/>
+    </resultMap>  
+    <select id="getcert_buscar_nro_certificado_gestioncode" resultType="java.lang.Integer">
+        SELECT * FROM cert_buscar_nro_certificado_gestioncode(#{nrocertificado_gestion},#{id_sede});
+    </select>
+    <select id="getListarEstudiantes" resultType="org.fautapo.domain.EstudianteUsuario">
+        SELECT u.id_usuario_estudiante, u.id_persona, u.correo, u.clave, u.celular, trim(e.paterno||' '||e.materno||' '||e.nombres)::text as nombre_completo
+        FROM personas e INNER JOIN usuario_estudiante u
+        ON e.id_persona = u.id_persona
+        WHERE u.id_estado = 'A' AND upper(trim(e.dip ||' ' ||e.paterno||' '||e.materno||' '||e.nombres)::text) LIKE '%'||upper(#{nombreUsuario})||'%'
+        ORDER BY paterno, materno, nombres ASC OFFSET (#{pagina}-1)*#{pagina} LIMIT #{nro_pagina} 
+    </select>
+    <select id="setRegistrarUsuarioEstudiante" resultType="java.lang.Integer">
+        SELECT * FROM mi_est_registrar_estudiante_user(#{id_usuario_estudiante},#{id_persona}, #{correo}, #{clave}, #{celular}, #{id_rol}, #{observacion}, #{ult_usuario});
+    </select>
+    <update id="setEliminarEstudiante">
+        UPDATE usuario_estudiante SET  id_estado  = 'X',  ult_usuario = #{ult_usuario}
+        WHERE id_usuario_estudiante = #{id_usuario_estudiante}  AND id_estado = 'A';   
+    </update>
+    <select id="getBuscarEstudianteUsuario" resultType="org.fautapo.domain.EstudianteUsuario">
+        SELECT id_usuario_estudiante, e.id_persona, 
+        e.id_estado, e.correo, clave, 
+        e.celular, id_rol, 
+        e.fec_registro, e.fec_modificacion, 
+        observacion, ip, dispositivo, ultima_conexion, ubicacion, e.ult_usuario,
+        p.paterno || ' ' || p.materno  || ' ' ||p.nombres  as nombre_completo
+        FROM public.usuario_estudiante e inner join personas p on p.id_persona=e.id_persona
+        where id_usuario_estudiante=#{id_usuario_estudiante}
+    </select>
+</mapper>

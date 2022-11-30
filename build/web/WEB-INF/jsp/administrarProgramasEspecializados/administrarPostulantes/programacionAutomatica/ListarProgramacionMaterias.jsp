@@ -1,0 +1,92 @@
+<%@ include file="../../../Superior.jsp" %>
+
+<div class="titulo">Programacion automatica de postulantes</div>
+<br>
+<forma name="fvolver" action="<c:url value="/postulantes/entradaBuscarPostulante.fautapo"/>" method="post">
+<div class="volver"><a href="javascript: document.fvolver.submit();">Volver</a></div>
+</form>
+<br> <br>
+
+<table class="formulario">
+  <tr>
+  <th colspan="4">MATRICULA POSTULANTE</th>
+  </tr>   
+ <tr>
+    <td colspan="2" rowspan="5">
+    <table width="100" height="100" class="tabla">
+    <tr> <td> </td>  </tr>
+    </table>
+    </td>
+    <td class="etiqueta4"> R.U.P.::</td>
+    <td><c:out value="${datosMatricula.id_matricula}"/> </td>
+  </tr>  
+  <tr> <td class="etiqueta4"> NOMBRES  ::</td>
+      <td><c:out value="${datosMatricula.paterno}"/>  <c:out value="${datosMatricula.materno}"/>  <c:out value="${datosMatricula.nombres}"/></td>
+  </tr>
+  <tr> <td class="etiqueta4"> DIP ::</td>
+      <td><c:out value="${datosMatricula.dip}"/> </td>
+  </tr>
+  <tr> <td class="etiqueta4"> PROGRAMA ::</td>
+      <td><c:out value="${datosMatricula.programa}"/> </td>
+  </tr>
+  <tr> <td class="etiqueta4"> PLAN ::</td>
+      <td><c:out value="${datosMatricula.id_plan}"/> </td>
+  </tr>
+  <tr> <td colspan="2" rowspan="3"> <center>________________________<br>FIRMA UNO </center></td>
+       <td colspan="2" rowspan="3"> <center>________________________<br>FIRMA DOS</center></td>
+  </tr>
+</table>
+
+<br> <br>
+<table class="tabla">
+    <tr> <th colspan="2"> CLAVE DE ACCESO </th> </tr>
+    <tr> <td class="etiqueta4"> CLAVE::</td>
+      <td><c:out value="${datosMatricula.clave}"/> </td>
+    </tr>
+</table>
+<br> <br>
+
+<table class="tabla">
+<tr>
+  <th colspan="4">MATERIAS PORGRAMADAS</th>
+</tr>  
+<tr>
+  <th>SITUACION</th>
+  <th>SIGLA</th>
+  <th>MATERIA</th>
+  <th>GRUPO</th>
+</tr>  
+<c:forEach var="materias" items="${lProgramacionPst}" varStatus="contador">
+     <!-- ********** Esto es para el efecto ************ -->
+       <tr <c:if test="${(contador.count mod 2) == 0}">bgColor="#FFFFD9" %-- Est&acute;tico :( --%</c:if> onMouseOver="this.className='sobreFila'" onmouseout="this.className=''">
+     <!-- ********** Fin  efecto ************ -->   
+    <td>
+        <font color=red>Inscrito</font>
+    </td>
+    <td> <c:out value="${materias.sigla}"/></td>
+    <td> <c:out value="${materias.materia}"/></td>
+    <td><c:out value="${materias.grupo}"/></td>
+  </tr>
+</c:forEach>
+<tr>
+  <td colspan="6" align=center>
+    <form method='post' action="<c:url value='/listarMisPendientes.fautapo'/>">
+      <input type="hidden" name="aplicacion" value="/" >
+      <input type='submit' value='Aceptar' class="aceptar">
+    </form>
+  </td>
+</tr>      
+</table>
+<br>
+<c:if test="${!empty mensaje }">
+<blink>
+  <center>
+    <div class='cuadroAviso'>
+      <div class="titulo">Aviso</div>
+      <c:out value="${mensaje}"/>
+    </div>
+  </center>
+</blink>
+</c:if>
+
+<%@ include file="../../../Inferior.jsp" %>

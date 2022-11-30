@@ -1,0 +1,75 @@
+<%@ include file="../Superior.jsp" %>
+
+
+<div class=titulo>Definir evaluaci&oacute;n</div>
+<div class="volver"><a href="javascript:history.back();">Volver</a></div>
+
+<br>
+<a class="enlace" href="javascript:history.back();"><< Volver</a>
+<c:if test="${mensaje != null}">
+    <div class ="cuadroAviso"><c:out value="${mensaje}"/></div>
+</c:if>
+
+<c:if test="${mensaje == null}">
+
+<table class="tabla" border="0">
+  <tr>
+    <th>CARRERA/PROGRAMA</th>
+    <th>SIGLA</th>
+    <th>MATERIA</th>
+    <th>GRUPO</th>
+    <th>GESTION</th>
+    <th>PERIODO</th>
+    <th>FASE ACTUAL</th>
+  <tr>    
+    <td class="etiqueta" align="center"><c:out value="${programa}"/></td>
+    <td class="etiqueta" align="center"><c:out value="${sigla}"/></td>    
+    <td class="etiqueta" align="center"><c:out value="${materia}"/></td>    
+    <td class="etiqueta" align="center"><c:out value="${grupo}"/></td>
+    <td class="etiqueta" align="center"><c:out value="${gestion}"/></td>
+    <td class="etiqueta" align="center"><c:out value="${periodo}"/></td>
+    <td class="etiqueta" align="center"><c:out value="${fase}"/></td>
+   </tr>
+</table>
+<br>
+<div class="H4"><b><c:out value="${tipo_evaluacion}"/></b></div>
+
+<form name=forma1 method="post">
+  <table class="formulario" > 
+    <tr>
+      <th>Nro.</th>
+      <th>TIPO NOTA</th>
+      <th>CANTIDAD</th>
+      <th>PORCENTAJE</th>
+    </tr>
+    <c:forEach var="nota" items="${listaTiposNotas}" varStatus="contador">    
+      <!-- ********** Esto es para el efecto ************ -->
+        <tr <c:if test="${(contador.count mod 2) == 0}">bgColor="#FFFFD9" %-- Est&acute;tico :( --%</c:if> onMouseOver="this.className='sobreFila'" onmouseout="this.className=''">
+      <!-- ********** Fin  efecto ************ --> 
+    
+      <td align="center"><c:out value="${contador.count}"/></td>
+      <td><c:out value="${nota.tipo_nota}"/></td>
+      <td align="center"><c:out value="${nota.cantidad}"/></td> 
+      <td align="center"><c:out value="${nota.ponderacion}"/></td></td> 
+    </tr>
+    </c:forEach>
+    <tr>
+      <td colspan="2" align="center"><input type=submit value="Modificar Evaluacion" onclick="document.forma1.action='<c:url value="/definirEvaluacion/definirEvaluacion.fautapo"/>'"></td>
+      <td colspan="2" align="center"><input type=submit value="Confirmar" onclick="document.forma1.action='<c:url value="/definirEvaluacion/registrarDefinicion.fautapo"/>'"></td>
+    </tr>
+ </table>
+  <input type=hidden name="id_docente"         value="<c:out value="${id_docente}"/>" > 
+  <input type=hidden name="id_programa"        value="<c:out value="${id_programa}"/>" >
+  <input type=hidden name="id_materia"         value="<c:out value="${id_materia}"/>" >
+  <input type=hidden name="id_grupo"           value="<c:out value="${id_grupo}"/>" >
+  <input type=hidden name="id_fase"            value="<c:out value="${id_fase}"/>" >
+  <input type=hidden name="tipo_evaluacion"    value="<c:out value="${tipo_evaluacion}"/>" >
+  <input type=hidden name="id_tipo_evaluacion" value="<c:out value="${id_tipo_evaluacion}"/>" >
+  <input type=hidden name="id_modelo_ahorro"   value="<c:out value="${id_modelo_ahorro}"/>" >
+  <input type=hidden name="id_departamento"    value="<c:out value="${id_departamento}"/>" >  
+  <input type=hidden name="gestion"            value="<c:out value="${gestion}"/>">
+  <input type=hidden name="periodo"            value="<c:out value="${periodo}"/>">
+</form>  
+</c:if>
+
+<%@ include file="../Inferior.jsp" %>

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${jdbc.driverClassName}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+    </bean>
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="mapperLocations"  value="classpath:org/fautapo/dao/ibatis/maps/*.xml" />
+        <property name="dataSource" ref="dataSource" />
+        <property name="typeAliasesPackage" value="org.fautapo.domain"></property>
+        <property name="transactionFactory">
+            <bean class="org.mybatis.spring.transaction.SpringManagedTransactionFactory" />
+        </property> 
+    </bean>
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--Specify the session factory, if only one is defined in the current context, the attribute can be omitted -->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+        <!-- Specify the base package to automatically scan the interface, implement the interface -->
+        <property name="basePackage" value="org.fautapo.dao"></property>
+    </bean>
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean> 
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <!-- ========================= DAO DEFINITIONS: IBATIS IMPLEMENTATIONS ========================= -->
+
+    <bean id="abmDao" class="org.fautapo.dao.ibatis.SqlMapAbmDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="clientesDao" class="org.fautapo.dao.ibatis.SqlMapClientesDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="usuariosDao" class="org.fautapo.dao.ibatis.SqlMapUsuariosDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+  
+    <bean id="enlacesDao" class="org.fautapo.dao.ibatis.SqlMapEnlacesDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="categoriasDao" class="org.fautapo.dao.ibatis.SqlMapCategoriasDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="rolesDao" class="org.fautapo.dao.ibatis.SqlMapRolesDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="herramientasDao" class="org.fautapo.dao.ibatis.SqlMapHerramientasDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="actividadesDao" class="org.fautapo.dao.ibatis.SqlMapActividadesDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="dominiosDao" class="org.fautapo.dao.ibatis.SqlMapDominiosDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="camposDao" class="org.fautapo.dao.ibatis.SqlMapCamposDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="informesDao" class="org.fautapo.dao.ibatis.SqlMapInformesDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="gwDao" class="org.fautapo.dao.ibatis.SqlMapGwDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="tramitesDao" class="org.fautapo.dao.ibatis.SqlMapTramitesDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="personasDao" class="org.fautapo.dao.ibatis.SqlMapPersonasDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="proveidosDao" class="org.fautapo.dao.ibatis.SqlMapProveidosDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="adjuntosDao" class="org.fautapo.dao.ibatis.SqlMapAdjuntosDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="tablerosDao" class="org.fautapo.dao.ibatis.SqlMapTablerosDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+  
+    <bean id="hilosDao" class="org.fautapo.dao.ibatis.SqlMapHilosDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+  
+    <bean id="dibwaykaDao" class="org.fautapo.dao.ibatis.SqlMapDibwaykaDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="horariosDao" class="org.fautapo.dao.ibatis.SqlMapHorariosDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="planesDao" class="org.fautapo.dao.ibatis.SqlMapPlanesDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="programasDao" class="org.fautapo.dao.ibatis.SqlMapProgramasDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="departamentosDao" class="org.fautapo.dao.ibatis.SqlMapDepartamentosDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="facultadesDao" class="org.fautapo.dao.ibatis.SqlMapFacultadesDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="universidadesDao" class="org.fautapo.dao.ibatis.SqlMapUniversidadesDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="notasDao" class="org.fautapo.dao.ibatis.SqlMapNotasDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="materiasDao" class="org.fautapo.dao.ibatis.SqlMapMateriasDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="libretasDao" class="org.fautapo.dao.ibatis.SqlMapLibretasDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="docentesDao" class="org.fautapo.dao.ibatis.SqlMapDocentesDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="asignacionesDao" class="org.fautapo.dao.ibatis.SqlMapAsignacionesDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+  
+    <bean id="estudiantesDao" class="org.fautapo.dao.ibatis.SqlMapEstudiantesDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+  
+    <bean id="gruposDao" class="org.fautapo.dao.ibatis.SqlMapGruposDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean> 
+
+    <bean id="postulantesDao" class="org.fautapo.dao.ibatis.SqlMapPostulantesDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+  
+    <bean id="perfilesDao" class="org.fautapo.dao.ibatis.SqlMapPerfilesDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+  
+    <bean id="curriculumDao" class="org.fautapo.dao.ibatis.SqlMapCurriculumDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+
+    <bean id="calendariosDao" class="org.fautapo.dao.ibatis.SqlMapCalendariosDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+    <bean id="tokenDao" class="org.fautapo.dao.ibatis.SqlMapTokenDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+    <bean id="programaAnaliticoDao" class="org.fautapo.dao.ibatis.SqlMapProgramaAnaliticoDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+    <bean id="cursosmoodleDao" class="org.fautapo.dao.ibatis.SqlMapCursosMoodleDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+    <bean id="kardexDao" class="org.fautapo.dao.ibatis.SqlMapKardexDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>     
+    <bean id="mencionesDao" class="org.fautapo.dao.ibatis.SqlMapMencionesDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+        <bean id="materiasOptativasDao" class="org.fautapo.dao.ibatis.SqlMapMateriasOptativasDao">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+    </bean>
+</beans>

@@ -1,0 +1,245 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="Grupos">
+
+    <!--Administrar horarios-->
+    <resultMap id="listarGrupos" type="org.fautapo.domain.Grupos">
+        <result property="id_dpto_grupo" column="id_dpto_grupo"/>
+        <result property="grupo"         column="grupo"/>
+    </resultMap>
+
+    <select id="getDptoListarGruposMateria" resultMap="listarGrupos">
+        SELECT * FROM mi_dpto_listar_grupos_materia(#{id_materia}, #{gestion}, #{periodo}, #{id_modelo_ahorro})
+        AS (id_dpto_grupo integer, grupo dtexto);
+    </select>
+  
+    <resultMap id="buscarGrupo" type="org.fautapo.domain.Grupos">
+        <result property="id_dpto_grupo"       column="id_dpto_grupo"/>
+        <result property="id_grupo"            column="id_grupo"/>
+        <result property="id_materia"          column="id_materia"/>
+        <result property="id_modelo_ahorro"    column="id_modelo_ahorro"/>    
+        <result property="id_departamento"     column="id_departamento"/>    
+        <result property="id_estado"           column="id_estado"/>        
+        <result property="gestion"             column="gestion"/>
+        <result property="periodo"             column="periodo"/>
+        <result property="cupo_actual"         column="cupo_actual"/>
+        <result property="cupo_max"            column="cupo_max"/>
+        <result property="horas"               column="horas"/>
+        <result property="nro_resolucion"      column="nro_resolucion"/>
+        <result property="fec_resolucion"      column="fec_resolucion"/>
+        <result property="grupo"               column="grupo"/>
+        <result property="id_tipo_evaluacion"  column="id_tipo_evaluacion"/>
+        <result property="tipo_evaluacion"     column="tipo_evaluacion"/>
+    </resultMap>
+
+    <select id="getDptoBuscarGrupo" resultMap="buscarGrupo">
+        SELECT *
+        FROM mi_dpto_buscar_grupo_eval(#{id_dpto_grupo})
+        AS (id_dpto_grupo integer, id_grupo dentero, id_materia dentero, id_modelo_ahorro dentero2, id_departamento dentero, 
+        id_estado did_estado, gestion dentero, periodo dentero, cupo_actual dentero2, cupo_max dentero2, horas dreal,
+        nro_resolucion dentero, fec_resolucion dfecha, grupo dtexto, id_tipo_evaluacion dentero, tipo_evaluacion dtexto)
+        WHERE id_dpto_grupo is not null;
+    </select>
+    <!--Fin Administrar horarios-->
+
+    <!-- Cambio de grupo -->
+    <resultMap id="listaEstudiantesGrupos" type="org.fautapo.domain.Grupos">
+        <result property="id_materia"       column="ID_MATERIA"/>
+        <result property="materia"          column="MATERIA"/>
+        <result property="id_estudiante"    column="ID_ESTUDIANTE"/>
+        <!--<result property="nombres"          column="NOMBRES"/>-->
+        <!--<result property="id_grupo"         column="ID_GRUPO"/>-->
+        <result property="grupo"            column="GRUPO"/>
+        <result property="id_modelo_ahorro" column="ID_MODELO_AHORRO"/>
+    </resultMap>
+
+    <select id="getListarEstudiantesGrupos" resultMap="listaEstudiantesGrupos">
+        SELECT * FROM listar_estudiantes_grupos(#{id_materia},#{gestion},#{periodo},#{id_modelo_ahorro})
+        AS (id_materia integer,materia varchar,id_estudiante integer,
+        nombres varchar,id_grupo integer,grupo varchar,id_modelo_ahorro integer);
+    </select>
+ 
+    <resultMap id="cambiarGrupoEstudiante" type="org.fautapo.domain.Grupos">
+        <result property="resultado"    column="RESULTADO"/>
+    </resultMap>
+
+    <select id="setCambiarGrupoEstudiante" resultMap="cambiarGrupoEstudiante">
+        SELECT cambiar_grupo_estudiante(#{id_estudiante}, #{id_materia}, #{id_grupo}, #{gestion}, #{periodo}, #{id_modelo_ahorro}, #{ult_usuario}) as resultado;
+    </select>
+    <!-- Cambio de grupo -->
+  
+    <!--EST_PROGRAMACIONES-->
+    <resultMap id="grupodatos" type="org.fautapo.domain.Grupos">
+        <result property="id_grupo" column="id_grupo"/>
+        <result property="grupo"    column="grupo"/>
+    </resultMap>
+
+    <select id="getGrpBuscarGrupo" resultMap="grupodatos">
+        SELECT id_grupo,grupo FROM mi_grp_buscar_grupo(#{id_grupo});
+    </select> 
+  
+    <resultMap id="cupogrupo" type="org.fautapo.domain.Grupos">
+        <result property="cupo_actual"     column="cupo_actual"/>
+    </resultMap>
+
+    <select id="getDptoBuscarCupoRestanteGrupo" resultMap="cupogrupo">
+        SELECT * FROM mi_dpto_buscar_cupo_restante_grupo(#{id_materia},#{id_modelo_ahorro},#{gestion},#{periodo},#{id_grupo}) AS cupo_actual;
+    </select> 
+    <!--FIN EST_PROGRAMACIONES-->
+
+    <!--  inicio - GRUPOS JOJO  -->
+    <resultMap id="grupo" type="org.fautapo.domain.Grupos">
+        <result property="id_materia"     column="id_materia"/>
+        <result property="materia"        column="materia"/>
+        <result property="id_dpto_grupo"  column="id_dpto_grupo"/>
+        <result property="cupo_actual"    column="cupo_actual"/>
+        <result property="cupo_max"       column="cupo_max"/>
+        <result property="horas"          column="horas"/>
+        <result property="nro_resolucion" column="nro_resolucion"/>
+        <result property="fechita"        column="fec_resolucion"/>
+        <result property="id_grupo"       column="id_grupo"/>
+        <result property="grupo"          column="grupo"/>
+    </resultMap>
+
+    <select id="getPrgListarGrupos" resultMap="grupo">
+        SELECT * FROM mi_prg_listar_grupos(#{id_programa}, #{id_plan}, #{gestion}, #{periodo}, #{id_tipo_evaluacion}, #{id_tipo_grado})
+        AS (id_materia integer, materia dtexto, id_dpto_grupo integer, cupo_actual dentero2, cupo_max dentero2, horas dreal, nro_resolucion dentero, fec_resolucion text, id_grupo integer, grupo dtexto);
+    </select>
+
+    <select id="getMtrListarGruposNoAsignados" resultMap="grupodatos">
+        SELECT * FROM mi_mtr_listar_grupos_noasignados(#{id_materia}, #{id_tipo_evaluacion}, #{gestion}, #{periodo})
+        AS (id_grupo integer, grupo dtexto);
+    </select>
+    <select id="getMtrListarGruposNoAsignadosCompletos" resultMap="grupodatos">
+        SELECT g.id_grupo, g.grupo
+        FROM grupos g
+        WHERE id_estado = 'A'
+    </select>
+
+
+    <resultMap id="buscarGrupo2" type="org.fautapo.domain.Grupos">
+        <result property="id_dpto_grupo"    column="id_dpto_grupo"/>
+        <result property="id_grupo"         column="id_grupo"/>
+        <result property="id_materia"       column="id_materia"/>
+        <result property="id_modelo_ahorro" column="id_modelo_ahorro"/>    
+        <result property="id_departamento"  column="id_departamento"/>    
+        <result property="id_estado"        column="id_estado"/>        
+        <result property="gestion"          column="gestion"/>
+        <result property="periodo"          column="periodo"/>
+        <result property="cupo_actual"      column="cupo_actual"/>
+        <result property="cupo_max"         column="cupo_max"/>
+        <result property="horas"            column="horas"/>
+        <result property="nro_resolucion"   column="nro_resolucion"/>
+        <result property="fec_resolucion"   column="fec_resolucion"/>
+        <result property="fec_registro"     column="fec_registro"/>
+        <result property="fec_modificacion" column="fec_modificacion"/>
+        <result property="ult_usuario"      column="ult_usuario"/>
+        <result property="grupo"            column="grupo"/>
+    </resultMap>
+
+    <select id="getMiDptoBuscarGrupo" resultMap="buscarGrupo2">
+        SELECT *, '' AS grupo FROM mi_dpto_buscar_grupo(#{id_dpto_grupo});
+    </select>
+    <!--  fin - GRUPOS JOJO  -->
+  
+    <!--Asignacion Docentes-->
+    <resultMap id="listarGruposTipoEval1" type="org.fautapo.domain.Grupos">
+        <result property="id_dpto_grupo" column="id_dpto_grupo"/>
+        <result property="grupo"         column="grupo"/>
+        <result property="id_asignacion" column="id_asignacion"/>
+        <result property="nombres"       column="nombres"/>
+    </resultMap>
+
+    <select id="getDptoListarGruposMateriaTipoEvaluacion" resultMap="listarGruposTipoEval1">
+        SELECT * FROM mi_dpto_listar_grupos_materia_tipo_evaluacion(#{id_materia}, #{gestion}, #{periodo}, #{id_modelo_ahorro}, #{id_tipo_evaluacion})
+        AS (id_dpto_grupo integer, grupo dtexto, id_asignacion integer, nombres text);
+    </select>
+  
+    <resultMap id="listarGruposTipoEval" type="org.fautapo.domain.Grupos">
+        <result property="id_dpto_grupo" column="id_dpto_grupo"/>
+        <result property="grupo"         column="grupo"/>
+        <result property="id_asignacion" column="id_asignacion"/>
+        <result property="id_fase_resolucion" column="id_fase_resolucion"/>
+        <result property="nombres"       column="nombres"/>
+    </resultMap>
+  
+    <select id="getDptoListarGruposMateriaTipoEvaluacionDesignado" resultMap="listarGruposTipoEval">
+        SELECT * FROM mi_dpto_listar_grupos_materia_tipo_evaluacion_designacion(#{id_materia}, #{gestion}, #{periodo}, #{id_modelo_ahorro}, #{id_tipo_evaluacion})
+        AS (id_dpto_grupo integer, grupo dtexto, id_asignacion integer,id_fase_resolucion dentero2, nombres text);
+    </select>
+  
+    <!--Fin Asignacion Docentes-->
+
+
+    <!--Asignacion Auxiliares-->
+    <select id="getDptoListarGruposMateriaTipoEvaluacionAuxiliares" resultMap="listarGruposTipoEval">
+        SELECT * FROM mi_dpto_listar_grupos_materia_tipo_evaluacion_auxiliares(#{id_materia}, #{gestion}, #{periodo}, #{id_modelo_ahorro}, #{id_tipo_evaluacion})
+        AS (id_dpto_grupo integer, grupo dtexto, id_asignacion integer, nombres text);
+    </select>
+    <!--Fin Asignacion Auxiliares-->
+
+    <!--FIN - METODOS ADICIONADOS POR LA UAP -->
+    <insert id="RegistrarDepartamentosGrupo">
+        <selectKey keyProperty="id_dpto_grupo"
+                   resultType="int">
+            SELECT nextVal('dpto_grupos_id_dpto_grupo_seq')
+        </selectKey>
+        INSERT INTO dpto_grupos(id_grupo, id_materia, id_departamento, id_tipo_evaluacion, gestion, periodo, cupo_max, horas, nro_resolucion, fec_resolucion, id_rol, ult_usuario) 
+        VALUES(#{id_grupo},#{id_materia},#{id_departamento},#{id_tipo_evaluacion},#{gestion},#{periodo},#{cupo_max},#{horas},#{nro_resolucion},#{fec_resolucion},#{id_rol},#{ult_usuario})
+    </insert>
+    <resultMap id="idDepartamentoGrupos" type="org.fautapo.domain.DepartamentoGrupos">
+        <result property="id_dpto_grupo" column="id_dpto_grupo"/>
+        <result property="id_grupo" column="id_grupo"/>
+        <result property="id_materia" column="id_materia"/>
+        <result property="id_departamento" column="id_departamento"/>
+        <result property="id_tipo_evaluacion" column="id_tipo_evaluacion"/>
+        <result property="gestion" column="gestion"/>
+        <result property="periodo" column="periodo"/>
+    </resultMap>
+    <select id="getDepartamentosGrupos" resultMap="idDepartamentoGrupos">
+        SELECT id_dpto_grupo,id_grupo,id_materia,id_departamento,id_tipo_evaluacion,gestion,periodo
+        FROM dpto_grupos
+        where id_grupo=#{id_grupo} 
+        and id_materia=#{id_materia} 
+        and id_departamento=#{id_departamento} 
+        and id_tipo_evaluacion=#{id_tipo_evaluacion} 
+        and gestion=#{gestion} 
+        and periodo=#{periodo}
+        and id_estado='A';
+    </select>
+    <update id="ActualizarDepartamentosGrupo">
+        UPDATE dpto_grupos
+        SET  id_grupo=#{id_grupo},
+        id_materia=#{id_materia}, 
+        id_departamento=#{id_departamento}, 
+        id_tipo_evaluacion=#{id_tipo_evaluacion}, 
+        gestion=#{gestion},  periodo=#{periodo},
+        cupo_max=#{cupo_max}, horas=#{horas},
+        nro_resolucion=#{nro_resolucion}, 
+        fec_resolucion=#{fec_resolucion},
+        id_rol=#{id_rol}, 
+        ult_usuario=#{ult_usuario}
+        WHERE id_dpto_grupo=#{id_dpto_grupo}
+    </update>
+    <update id="EliminarGrupo">
+        UPDATE dpto_grupos 
+        SET id_estado=#{id_estado},
+        id_rol=#{id_rol}, 
+        ult_usuario=#{ult_usuario}
+        where id_dpto_grupo=#{id_dpto_grupo}
+    </update>
+    <resultMap id="idGruposPermitidos" type="org.fautapo.domain.DepartamentoGrupos">
+        <result property="id_grupos_permitidos" column="id_grupos_permitidos"/>
+        <result property="id_grupo" column="id_grupo"/>
+        <result property="id_materia" column="id_materia"/>
+        <result property="id_departamento" column="id_departamento"/>
+        <result property="id_tipo_evaluacion" column="id_tipo_evaluacion"/>
+        <result property="gestion" column="gestion"/>
+        <result property="periodo" column="periodo"/>
+    </resultMap>
+    <select id="getGrupos_Permitidos" resultMap="idGruposPermitidos">
+        select * from grupos_permitidos
+        where id_grupo=#{id_grupo} and id_materia=#{id_materia} and id_estado='A' and periodo=#{periodo}
+        and gestion=#{gestion} 
+    </select>
+</mapper>

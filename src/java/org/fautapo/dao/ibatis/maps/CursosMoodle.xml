@@ -1,0 +1,275 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="CursosMoodle">
+    
+    <resultMap id="map_listar_cursos_moodle" type="org.fautapo.domain.CursosMoodle">
+        <result property="id_cursos_moodle"   column="id_cursos_moodle" />
+        <result property="id_moodle"   column="id_moodle" />
+        <result property="moodle_username"          column="moodle_username" />
+        <result property="moodle_password"      column="moodle_password" />
+        <result property="moodle_correo"      column="moodle_correo" />
+        <result property="moodle_nombres_usuario"      column="moodle_nombres_usuario" />
+        <result property="moodle_apellidos_usuario"   column="moodle_apellidos_usuario" />
+        <result property="moodle_detallecurso"    column="moodle_detallecurso" />
+        <result property="id_moodle_cursos"     column="id_moodle_cursos" />
+        <result property="id_rol_cursos_moodle" column="id_rol_cursos_moodle" />
+        <result property="id_persona_moxos"   column="id_persona_moxos" />
+        <result property="id_programa"        column="id_programa" />
+        <result property="gestion"      column="gestion" />
+        <result property="periodo" column="periodo" />
+        <result property="id_usuario_moxos_ru_doc" column="id_usuario_moxos_ru_doc" />
+        <result property="tipo_usuario"  column="tipo_usuario" />
+        <result property="id_grupo"     column="id_grupo" />
+        <result property="id_materia"     column="id_materia" />
+        <result property="materias"     column="materias" />
+        <result property="grupo"     column="grupo" />
+        <result property="facultad"     column="facultad" />
+        <result property="programa"     column="programa" />
+    </resultMap>
+    <select id="GetListarCursosMoodleEstudiantePorEstudiante" resultMap="map_listar_cursos_moodle">
+        select * from view_cursos_moodle_estudiante
+        where 
+        id_programa=#{id_programa} and 
+        id_materia=#{id_materia} and 
+        id_usuario_moxos_ru_doc=#{id_estudiante} and 
+        id_grupo=#{id_grupo} and 
+        gestion=#{gestion} and 
+        periodo=#{periodo#{
+    </select>
+    <select id="GetListarCursosMoodleEstudiante" resultMap="map_listar_cursos_moodle">
+        select * from view_cursos_moodle_estudiante
+        where 
+        id_programa=#{id_programa} and 
+        id_materia=#{id_materia} and  
+        id_grupo=#{id_grupo} and 
+        gestion=#{gestion} and 
+        periodo=#{periodo#{
+    </select>
+    <select id="GetListarCursosMoodleEstudiantePorCurso" resultMap="map_listar_cursos_moodle">
+        select * from view_cursos_moodle_estudiante
+        where 
+        id_programa=#{id_programa} and 
+        id_materia=#{id_materia} and  
+        id_grupo=#{id_grupo} and 
+        gestion=#{gestion} and 
+        periodo=#{periodo} and
+        id_moodle_cursos=#{id_moodle_cursos#{
+    </select>
+    <select id="GetListarCursosMoodleDocente" resultMap="map_listar_cursos_moodle">
+        select * from view_cursos_moodle_docente
+        where 
+        id_programa=#{id_programa} and 
+        id_materia=#{id_materia} and 
+        id_usuario_moxos_ru_doc=#{id_docente} and 
+        id_grupo=#{id_grupo} and 
+        gestion=#{gestion} and 
+        periodo=#{periodo#{
+    </select>
+    <update id="UpdateUserMoodle">
+        UPDATE cursos_creados_moodle
+        SET   
+        moodle_username=#{moodle_username}, 
+        moodle_password=#{moodle_password}, 
+        moodle_correo=#{moodle_correo}, 
+        moodle_nombres_usuario=#{moodle_nombres_usuario}, 
+        moodle_apellidos_usuario=#{moodle_apellidos_usuario}, 
+        id_rol_cursos_moodle=#{id_rol_cursos_moodle} 
+        WHERE id_persona_moxos=#{id_persona_moxos}
+    </update>
+    <update id="MatricularMoodle">
+        UPDATE cursos_creados_moodle SET id_moodle=#{id_moodle} WHERE id_cursos_moodle=#{id_cursos_moodle}
+    </update>
+    <insert id="RegistrarCursosMoodleDocente">
+        INSERT INTO cursos_creados_moodle(
+        id_moodle, 
+        moodle_username, 
+        moodle_password,
+        moodle_correo, 
+        moodle_nombres_usuario, 
+        moodle_apellidos_usuario,
+        moodle_detallecurso, 
+        id_moodle_cursos, id_rol_cursos_moodle, id_persona_moxos, id_programa, gestion, 
+        periodo, 
+        id_usuario_moxos_ru_doc, 
+        tipo_usuario, id_grupo, id_materia, id_estado, id_rol, ult_usuario)
+        VALUES (
+        #{id_moodle},
+        #{moodle_username},
+        #{moodle_password},
+        #{moodle_correo},
+        #{moodle_nombres_usuario},
+        #{moodle_apellidos_usuario},
+        #{moodle_detallecurso},
+        #{id_moodle_cursos},
+        #{id_rol_cursos_moodle},
+        #{id_persona_moxos},
+        #{id_programa},
+        #{gestion},
+        #{periodo},
+        #{id_usuario_moxos_ru_doc},
+        2,
+        #{id_grupo},
+        #{id_materia},
+        'A',
+        #{id_rol},
+        #{ult_usuario});
+    </insert>
+    <insert id="RegistrarCursosMoodleEstudiante">
+        INSERT INTO cursos_creados_moodle(id_moodle, moodle_username, moodle_password, moodle_correo, moodle_nombres_usuario, moodle_apellidos_usuario, moodle_detallecurso, id_moodle_cursos, id_rol_cursos_moodle, id_persona_moxos, id_programa, gestion, periodo, id_usuario_moxos_ru_doc, tipo_usuario, id_grupo, id_materia, id_estado, id_rol, ult_usuario)
+        VALUES (#{id_moodle},
+        #{moodle_username},
+        #{moodle_password},
+        #{moodle_correo},
+        #{moodle_nombres_usuario},
+        #{moodle_apellidos_usuario},
+        #{moodle_detallecurso},
+        #{id_moodle_cursos},
+        #{id_rol_cursos_moodle},
+        #{id_persona_moxos},
+        #{id_programa},
+        #{gestion},
+        #{periodo},
+        #{id_usuario_moxos_ru_doc},
+        1,
+        #{id_grupo},
+        #{id_materia},
+        'A',
+        #{id_rol},
+        #{ult_usuario});
+    </insert>
+    
+    <resultMap id="map_Configuracion_cursos_moodle" type="org.fautapo.domain.MoodleConfiguracion">
+        <result property="id_condiguracion_moodle"   column="id_condiguracion_moodle" />
+        <result property="moodle_host"   column="moodle_host" />
+        <result property="moodle_key"          column="moodle_key" />
+        <result property="moodle_rol_teacher"      column="moodle_rol_teacher" />
+        <result property="moodle_rol_student"      column="moodle_rol_student" />
+        <result property="moodle_detalle"      column="moodle_detalle" />
+    </resultMap>
+    <select id="GetConfiguracionCursosMoodle" resultMap="map_Configuracion_cursos_moodle">
+        SELECT 
+        id_condiguracion_moodle, 
+        moodle_host, 
+        moodle_key, 
+        moodle_rol_teacher, 
+        moodle_rol_student, moodle_detalle FROM configuracion_moodle WHERE moodle_detalle='pregrado';
+    </select>
+        
+    <resultMap id="map_cursos_moodle" type="org.fautapo.domain.CursosMoodle">
+        <result property="id_cursos_moodle"   column="id_cursos_moodle" />
+        <result property="id_moodle"   column="id_moodle" />
+        <result property="moodle_username"          column="moodle_username" />
+        <result property="moodle_password"      column="moodle_password" />
+        <result property="moodle_correo"      column="moodle_correo" />
+        <result property="moodle_nombres_usuario"      column="moodle_nombres_usuario" />
+        <result property="moodle_apellidos_usuario"   column="moodle_apellidos_usuario" />
+        <result property="moodle_detallecurso"    column="moodle_detallecurso" />
+        <result property="id_moodle_cursos"     column="id_moodle_cursos" />
+        <result property="id_rol_cursos_moodle" column="id_rol_cursos_moodle" />
+        <result property="id_persona_moxos"   column="id_persona_moxos" />
+        <result property="id_programa"        column="id_programa" />
+        <result property="gestion"      column="gestion" />
+        <result property="periodo" column="periodo" />
+        <result property="id_usuario_moxos_ru_doc" column="id_usuario_moxos_ru_doc" />
+        <result property="tipo_usuario"  column="tipo_usuario" />
+        <result property="id_grupo"     column="id_grupo" />
+        <result property="id_materia"     column="id_materia" />
+    </resultMap>
+    <select id="GetCursoMoodleEstudiante" resultMap="map_cursos_moodle">
+        SELECT id_cursos_moodle, id_moodle, moodle_username, moodle_password, 
+        moodle_correo, moodle_nombres_usuario, moodle_apellidos_usuario, 
+        moodle_detallecurso, id_moodle_cursos, id_rol_cursos_moodle, 
+        id_persona_moxos, id_programa, gestion, periodo, id_usuario_moxos_ru_doc, 
+        tipo_usuario, id_grupo, id_materia
+        FROM cursos_creados_moodle
+        WHERE id_usuario_moxos_ru_doc=#{id_estudiante} 
+        and id_persona_moxos=#{id_persona} 
+        and periodo=#{periodo} 
+        and gestion=#{gestion}
+        and tipo_usuario=1 
+        and id_moodle_cursos=#{id_moodle_cursos}
+        LIMIT 1;
+    </select>
+
+    <insert id="RegistrarUsuariosMoodle">
+        INSERT INTO usuarios_creados_moodle(moodle_username, moodle_password, moodle_correo, moodle_nombres_usuario, id_persona_moxos, id_estado, id_rol, ult_usuario)
+        VALUES ( #{moodle_username}, #{moodle_password}, #{moodle_correo}, #{moodle_nombres_usuario}, #{id_persona_moxos}, 'A', #{id_rol}, #{ult_usuario});
+    </insert>
+    <insert id="ActualizarUsuariosMoodle">
+        UPDATE usuarios_creados_moodle
+        SET moodle_username=#{moodle_username}, 
+        moodle_password=#{moodle_password}, 
+        moodle_correo=#{moodle_correo}, 
+        moodle_nombres_usuario=#{moodle_nombres_usuario}, 
+        ult_usuario=#{ult_usuario#{
+        WHERE id_persona_moxos=#{id_persona_moxos};
+    </insert>
+    <resultMap id="map_usuario_moodle" type="org.fautapo.domain.CursosMoodle">
+        <result property="id_cursos_moodle"   column="id_cursos_moodle" />
+        <result property="moodle_username"   column="moodle_username" /> 
+        <result property="moodle_password"      column="moodle_password" />
+        <result property="moodle_correo"      column="moodle_correo" />
+        <result property="moodle_nombres_usuario"      column="moodle_nombres_usuario" />  
+        <result property="id_persona_moxos"   column="id_persona_moxos" />
+    </resultMap>
+    <select id="GetUsuarioMoodle" resultMap="map_usuario_moodle">
+        SELECT id_cursos_moodle,
+        moodle_username, 
+        moodle_password, 
+        moodle_correo, 
+        moodle_nombres_usuario, 
+        id_persona_moxos 
+        FROM usuarios_creados_moodle
+        WHERE id_persona_moxos=#{id_persona_moxos}
+    </select>
+    <select id="GetListaCursosMoodlePorPrograma" resultType="org.fautapo.domain.CursosMoodle">
+        SELECT  
+        materias.sigla, 
+        materias.materia as materias, 
+        grupos.grupo, 
+        personas.paterno || ' ' ||  personas.materno|| ' ' ||  personas.nombres AS nombres, 
+        personas.dip,
+        case when moodle.id_moodle is null then 'NO' else 'SI'  end as oferta,
+        case when moodle.id_moodle is null then -2 else moodle.id_moodle end as id_moodle,
+        case when moodle.id_moodle_cursos is null then -2 else moodle.id_moodle_cursos::integer end as id_moodle_cursos,
+        case when matriculas.cantidad is null then 0 else matriculas.cantidad end as cantidad
+        FROM 
+        public.dct_asignaciones inner join  public.docentes on docentes.id_docente = dct_asignaciones.id_docente
+        inner join  public.personas on personas.id_persona = docentes.id_persona
+        inner join public.fcl_departamentos_programas on fcl_departamentos_programas.id_departamento = dct_asignaciones.id_departamento
+        inner join public.fcl_programas on fcl_programas.id_programa = fcl_departamentos_programas.id_programa
+        inner join public.grupos on grupos.id_grupo = dct_asignaciones.id_grupo
+        inner join public.materias on materias.id_materia = dct_asignaciones.id_materia 
+        left join ( SELECT materias.id_materia, grupos.id_grupo, fp.id_programa,
+        materias.sigla, 
+        materias.materia as materias, 
+        grupos.grupo, 
+        p.paterno ||' ' || p.materno ||' ' || p.nombres as nombres ,
+        p.dip,
+        ccm.id_moodle,
+        ccm.id_moodle_cursos
+        FROM 
+        public.cursos_creados_moodle ccm inner join  public.fcl_programas fp on fp.id_programa = ccm.id_programa
+        inner join  public.materias on materias.id_materia = ccm.id_materia
+        inner join  public.grupos on grupos.id_grupo = ccm.id_grupo
+        inner join public.facultades f on f.id_facultad = fp.id_facultad
+        inner join public.personas p on p.id_persona = ccm.id_persona_moxos 
+        WHERE ccm.gestion = #{gestion} AND 
+        ccm.tipo_usuario = 2 and fp.id_programa=#{id_programa} and ccm.periodo=#{periodo} and ccm.id_moodle<![CDATA[ <> ]]>-1 ) as moodle on moodle.id_materia=dct_asignaciones.id_materia and moodle.id_grupo= dct_asignaciones.id_grupo 
+        left join (  SELECT est_programaciones.id_materia, est_programaciones.id_grupo, count(est_programaciones.id_estudiante) as cantidad
+        FROM 
+        est_programaciones inner join estudiantes on estudiantes.id_estudiante = est_programaciones.id_estudiante
+        WHERE 
+        est_programaciones.id_tipo_evaluacion = #{id_tipo_evaluacion} AND 
+        est_programaciones.gestion = #{gestion} AND 
+        est_programaciones.id_estado = 'A' and
+        est_programaciones.periodo = #{periodo} AND
+        estudiantes.id_programa = #{id_programa} 
+        group by est_programaciones.id_materia, est_programaciones.id_grupo) as matriculas on matriculas.id_materia=dct_asignaciones.id_materia and matriculas.id_grupo= dct_asignaciones.id_grupo 
+        WHERE dct_asignaciones.id_tipo_evaluacion = #{id_tipo_evaluacion} AND 
+        fcl_programas.id_programa =#{id_programa} and 
+        dct_asignaciones.gestion = #{gestion} AND 
+        dct_asignaciones.periodo = #{periodo} AND 
+        dct_asignaciones.id_estado = 'A';
+    </select>
+</mapper>

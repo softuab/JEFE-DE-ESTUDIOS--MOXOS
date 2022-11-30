@@ -1,0 +1,66 @@
+<%@ include file="../../Superior.jsp"%>
+<c:if test="${empty titulo}">
+<div class="titulo">Administrar Estudiante Nuevo</div>
+</c:if>
+<c:if test="${!empty titulo}">
+<div class="titulo"><c:out value="${titulo}"/></div>
+</c:if>
+
+<br>
+<table>
+  <tr>
+    <td>
+     <form name="fvolver" action="<c:url value='/postulantes/entradaBuscarPst.fautapo'/>" method="post">
+      <input type="hidden" name="gestion" value="<c:out value='${gestion}'/>">
+      <input type="hidden" name="periodo"  value="<c:out value='${periodo}'/>">
+      <input type="hidden" name="nombre"  value="<c:out value='${nombre}'/>">
+      <div> <a class="volver" href="javascript:document.fvolver.submit();"> Volver</a> </div>
+    </form>
+    </td>
+</tr>
+</table>
+
+<div class="centro">
+  <table class="tabla">
+  <tr>
+    <th colspan="9">INFORMACION ENCONTRADA</th>
+  </tr>
+  <tr>
+    <th>Ap. Paterno</th>
+    <th>Ap. Materno</th>
+    <th>Nombres</th>
+    <th>C.I.</th>
+    <th>Programa<br>(Carrera)</th>
+    <th>Gesti&oacute;n</th>
+    <th>Periodo</th>
+    <th>SITUACION</th>
+  </tr>
+  <c:forEach var="lista" items="${listaPostulantes}" varStatus="contador">
+    <tr <c:if test="${(contador.count mod 2) == 0}">bgColor="#FFFFD9" %-- Est&acute;tico :( --%</c:if> onMouseOver="this.className='sobreFila'" onmouseout="this.className=''">
+      <td><c:out value="${lista.paterno}"/></td>
+      <td><c:out value="${lista.materno}"/></td>
+      <td><c:out value="${lista.nombres}"/></td>
+      <td><c:out value="${lista.dip}"/></td>
+      <td><c:out value="${lista.programa}"/></td>
+      <td><c:out value="${lista.gestion}"/></td>
+      <td><c:out value="${lista.periodo}"/></td>
+      <td>
+        <c:if test="${lista.id_estado == 'P'}">
+        <form name="fnuevo<c:out value='${contador.count}'/>" action="<c:url value='/postulantes/verDatosPostulante.fautapo'/>" method="post">
+	<input type="hidden" name="id_postulante" value="<c:out value='${lista.id_postulante}'/>">
+        <div> <a class="agregar" href="javascript:document.fnuevo<c:out value='${contador.count}'/>.submit();"> Certificado Habilitaci&oacute;n</a> </div>
+        </form>
+	</c:if>
+	<c:if test="${lista.id_estado == 'E'}">
+	 <font color="red"> Inscrito/Universitario  </font>
+	</c:if>
+	<c:if test="${lista.id_estado == 'A'}">
+	 <font color="red"> Aprobado </font>
+	</c:if>
+      </td>
+    </tr>
+  </c:forEach>
+  </table>
+</div>
+
+<%@ include file="../../Inferior.jsp" %>

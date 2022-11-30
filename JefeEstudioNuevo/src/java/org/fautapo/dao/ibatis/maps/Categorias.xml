@@ -1,0 +1,17 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="Categorias">
+
+  <resultMap id="categoria" type="org.fautapo.domain.Categorias">
+    <result property="id_categoria" column="id_categoria" />
+    <result property="categoria"    column="categoria" />
+    <result property="imagen"       column="imagen" />
+  </resultMap>
+
+  <select id="getListarCategorias" resultMap="categoria">
+    SELECT distinct id_categoria, categoria, orden, imagen
+    FROM ctg_listar_categorias(#{id_rol})
+    ORDER BY orden, categoria;
+  </select>
+
+</mapper>

@@ -1,0 +1,47 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="Enlaces">
+
+  <resultMap id="enlace" type="org.fautapo.domain.Enlaces">
+    <result property="id_enlace"       column="id_enlace" />
+    <result property="id_enlace_padre" column="id_enlace_padre" />
+    <result property="nivel"           column="nivel" />
+    <result property="enlace"          column="enlace" />
+    <result property="imagen"          column="imagen" />
+    <result property="ruta"            column="ruta" />
+    <result property="tabla"           column="tabla" />
+    <result property="permiso"         column="permiso" />
+  </resultMap>
+  
+  <select id="getListarEnlaces" resultMap="enlace">
+    SELECT * FROM listar_enlaces(#{id_rol})
+  </select>
+
+  <select id="getBuscarEnlaces" resultMap="enlace">
+    SELECT *
+    FROM ctg_buscar_enlace(#{id_enlace});
+  </select>
+
+  <!-- INICIO Combustible -->
+  <select id="getEnlBuscarEnlace" resultMap="enlace">
+    SELECT *
+    FROM enl_buscar_enlace(#{id_enlace});
+  </select>
+  <!-- FIN Combustible -->
+
+<!-- INICIO - MI -->
+  <!--Buscar Estados -->
+  <resultMap id="estados" type="org.fautapo.domain.Enlaces">
+    <result property="id_estado"   column="id_estado"/>
+    <result property="estado"      column="estado"/>
+    <result property="tabla"       column="tabla"/>
+  </resultMap>
+
+  <select id="getStdListarEstadosTabla" resultMap="estados">
+    SELECT id_estado, estado,tabla FROM mi_std_listar_estados_xtabla(#{tabla});    
+  </select>
+  
+  <!--Fin Buscar Estados-->
+<!-- FIN - MI -->
+
+</mapper>

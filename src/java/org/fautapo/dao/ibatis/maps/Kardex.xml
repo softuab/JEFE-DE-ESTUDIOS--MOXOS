@@ -1,0 +1,703 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+ * @autor FAUTAPO
+ * @fec_registro 2020-03-18
+ * @ult_usuario FAUTAPO
+ * @fec_modificacion 2020-03-18
+-->
+
+
+<mapper namespace="Kardex">
+    <insert id="RegistrarNuevoKardexDocente">
+        INSERT INTO persona_kardex( numerodocumento, tipodocumento, nombre, segundonombre, 
+        apellidopaterno, apellidomaterno, imagen, fechanacimiento, direccion, 
+        telefonocelular, estadocivil, correoinsitucional, id_localidad, 
+        nua, tiponua, sexo, fechacontratoinicial, sindicato, jubilado, 
+        ren, discapacidad, numerolibreta, numerodeseguro, fechaingresodocente, 
+        matriculalibreta, escalon, aserviciomilitar, 
+        nrodiscpacitado, ult_usuario, id_banco, cuentacorriente, id_nivelestudio, 
+        id_profesiones, id_colegio_profesionales, numeroregistroprofesionales, 
+        fechatituloprofesion, ley1178, nrotitulo, promedio, idiomanativo, 
+        imagelibretamilitar, imagecarnetidentidad, declaracionjurada, 
+        declaracionjurabienesrentas, fechacurso1178, id_estado, universidad, 
+        fechaemision, numerotituloprovision, sippase, fechaemisionsippase, 
+        id_persona, prefijo_profesional, emision_documento,fechaexpiracioncarnet)
+        VALUES ( #{numerodocumento},
+        #{tipodocumento},
+        #{nombre},
+        #{segundonombre},
+        #{apellidopaterno},
+        #{apellidomaterno},
+        #{imagen},
+        #{fechanacimiento},
+        #{direccion},
+        #{telefonocelular},
+        #{estadocivil},
+        #{correoinsitucional},
+        #{id_localidad},
+        #{nua},
+        #{tiponua},
+        #{sexo},
+        #{fechacontratoinicial},
+        #{sindicato},
+        #{jubilado},
+        #{ren},
+        #{discapacidad},
+        #{numerolibreta},
+        #{numerodeseguro},
+        #{fechaingresodocente},
+        #{matriculalibreta},
+        #{escalon},
+        #{aserviciomilitar},
+        #{nrodiscpacitado},
+        #{ult_usuario},
+        #{id_banco},
+        #{cuentacorriente},
+        #{id_nivelestudio},
+        #{id_profesiones},
+        #{id_colegio_profesionales},
+        #{numeroregistroprofesionales},
+        #{fechatituloprofesion},
+        #{ley1178},
+        #{nrotitulo},
+        #{promedio},
+        #{idiomanativo},
+        #{imagelibretamilitar},
+        #{imagecarnetidentidad},
+        #{declaracionjurada},
+        #{declaracionjurabienesrentas},
+        #{fechacurso1178},
+        'A',
+        #{universidad},
+        #{fechaemision},
+        #{numerotituloprovision},
+        #{sippase},
+        #{fechaemisionsippase},
+        #{id_persona},
+        #{prefijo_profesional},
+        #{emision_documento},
+        #{fechaexpiracioncarnet});
+    </insert>
+    <update id="ActualizarDatosKardexDocente">
+        UPDATE persona_kardex
+        SET    
+        numerodocumento=#{numerodocumento},
+        tipodocumento=#{tipodocumento},
+        nombre=#{nombre},
+        segundonombre=#{segundonombre},
+        apellidopaterno=#{apellidopaterno},
+        apellidomaterno=#{apellidomaterno},
+        imagen=#{imagen},
+        fechanacimiento=#{fechanacimiento},
+        direccion=#{direccion},
+        telefonocelular=#{telefonocelular},
+        estadocivil=#{estadocivil},
+        correoinsitucional=#{correoinsitucional},
+        id_localidad=#{id_localidad},
+        nua=#{nua},
+        tiponua=#{tiponua},
+        sexo=#{sexo},
+        fechacontratoinicial=#{fechacontratoinicial},
+        sindicato=#{sindicato},
+        jubilado=#{jubilado},
+        ren=#{ren},
+        discapacidad=#{discapacidad},
+        numerolibreta=#{numerolibreta},
+        numerodeseguro=#{numerodeseguro},
+        fechaingresodocente=#{fechaingresodocente},
+        fechaexpiracioncarnet=#{fechaexpiracioncarnet},
+        matriculalibreta=#{matriculalibreta},
+        escalon=#{escalon},
+        aserviciomilitar=#{aserviciomilitar},
+        nrodiscpacitado=#{nrodiscpacitado},
+        ult_usuario=#{ult_usuario},
+        id_banco=#{id_banco},
+        cuentacorriente=#{cuentacorriente},
+        id_nivelestudio=#{id_nivelestudio},
+        id_profesiones=#{id_profesiones},
+        id_colegio_profesionales=#{id_colegio_profesionales},
+        numeroregistroprofesionales=#{numeroregistroprofesionales},
+        fechatituloprofesion=#{fechatituloprofesion},
+        ley1178=#{ley1178},
+        nrotitulo=#{nrotitulo},
+        promedio=#{promedio},
+        idiomanativo=#{idiomanativo},
+        imagelibretamilitar=#{imagelibretamilitar},
+        imagecarnetidentidad=#{imagecarnetidentidad},
+        declaracionjurada=#{declaracionjurada},
+        declaracionjurabienesrentas=#{declaracionjurabienesrentas},
+        fechacurso1178=#{fechacurso1178},
+        id_estado=#{id_estado},
+        universidad=#{universidad},
+        fechaemision=#{fechaemision},
+        numerotituloprovision=#{numerotituloprovision},
+        sippase=#{sippase},
+        fechaemisionsippase=#{fechaemisionsippase},
+        id_persona=#{id_persona},
+        prefijo_profesional=#{prefijo_profesional},
+        emision_documento=#{emision_documento},
+        WHERE id_persona_kardex=#{id_persona_kardex};
+    </update>
+    <resultMap id="kerdex_nuevo" type="org.fautapo.domain.PersonaKardex">
+        <result property="id_persona_kardex"            column="id_persona_kardex" />
+        <result property="numerodocumento"            column="numerodocumento" />
+        <result property="tipodocumento"            column="tipodocumento" />
+        <result property="nombre"            column="nombre" />
+        <result property="segundonombre"            column="segundonombre" />
+        <result property="apellidopaterno"            column="apellidopaterno" />
+        <result property="apellidomaterno"            column="apellidomaterno" />
+        <result property="imagen"            column="imagen" />
+        <result property="fechanacimiento"            column="fechanacimiento" />
+        <result property="direccion"            column="direccion" />
+        <result property="telefonocelular"            column="telefonocelular" />
+        <result property="estadocivil"            column="estadocivil" />
+        <result property="correoinsitucional"            column="correoinsitucional" />
+        <result property="id_localidad"            column="id_localidad" />
+        <result property="nua"            column="nua" />
+        <result property="tiponua"            column="tiponua" />
+        <result property="sexo"            column="sexo" />
+        <result property="fechacontratoinicial"            column="fechacontratoinicial" />
+        <result property="sindicato"            column="sindicato" />
+        <result property="jubilado"            column="jubilado" />
+        <result property="ren"            column="ren" />
+        <result property="discapacidad"            column="discapacidad" />
+        <result property="numerolibreta"            column="numerolibreta" />
+        <result property="numerodeseguro"            column="numerodeseguro" />
+        <result property="fechaingresodocente"            column="fechaingresodocente" />
+        <result property="fechaexpiracioncarnet"            column="fechaexpiracioncarnet" />
+        <result property="matriculalibreta"            column="matriculalibreta" />
+        <result property="escalon"            column="escalon" />
+        <result property="aserviciomilitar"            column="aserviciomilitar" />
+        <result property="nrodiscpacitado"            column="nrodiscpacitado" />
+        <result property="ult_usuario"            column="ult_usuario" />
+        <result property="id_banco"            column="id_banco" />
+        <result property="cuentacorriente"            column="cuentacorriente" />
+        <result property="id_nivelestudio"            column="id_nivelestudio" />
+        <result property="id_profesiones"            column="id_profesiones" />
+        <result property="id_colegio_profesionales"            column="id_colegio_profesionales" />
+        <result property="numeroregistroprofesionales"            column="numeroregistroprofesionales" />
+        <result property="fechatituloprofesion"            column="fechatituloprofesion" />
+        <result property="ley1178"            column="ley1178" />
+        <result property="nrotitulo"            column="nrotitulo" />
+        <result property="promedio"            column="promedio" />
+        <result property="idiomanativo"            column="idiomanativo" />
+        <result property="imagelibretamilitar"            column="imagelibretamilitar" />
+        <result property="imagecarnetidentidad"            column="imagecarnetidentidad" />
+        <result property="declaracionjurada"            column="declaracionjurada" />
+        <result property="declaracionjurabienesrentas"            column="declaracionjurabienesrentas" />
+        <result property="fechacurso1178"            column="fechacurso1178" />
+        <result property="id_estado"            column="id_estado" />
+        <result property="universidad"            column="universidad" />
+        <result property="fechaemision"            column="fechaemision" />
+        <result property="numerotituloprovision"            column="numerotituloprovision" />
+        <result property="sippase"            column="sippase" />
+        <result property="fechaemisionsippase"            column="fechaemisionsippase" />
+        <result property="id_persona"            column="id_persona" />
+        <result property="prefijo_profesional"            column="prefijo_profesional" />
+        <result property="emision_documento"            column="emision_documento" />
+        <result property="detalle_localidad" column="detalle_localidad" />
+        <result property="detalle_banco" column="detalle_banco" />
+        <result property="detalle_nivelestudio" column="detalle_nivelestudio" />
+        <result property="detalle_colegio_profesionales" column="detalle_colegio_profesionales" />
+        <result property="detalle_profesion" column="detalle_profesion" />
+        <result property="detalle_banco" column="detalle_banco" />
+    </resultMap>
+    <select id="GetKardexPersonalNuevo" resultMap="kerdex_nuevo">
+        SELECT * FROM persona_kardex_detalle where id_persona=#{id_persona}
+    </select>
+    <resultMap id="listview" type="org.fautapo.util.ListViewItem"> 
+        <result property="id" column="id" />
+        <result property="value" column="value" />
+    </resultMap>
+    <select id="GetLocalidadPersona" resultMap="listview">
+        SELECT * FROM  persona_localidades_detalle
+    </select>
+    <select id="GetNivelEstudio" resultMap="listview">
+        SELECT id_nivelestudio as id, nivelestudio as value
+        FROM persona_nivelestudio;
+    </select>
+    <select id="GetProfesiones" resultMap="listview">
+        SELECT id_profesiones as id, detalle_profesion as value
+        FROM persona_profesiones;
+    </select>
+    <select id="GetColegiosProfesionales" resultMap="listview">
+        SELECT id_colegio_profesionales as id, descripcioncolegio as value
+        FROM persona_colegio_profesionales;
+    </select>
+    <select id="GetBancos" resultMap="listview">
+        SELECT id_banco as id, detalle_banco as value
+        FROM persona_bancos;
+    </select>
+    <resultMap id="kerdex_nuevo_imagen" type="org.fautapo.domain.PersonaKardex">
+        <result property="imagen"            column="imagen" />
+        <result property="imagelibretamilitar"            column="imagelibretamilitar" />
+        <result property="imagecarnetidentidad"            column="imagecarnetidentidad" />
+    </resultMap>
+    
+    <select id="GetImagenesPersonaKardex" resultMap="kerdex_nuevo_imagen">
+        SELECT imagen, imagelibretamilitar, imagecarnetidentidad FROM persona_kardex where id_persona=#{id_persona};
+    </select> 
+    <!-- INICIO - IDIOMA -->
+    <insert id="RegistrarNuevoIdiomaKardex">
+        <selectKey keyProperty="id_idioma"
+                   resultType="int">
+            SELECT nextVal('persona_idioma_id_idioma_seq')
+        </selectKey>
+        INSERT INTO persona_idioma(
+        id_idioma,descripcion_idioma, lee, escribe, id_persona_kardex, 
+        url_idioma, aprobado,id_estado)
+        VALUES (#{id_idioma},  #{descripcion_idioma}, #{lee}, #{escribe}, #{id_persona_kardex}, 
+        #{url_idioma}, #{aprobado},'A');
+    </insert>
+    <update id="ActualizarDatosiIdiomaKardexDocente">
+        UPDATE persona_idioma
+        SET  descripcion_idioma=#{descripcion_idioma},
+        lee=#{lee},
+        escribe=#{escribe},
+        url_idioma=#{url_idioma}
+        WHERE id_idioma=#{id_idioma};
+    </update>
+    <update id="AprobarIdiomaKardexDocente">
+        UPDATE persona_idioma
+        SET  aprobado=#{aprobado}
+        WHERE id_idioma=#{id_idioma};
+    </update>
+    <update id="EliminarIdiomaKardexDocente">
+        UPDATE persona_idioma
+        SET  id_estado='X'
+        WHERE id_idioma=#{id_idioma};
+    </update>
+    <update id="ActualizarImagenIdiomaKardexDocente">
+        UPDATE persona_idioma SET url_idioma=#{url_idioma} WHERE id_idioma=#{id_idioma};
+    </update>
+    <resultMap id="kerdex_idioma" type="org.fautapo.domain.PersonaIdioma">
+        <result property="id_idioma"    column="id_idioma" />
+        <result property="descripcion_idioma"    column="descripcion_idioma" />
+        <result property="lee"    column="lee" />
+        <result property="escribe"    column="escribe" />
+        <result property="id_persona_kardex"    column="id_persona_kardex" />
+        <result property="url_idioma"    column="url_idioma" />
+        <result property="aprobado"    column="aprobado" />
+    </resultMap>
+    <select id="GetPersonaTotalIdiomaKardex" resultMap="kerdex_idioma">
+        SELECT id_idioma, descripcion_idioma, lee, escribe, id_persona_kardex, 
+        url_idioma, aprobado, id_estado
+        FROM persona_idioma
+        where  id_estado='A' AND id_persona_kardex=#{id_persona};
+    </select> 
+    <select id="GetPersonaIdiomaKardex" resultMap="kerdex_idioma">
+        SELECT id_idioma, descripcion_idioma, lee, escribe, id_persona_kardex, 
+        url_idioma, aprobado, id_estado
+        FROM persona_idioma
+        where id_idioma=#{id_idioma};
+    </select> 
+    <select id="GetPersonaSubTotalIdiomaKardex" resultMap="kerdex_idioma">
+        SELECT id_idioma, descripcion_idioma, lee, escribe, id_persona_kardex, 
+        url_idioma, aprobado, id_estado
+        FROM persona_idioma
+        where   id_estado='A' AND  id_persona_kardex=#{id_persona}
+        LIMIT #{number};
+    </select> 
+    <!-- FIN - IDIOMA -->
+    
+    <!-- INICIO - FORMACION -->
+    <insert id="RegistrarNuevoFormacionAcademicaKardex">
+        <selectKey keyProperty="id_formacion"
+                   resultType="int">
+            SELECT nextVal('persona_formacion_academica_id_formacion_seq')
+        </selectKey>
+        INSERT INTO persona_formacion_academica(
+        id_formacion, id_persona_kardex, expedido, fechaemision, id_nivelestudio, 
+        id_profesiones, descripcion, url_formacion, tipotitulo, numerotitulo, 
+        eseducacionsuperor, id_estado, aprobado)
+        VALUES (#{id_formacion}, #{id_persona_kardex}, #{expedido}, #{fechaemision}, #{id_nivelestudio}, 
+        #{id_profesiones}, #{descripcion}, #{url_formacion}, #{tipotitulo}, #{numerotitulo}, 
+        #{eseducacionsuperor}, 'A', #{aprobado});
+    </insert>
+    <update id="ActualizarDatosFormacionAcademicaKardexDocente">
+        UPDATE persona_formacion_academica
+        SET
+        id_persona_kardex=#{id_persona_kardex},
+        expedido=#{expedido},
+        fechaemision=#{fechaemision},
+        id_nivelestudio=#{id_nivelestudio},
+        id_profesiones=#{id_profesiones},
+        descripcion=#{descripcion},
+        url_formacion=#{url_formacion},
+        tipotitulo=#{tipotitulo},
+        numerotitulo=#{numerotitulo},
+        eseducacionsuperor=#{eseducacionsuperor} 
+        WHERE  id_formacion=#{id_formacion};
+    </update>
+    <update id="AprobarFormacionAcademicaKardexDocente">
+        UPDATE persona_formacion_academica
+        SET  aprobado=#{aprobado}
+        WHERE id_formacion=#{id_formacion};
+    </update>
+    <update id="EliminarFormacionAcademicaKardexDocente">
+        UPDATE persona_formacion_academica
+        SET  id_estado='X'
+        WHERE id_formacion=#{id_formacion};
+    </update>
+    <update id="ActualizarImagenFormacionAcademicaKardexDocente">
+        UPDATE persona_formacion_academica SET url_formacion=#{url_formacion} WHERE id_formacion=#{id_formacion};
+    </update>
+    <resultMap id="kerdex_formacion_academica" type="org.fautapo.domain.PersonaFormacionAcademica">
+        <result property="id_formacion"    column="id_formacion" />
+        <result property="id_persona_kardex"    column="id_persona_kardex" />
+        <result property="expedido"    column="expedido" />
+        <result property="fechaemision"    column="fechaemision" />
+        <result property="id_nivelestudio"    column="id_nivelestudio" />
+        <result property="id_profesiones"    column="id_profesiones" />
+        <result property="descripcion"    column="descripcion" />
+        <result property="url_formacion"    column="url_formacion" />
+        <result property="tipotitulo"    column="tipotitulo" />
+        <result property="numerotitulo"    column="numerotitulo" />
+        <result property="eseducacionsuperor"    column="eseducacionsuperor" />
+        <result property="id_estado"    column="id_estado" />
+        <result property="aprobado"    column="aprobado" />
+        <result property="nivelestudio"    column="nivelestudio" />
+        <result property="detalle_profesion"    column="detalle_profesion" />
+    </resultMap>
+    <select id="GetPersonaTotalFormacionAcademicaKardex" resultMap="kerdex_formacion_academica">
+        SELECT id_formacion, id_persona_kardex, expedido, fechaemision, id_nivelestudio, 
+        nivelestudio, id_profesiones, detalle_profesion, descripcion, 
+        url_formacion, tipotitulo, numerotitulo, eseducacionsuperor, 
+        id_estado, aprobado
+        FROM view_formacion_academica
+        where  id_estado='A' AND id_persona_kardex=#{id_persona_kardex};
+    </select> 
+    <select id="GetPersonaFormacionAcademicaKardex" resultMap="kerdex_formacion_academica">
+        SELECT id_formacion, id_persona_kardex, expedido, fechaemision, id_nivelestudio, 
+        nivelestudio, id_profesiones, detalle_profesion, descripcion, 
+        url_formacion, tipotitulo, numerotitulo, eseducacionsuperor, 
+        id_estado, aprobado
+        FROM view_formacion_academica
+        where id_formacion=#{id_formacion};
+    </select> 
+    <select id="GetPersonaSubTotalFormacionAcademicaKardex" resultMap="kerdex_formacion_academica">
+        SELECT id_formacion, id_persona_kardex, expedido, fechaemision, id_nivelestudio, 
+        nivelestudio, id_profesiones, detalle_profesion, descripcion, 
+        url_formacion, tipotitulo, numerotitulo, eseducacionsuperor, 
+        id_estado, aprobado
+        FROM view_formacion_academica
+        where   id_estado='A' AND  id_persona_kardex=#{id_persona_kardex}
+        LIMIT #{number};
+    </select> 
+    <!-- FIN - FORMACION -->
+    
+    <!-- INICIO - EXPERIENCIA LABORAL -->
+    <insert id="RegistrarExperienciaLaboralKardex">
+        <selectKey keyProperty="id_experiencia_laboral"
+                   resultType="int">
+            SELECT nextVal('persona_experiencia_laboral_id_experiencia_laboral_seq')
+        </selectKey>
+        INSERT INTO persona_experiencia_laboral(
+        id_experiencia_laboral, id_persona_kardex, institucion, detalle, 
+        cargoocupado, refrencia, calificacion, url_experiencia, inicio, 
+        fin, gestion, tipo_experiencia_laboral, id_estado, aprobado)
+        VALUES (#{id_experiencia_laboral}, #{id_persona_kardex}, #{institucion}, #{detalle}, 
+        #{cargoocupado}, #{refrencia}, #{calificacion}, #{url_experiencia}, #{inicio}, 
+        #{fin}, #{gestion}, #{tipo_experiencia_laboral}, 'A', #{aprobado});
+    </insert>
+    <update id="ActualizarDatosExperienciaLaboralKardexDocente">
+        UPDATE persona_experiencia_laboral
+        SET 
+        id_persona_kardex=#{id_persona_kardex},
+        institucion=#{institucion},
+        detalle=#{detalle},
+        cargoocupado=#{cargoocupado},
+        refrencia=#{refrencia},
+        calificacion=#{calificacion},
+        url_experiencia=#{url_experiencia},
+        inicio=#{inicio},
+        fin=#{fin},
+        gestion=#{gestion},
+        tipo_experiencia_laboral=#{tipo_experiencia_laboral},
+        id_estado=#{id_estado},
+        aprobado=#{aprobado}
+        WHERE  id_experiencia_laboral=#{id_experiencia_laboral};
+    </update>
+    <update id="AprobarExperienciaLaboralKardexDocente">
+        UPDATE persona_experiencia_laboral
+        SET  aprobado=#{aprobado#{
+        WHERE id_experiencia_laboral=#{id_experiencia_laboral#{;
+    </update>
+    <update id="EliminarExperienciaLaboralKardexDocente">
+        UPDATE persona_experiencia_laboral
+        SET  id_estado='X'
+        WHERE id_experiencia_laboral=#{id_experiencia_laboral#{;
+    </update>
+    <update id="ActualizarImagenExperienciaLaboralKardexDocente">
+        UPDATE persona_experiencia_laboral 
+        SET url_experiencia=#{url_experiencia}
+        WHERE id_experiencia_laboral=#{id_experiencia_laboral};
+    </update>
+    <resultMap id="kerdex_experiencia_laboral" type="org.fautapo.domain.PersonaExperienciaLaboral">
+        <result property="id_experiencia_laboral"    column="id_experiencia_laboral" />
+        <result property="id_persona_kardex"    column="id_persona_kardex" />
+        <result property="institucion"    column="institucion" />
+        <result property="detalle"    column="detalle" />
+        <result property="cargoocupado"    column="cargoocupado" />
+        <result property="refrencia"    column="refrencia" />
+        <result property="calificacion"    column="calificacion" />
+        <result property="url_experiencia"    column="url_experiencia" />
+        <result property="inicio"    column="inicio" />
+        <result property="fin"    column="fin" />
+        <result property="gestion"    column="gestion" />
+        <result property="tipo_experiencia_laboral"    column="tipo_experiencia_laboral" />
+        <result property="id_estado"    column="id_estado" />
+        <result property="aprobado"    column="aprobado" />
+    </resultMap>
+    <select id="GetPersonaTotalExperienciaLaboralKardex" resultMap="kerdex_experiencia_laboral">
+        SELECT id_experiencia_laboral, id_persona_kardex, institucion, detalle, 
+        cargoocupado, refrencia, calificacion, url_experiencia, inicio, 
+        fin, gestion, tipo_experiencia_laboral, id_estado, aprobado
+        FROM persona_experiencia_laboral
+        where  id_estado='A' AND id_persona_kardex=#{id_persona_kardex};
+    </select> 
+    <select id="GetPersonaExperienciaLaboralKardex" resultMap="kerdex_experiencia_laboral">
+        SELECT id_experiencia_laboral, id_persona_kardex, institucion, detalle, 
+        cargoocupado, refrencia, calificacion, url_experiencia, inicio, 
+        fin, gestion, tipo_experiencia_laboral, id_estado, aprobado
+        FROM persona_experiencia_laboral
+        where id_experiencia_laboral=#{id_experiencia_laboral};
+    </select> 
+    <select id="GetPersonaSubTotalExperienciaLaboralKardex" resultMap="kerdex_experiencia_laboral">
+        SELECT id_experiencia_laboral, id_persona_kardex, institucion, detalle, 
+        cargoocupado, refrencia, calificacion, url_experiencia, inicio, 
+        fin, gestion, tipo_experiencia_laboral, id_estado, aprobado
+        FROM persona_experiencia_laboral
+        where   id_estado='A' AND  id_persona_kardex=#{id_persona_kardex}
+        LIMIT #{number};
+    </select> 
+    <!-- FIN - EXPERIENCIA LABORAL -->
+    
+    <!-- INICIO - CURSOS -->
+    <insert id="RegistrarCursosRealizadosKardex">
+        <selectKey keyProperty="id_cursos_realizados"
+                   resultType="int">
+            SELECT nextVal('persona_cursos_realizados_id_cursos_realizados_seq')
+        </selectKey>
+        INSERT INTO persona_cursos_realizados(
+        id_persona_kardex, id_cursos_realizados, expedido_institucion, 
+        fechapresentacion, nrotitulo, detalle, url_cursos, horas_academicas, 
+        tipo_eventos, duracion, id_estado, aprobado,tipoorganizacion)
+        VALUES (#{id_persona_kardex}, #{id_cursos_realizados}, #{expedido_institucion}, 
+        #{fechapresentacion}, #{nrotitulo}, #{detalle}, #{url_cursos}, #{horas_academicas}, 
+        #{tipo_eventos}, #{duracion}, 'A', #{aprobado},#{tipoorganizacion});
+    </insert>
+    
+    <update id="ActualizarDatosCursosRealizadosKardexDocente">
+        UPDATE persona_cursos_realizados
+        SET 
+        id_persona_kardex=#{id_persona_kardex}, 
+        expedido_institucion=#{expedido_institucion},
+        fechapresentacion=#{fechapresentacion},
+        nrotitulo=#{nrotitulo},
+        detalle=#{detalle},
+        url_cursos=#{url_cursos},
+        horas_academicas=#{horas_academicas},
+        tipo_eventos=#{tipo_eventos},
+        duracion=#{duracion},
+        id_estado=#{id_estado},
+        aprobado=#{aprobado},
+        tipoorganizacion=#{tipoorganizacion}
+        WHERE  id_cursos_realizados=#{id_cursos_realizados};
+    </update>
+    <update id="AprobarCursosRealizadosKardexDocente">
+        UPDATE persona_cursos_realizados
+        SET  aprobado=#{aprobado}
+        WHERE id_cursos_realizados=#{id_cursos_realizados};
+    </update>
+    <update id="EliminarCursosRealizadosKardexDocente">
+        UPDATE persona_cursos_realizados
+        SET  id_estado='X'
+        WHERE id_cursos_realizados=#{id_cursos_realizados};
+    </update>
+    <update id="ActualizarImagenCursosRealizadosKardexDocente">
+        UPDATE persona_cursos_realizados 
+        SET url_cursos=#{url_cursos}
+        WHERE id_cursos_realizados=#{id_cursos_realizados};
+    </update>
+    <resultMap id="kardex_cursos_realizados" type="org.fautapo.domain.PersonaCursosRealizados">
+        <result property="id_persona_kardex"    column="id_persona_kardex" />
+        <result property="id_cursos_realizados"    column="id_cursos_realizados" />
+        <result property="expedido_institucion"    column="expedido_institucion" />
+        <result property="fechapresentacion"    column="fechapresentacion" />
+        <result property="nrotitulo"    column="nrotitulo" />
+        <result property="detalle"    column="detalle" />
+        <result property="url_cursos"    column="url_cursos" />
+        <result property="horas_academicas"    column="horas_academicas" />
+        <result property="tipo_eventos"    column="tipo_eventos" />
+        <result property="duracion"    column="duracion" />
+        <result property="id_estado"    column="id_estado" />
+        <result property="aprobado"    column="aprobado" />
+        <result property="tipoorganizacion"    column="tipoorganizacion" />
+    </resultMap>
+    <select id="GetPersonaTotalCursosRealizadosKardex" resultMap="kardex_cursos_realizados">
+        SELECT id_persona_kardex, id_cursos_realizados, expedido_institucion, 
+        fechapresentacion, nrotitulo, detalle, url_cursos, horas_academicas, 
+        tipo_eventos, duracion, id_estado, aprobado,tipoorganizacion
+        FROM persona_cursos_realizados
+        where  id_estado='A' AND id_persona_kardex=#{id_persona_kardex};
+    </select> 
+    <select id="GetPersonaCursosRealizadosKardex" resultMap="kardex_cursos_realizados">
+        SELECT id_persona_kardex, id_cursos_realizados, expedido_institucion, 
+        fechapresentacion, nrotitulo, detalle, url_cursos, horas_academicas, 
+        tipo_eventos, duracion, id_estado, aprobado,tipoorganizacion
+        FROM persona_cursos_realizados
+        where id_cursos_realizados=#{id_cursos_realizados};
+    </select> 
+    <select id="GetPersonaSubTotalCursosRealizadosKardex" resultMap="kardex_cursos_realizados">
+        SELECT id_persona_kardex, id_cursos_realizados, expedido_institucion, 
+        fechapresentacion, nrotitulo, detalle, url_cursos, horas_academicas, 
+        tipo_eventos, duracion, id_estado, aprobado,tipoorganizacion
+        FROM persona_cursos_realizados
+        where   id_estado='A' AND  id_persona_kardex=#{id_persona_kardex}
+        LIMIT #{number};
+    </select> 
+    <!-- FIN - CURSOS -->
+    <!-- INICIO - PRODUCCION -->
+    <insert id="RegistrarProduccionCientificaKardex">
+        <selectKey keyProperty="id_produccion_cientifica"
+                   resultType="int">
+            SELECT nextVal('persona_produccion_cientifica_id_produccion_cientifica_seq')
+        </selectKey>
+        INSERT INTO persona_produccion_cientifica(
+        id_produccion_cientifica, id_persona_kardex, categoria, nombre_producto, 
+        fecha_certificacion, url_portada_libro, id_estado, aprobado)
+        VALUES (#{id_produccion_cientifica}, #{id_persona_kardex}, #{categoria}, #{nombre_producto}, 
+        #{fecha_certificacion}, #{url_portada_libro}, 'A', #{aprobado});
+    </insert>
+    <update id="ActualizarProduccionCientificaKardexDocente">
+        UPDATE persona_produccion_cientifica
+        SET  
+        id_persona_kardex=#{id_persona_kardex},
+        categoria=#{categoria},
+        nombre_producto=#{nombre_producto},
+        fecha_certificacion=#{fecha_certificacion},
+        url_portada_libro=#{url_portada_libro},
+        id_estado=#{id_estado},
+        aprobado=#{aprobado}
+        WHERE id_produccion_cientifica=#{id_produccion_cientifica};
+    </update>
+    <update id="AprobarProduccionCientificaKardexDocente">
+        UPDATE persona_produccion_cientifica
+        SET  aprobado=#{aprobado#{
+        WHERE id_produccion_cientifica=#{id_produccion_cientifica};
+    </update>
+    <update id="EliminarProduccionCientificaKardexDocente">
+        UPDATE persona_produccion_cientifica
+        SET  id_estado='X'
+        WHERE id_produccion_cientifica=#{id_produccion_cientifica};
+    </update>
+    <update id="ActualizarImagenProduccionCientificaKardexDocente">
+        UPDATE persona_produccion_cientifica 
+        SET  url_portada_libro=#{url_portada_libro}
+        WHERE id_produccion_cientifica=#{id_produccion_cientifica};
+    </update>
+    <resultMap id="kardex_produccion_cientifica" type="org.fautapo.domain.PersonaProduccionCientifica">
+        <result property="id_produccion_cientifica"    column="id_produccion_cientifica" />
+        <result property="id_persona_kardex"    column="id_persona_kardex" />
+        <result property="categoria"    column="categoria" />
+        <result property="nombre_producto"    column="nombre_producto" />
+        <result property="fecha_certificacion"    column="fecha_certificacion" />
+        <result property="url_portada_libro"    column="url_portada_libro" />
+        <result property="id_estado"    column="id_estado" />
+        <result property="aprobado"    column="aprobado" />
+    </resultMap>
+    <select id="GetPersonaTotalProduccionCientificaKardex" resultMap="kardex_produccion_cientifica">
+        SELECT id_produccion_cientifica, id_persona_kardex, categoria, nombre_producto, 
+        fecha_certificacion, url_portada_libro, id_estado, aprobado
+        FROM persona_produccion_cientifica
+        where  id_estado='A' AND id_persona_kardex=#{id_persona_kardex};
+    </select> 
+    <select id="GetPersonaProduccionCientificaKardex" resultMap="kardex_produccion_cientifica">
+        SELECT id_produccion_cientifica, id_persona_kardex, categoria, nombre_producto, 
+        fecha_certificacion, url_portada_libro, id_estado, aprobado
+        FROM persona_produccion_cientifica
+        where id_produccion_cientifica=#{id_produccion_cientifica};
+    </select> 
+    <select id="GetPersonaSubTotalProduccionCientificaKardex" resultMap="kardex_produccion_cientifica">
+        SELECT id_produccion_cientifica, id_persona_kardex, categoria, nombre_producto, 
+        fecha_certificacion, url_portada_libro, id_estado, aprobado
+        FROM persona_produccion_cientifica
+        where   id_estado='A' AND  id_persona_kardex=#{id_persona_kardex}
+        LIMIT #{number#{;
+    </select> 
+    <!-- FIN - PRODUCCION -->
+    <!-- INICIO - EVALUACION -->
+    <insert id="RegistrarEvaluacionDocenteKardex">
+        <selectKey keyProperty="id_evaluacion_docente"
+                   resultType="int">
+            SELECT nextVal('persona_evaluacion_docente_id_evaluacion_docente_seq')
+        </selectKey>
+        INSERT INTO persona_evaluacion_docente(
+        id_evaluacion_docente, id_persona_kardex, gestion, periodo, asignatura, 
+        puntaje, url_certificado_evaluacion, id_estado, aprobado)
+        VALUES (#{id_evaluacion_docente}, #{id_persona_kardex}, #{gestion}, #{periodo}, #{asignatura}, 
+        #{puntaje}, #{url_certificado_evaluacion}, 'A', #{aprobado});
+    </insert>
+    <update id="ActualizarEvaluacionDocenteKardex">
+        UPDATE persona_evaluacion_docente
+        SET  
+        id_persona_kardex=#{id_persona_kardex},
+        gestion=#{gestion},
+        periodo=#{periodo},
+        asignatura=#{asignatura},
+        puntaje=#{puntaje},
+        url_certificado_evaluacion=#{url_certificado_evaluacion},
+        id_estado=#{id_estado},
+        aprobado=#{aprobado}
+        WHERE id_evaluacion_docente=#{id_evaluacion_docente};
+    </update>
+    <update id="AprobarEvaluacionDocenteKardex">
+        UPDATE persona_evaluacion_docente
+        SET  aprobado=#{aprobado#{
+        WHERE id_evaluacion_docente=#{id_evaluacion_docente};
+    </update>
+    <update id="EliminarEvaluacionDocenteKardex">
+        UPDATE persona_evaluacion_docente
+        SET  id_estado='X'
+        WHERE id_evaluacion_docente=#{id_evaluacion_docente};
+    </update>
+    <update id="ActualizarImagenEvaluacionDocenteKardex">
+        UPDATE persona_evaluacion_docente 
+        SET  url_certificado_evaluacion=#{url_certificado_evaluacion}
+        WHERE id_evaluacion_docente=#{id_evaluacion_docente};
+    </update>
+    <resultMap id="kardex_evaluacion_docente" type="org.fautapo.domain.PersonaEvaluacionDocente">
+        <result property="id_evaluacion_docente"    column="id_evaluacion_docente" />
+        <result property="id_persona_kardex"    column="id_persona_kardex" />
+        <result property="gestion"    column="gestion" />
+        <result property="periodo"    column="periodo" />
+        <result property="asignatura"    column="asignatura" />
+        <result property="puntaje"    column="puntaje" />
+        <result property="url_certificado_evaluacion"    column="url_certificado_evaluacion" />
+        <result property="id_estado"    column="id_estado" />
+        <result property="aprobado"    column="aprobado" />
+
+    </resultMap>
+    <select id="GetPersonaTotalEvaluacionDocenteKardex" resultMap="kardex_evaluacion_docente">
+        SELECT id_evaluacion_docente, id_persona_kardex, gestion, periodo, asignatura, 
+        puntaje, url_certificado_evaluacion, id_estado, aprobado
+        FROM persona_evaluacion_docente
+        where  id_estado='A' AND id_persona_kardex=#{id_persona_kardex};
+    </select> 
+    <select id="GetPersonaEvaluacionDocenteKardex" resultMap="kardex_evaluacion_docente">
+        SELECT id_evaluacion_docente, id_persona_kardex, gestion, periodo, asignatura, 
+        puntaje, url_certificado_evaluacion, id_estado, aprobado
+        FROM persona_evaluacion_docente
+        where id_evaluacion_docente=#{id_evaluacion_docente};
+    </select> 
+    <select id="GetPersonaSubTotalEvaluacionDocenteKardex" resultMap="kardex_evaluacion_docente">
+        SELECT id_evaluacion_docente, id_persona_kardex, gestion, periodo, asignatura, 
+        puntaje, url_certificado_evaluacion, id_estado, aprobado
+        FROM persona_evaluacion_docente
+        where   id_estado='A' AND  id_persona_kardex=#{id_persona_kardex}
+        LIMIT #{number};
+    </select> 
+    <!-- FIN - EVALUACION -->
+</mapper>

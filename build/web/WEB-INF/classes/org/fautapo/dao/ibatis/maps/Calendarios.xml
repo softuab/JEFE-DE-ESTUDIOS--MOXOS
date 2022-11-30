@@ -1,0 +1,38 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+ * @autor FAUTAPO
+ * @fec_registro 2005-11-01
+ * @ult_usuario FAUTAPO
+ * @fec_modificacion 2005-11-01
+-->
+
+<mapper namespace="Calendarios">
+
+    <resultMap id="universidad" type="org.fautapo.domain.Calendarios">
+        <result property="id_universidad" column="id_universidad"/>
+        <result property="universidad"    column="universidad"/>
+    </resultMap>
+
+    <select id="getListarCalendarios" resultMap="universidad">
+        SELECT *
+        FROM mi_listar_calendario(#{id_departamento}, #{id_programa}, #{tabla}, #{gestion}, #{periodo});
+    </select>
+    <resultMap id="CalendarioDocente" type="org.fautapo.domain.Calendarios">
+        <result property="facultad" column="facultad"/>
+        <result property="programa"    column="programa"/>
+        <result property="tipo_evaluacion"    column="tipo_evaluacion"/>
+        <result property="tipo_nota"    column="tipo_nota"/>
+        <result property="nro_tipo_nota"    column="nro_tipo_nota"/>
+        <result property="fecha_inicio"    column="fecha_inicio"/>
+        <result property="fecha_limite"    column="fecha_limite"/>
+        <result property="gestion"    column="gestion"/>
+        <result property="periodo"    column="periodo"/>
+    </resultMap>
+    <select id="getlistarCalendarioDocente" resultMap="CalendarioDocente">
+        select * from 
+        get_listar_Calendario_Docente(#{id_docente},#{gestion}, #{periodo})
+        as (facultad dtexto,programa dtexto,tipo_evaluacion dtexto,tipo_nota dtexto,nro_tipo_nota dentero,fecha_inicio dfecha2,fecha_limite dfecha2,gestion dentero,periodo dentero)
+    </select>
+
+</mapper>

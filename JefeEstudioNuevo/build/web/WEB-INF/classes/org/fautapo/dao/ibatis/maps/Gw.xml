@@ -1,0 +1,111 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!--
+ * @autor FAUTAPO
+ * @fec_registro 2006-03-22
+ * @ult_usuario FAUTAPO
+ * @fec_modificacion 2006-03-22
+-->
+
+<mapper namespace="Gw">
+
+  <select id="getListarDatosTabla" resultType="java.lang.String">
+    SELECT tr_gw_listar_datos_tabla(#{tabla}) AS valores;
+  </select>
+
+  <resultMap id="camposTabla" type="org.fautapo.domain.Abm">
+    <result property="campo"    column="campo" />
+    <result property="etiqueta" column="etiqueta" />
+  </resultMap>
+
+  <select id="getListarCamposTabla2" resultMap="camposTabla">
+    SELECT *
+    FROM tr_gw_listar_campos_tabla(#{id_tabla})
+    AS (campo text, etiqueta text);
+  </select>
+
+  <select id="getListarDatosPrimarios" resultType="java.lang.String">
+    SELECT tr_gw_listar_primarios_tabla(#{tabla}) AS primarios;
+  </select>
+
+  <resultMap id="valoresTramite" type="org.fautapo.domain.Tramites">
+    <result property="valores"    column="valores" />
+    <result property="id_campo"   column="id_campo" />
+    <result property="id_tramite" column="id_tramite" />
+  </resultMap>
+
+  <select id="getBuscarCampoGw" resultMap="valoresTramite">
+    SELECT * 
+    FROM tr_gw_buscar_valor(#{id_tramite}, #{etiqueta})
+    AS (id_campo integer, valores text, campos text, id_tramite integer);
+  </select>
+
+  <resultMap id="datosTramitesMios" type="org.fautapo.domain.Tramites">
+    <result property="id_tramite"           column="id_tramite" />
+    <result property="id_proceso"           column="id_proceso" />
+    <result property="id_actividad_actual"  column="id_actividad_actual" />
+    <result property="id_tipo_proveido"     column="id_tipo_proveido" />
+    <result property="id_estado"            column="id_estado" />
+    <result property="para"                 column="para" />
+    <result property="de"                   column="de" />
+    <result property="actividad"            column="actividad" />
+    <result property="proceso"              column="proceso" />
+    <result property="id_form"              column="id_form" />
+    <result property="usuario"              column="nombres" />
+    <result property="cargo"                column="cargo" />
+    <result property="correlativo"          column="correlativo" />
+    <result property="id_actividad_minima"  column="id_actividad_minima" />
+    <result property="estado"               column="estado" />
+    <result property="imagen"               column="imagen" />
+    <result property="id_tipo_actuacion"    column="id_tipo_actuacion" />
+    <result property="actuacion"            column="actuacion" />
+    <result property="rol"                  column="rol" />
+    <result property="ruta"                 column="ruta" />
+  </resultMap>
+
+  <select id="getListarTramitesMiosLimbo" resultMap="datosTramitesMios">
+    SELECT *
+    FROM tr_gw_listar_tramites_mios_limbo(#{para}, #{pagina})
+    AS (id_tramite integer, id_proceso dentero, id_actividad_actual dentero, id_tipo_proveido dentero, id_estado did_estado, para did_usuario, de did_usuario,
+        fec_registro dfec_modificacion, fec_modificacion dfec_modificacion, actividad dtexto, proceso dtexto, id_form integer,
+	nombres dtexto, cargo dtexto2, correlativo dentero2, id_actividad_minima integer, estado dtexto, imagen dtexto2, id_tipo_actuacion dentero, 
+	actuacion dtexto2, rol dtexto, ruta dtexto2);
+  </select>
+
+  <select id="setRegistrarValorLimbo" resultType="java.lang.Integer">
+    SELECT tr_gw_registrar_valor_limbo(#{id_tramite}, #{id_campo}, #{valor}, #{campos}, #{ult_usuario}) as valor;
+  </select>
+
+  <select id="setInsertarTramiteLimbo" resultType="java.lang.Integer">
+    SELECT tr_gw_insertar_tramite_limbo(#{id_proceso}, #{para}) AS valor;
+  </select>
+
+  <select id="setRetrocederTramiteLimbo" resultType="java.lang.Integer">
+    SELECT tr_gw_retroceder_tramite_limbo(#{id_tramite}, #{proveido}, #{ult_usuario}) AS minimo
+  </select>
+
+  <select id="getBuscarTablaLimbo" resultType="java.lang.String">
+    SELECT tr_buscar_tabla_limbo(#{id_proceso}, #{id_actividad}) AS tabla;
+  </select>
+
+  <select id="setAvanzarTramiteLimbo" resultType="java.lang.Integer">
+    SELECT tr_gw_avanzar_tramite_limbo(#{id_tramite}, #{para}, #{id_tipo_actuacion}, #{orden}) AS minimo
+  </select>
+
+  <select id="getBuscarIdCampoLimbo" resultType="java.lang.Integer">
+    SELECT tr_gw_buscar_id_campo_limbo(#{id_proceso}, #{etiqueta}) as codigo;
+  </select>
+
+  <select id="setRegistrarValorLimbo2" resultType="java.lang.Integer">
+    SELECT tr_gw_registrar_valor_limbo2(#{id_tramite}, #{etiqueta}, #{valor}, #{ult_usuario}) as valor;
+  </select>
+
+  <select id="getContarPaginasLimbo" resultType="java.lang.String">
+    SELECT tr_contar_paginas_limbo(#{para}) AS valor;
+  </select>
+
+  <select id="setRegistrarTrPrFrLogLimbo" resultType="java.lang.Integer">
+    SELECT tr_gw_registrar_tr_pr_fr_log(#{id_tramite}, #{ult_usuario}) as valor;
+  </select>
+
+</mapper>
